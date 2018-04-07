@@ -24,3 +24,16 @@ void Link_destruct(struct Link * this)
 	
 	free(this);
 }
+
+char Link_isConnected(struct Link * this, struct Node * node)
+{
+	if (node == this->node) {
+		return 1;
+	}
+	
+	if (NULL != this->previous) {
+		return Link_isConnected(this->previous, node);
+	}
+	
+	return 0;
+}

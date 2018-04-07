@@ -29,7 +29,9 @@ void Node_connect(struct Node * this, struct Node * destinationNode)
 	if (NULL == this->tail) {
 		this->tail = Link_construct(destinationNode, NULL);
 	} else {
-		this->tail = Link_construct(destinationNode, this->tail);
+		if (! Link_isConnected(this->tail, destinationNode)) {
+			this->tail = Link_construct(destinationNode, this->tail);
+		}
 	}
 }
 

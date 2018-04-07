@@ -17,6 +17,6 @@ void Link_destruct(struct Link * this);
 
 unsigned int Link_getNodePlace(struct Link * this);
 
-void Link_appendNode(struct Link * this, unsigned int nodePlace);
+char Link_isConnected(struct Link * this, struct Node * node);
 
 #endif
