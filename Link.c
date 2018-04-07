@@ -1,33 +1,26 @@
 #include "Link.h"
 #include <stdlib.h>
+#include "Node.h"
 
 struct Link * Link_construct(
-	unsigned int nodePlace,
-	unsigned int nextLinkPlace
+	struct Node * node,
+	struct Link * previous
 ) {
 	struct Link * this = malloc(sizeof(struct Link));
 
-	this->nodePlace = nodePlace;
-	this->nextLinkPlace = nextLinkPlace;
+	this->node = node;
+	this->previous = previous;
 	
 	return this;
 }
 
 void Link_destruct(struct Link * this)
 {
-	free(this);
-}
-
-unsigned int Link_getNodePlace(struct Link * this)
-{
-	return this->nodePlace;
-}
-
-void Link_appendNode(struct Link * this, unsigned int nodePlace)
-{
-	if (0 == this->nextLinkPlace) {
-		this->nextLinkPlace = nodePlace;
-	} else {
-		Link_appendNode(this->nextLinkPlace, nodePlace);
+	Node_destruct(this->node);
+	
+	if (NULL != this->previous) {
+		Link_destruct(this->previous);
 	}
+	
+	free(this);
 }

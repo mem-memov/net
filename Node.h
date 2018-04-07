@@ -4,10 +4,11 @@
 #include "Link.h"
 
 struct Node {
-	struct Link * head;
+	unsigned int place;
+	struct Link * tail;
 };
 
-struct Node * Node_construct(struct Link * head);
+struct Node * Node_construct(unsigned int place);
 
 void Node_destruct(struct Node * node);
 

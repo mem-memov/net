@@ -5,14 +5,13 @@
 
 int main(int argc, char** argv) {
 
-	struct Net * net = Net_construct(
-		Space_construct(12)
-	);
+	struct Net * net = Net_construct(6);
 
 	char command[100];
 	unsigned int nodePlace;
 
 	while (1) {
+		printf( "Enter a command:");
 		scanf("%s", command);
 		
 		if (strcmp("create", command) == 0 || strcmp("+", command) == 0) {
@@ -29,10 +28,12 @@ int main(int argc, char** argv) {
 
 		if (strcmp("connect", command) == 0 || strcmp(">", command) == 0) {
 			
+			printf( "origin node:");
 			scanf("%u", &nodePlace);
 			
 			struct Node * originNode = Net_getNode(net, nodePlace);
 			
+			printf( "destination node:");
 			scanf("%u", &nodePlace);
 			
 			struct Node * destinationNode = Net_getNode(net, nodePlace);

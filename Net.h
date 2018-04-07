@@ -2,13 +2,14 @@
 #define NET_H
 
 #include "Node.h"
-#include "Space.h"
 
 struct Net {
-	struct Space * space;
+	unsigned int size;
+	struct Node ** nodes;
+	unsigned int offset;
 };
 
-struct Net * Net_construct(struct Space * space);
+struct Net * Net_construct(unsigned int size);
 
 void Net_destruct(struct Net * this);
 

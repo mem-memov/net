@@ -1,14 +1,16 @@
 #ifndef LINK_H
 #define LINK_H
 
+#include "Node.h"
+
 struct Link {
-	unsigned int nodePlace;
-	unsigned int nextLinkPlace;
+	struct Node * node;
+	struct Link * previous;
 };
 
 struct Link * Link_construct(
-	unsigned int nodePlace,
-	unsigned int nextLinkPlace
+	struct Node * node,
+	struct Link * previous
 );
 
 void Link_destruct(struct Link * this);

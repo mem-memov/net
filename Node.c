@@ -2,29 +2,34 @@
 #include <stdlib.h>
 #include "Link.h"
 
-struct Node * Node_construct(struct Link * head)
+struct Node * Node_construct(unsigned int place)
 {
 	struct Node * this = malloc(sizeof(struct Node));
 	
-	this->head = head;
+	this->place = place;
+	this->tail = NULL;
 
 	return this;
 }
 
 void Node_destruct(struct Node * this)
 {
-	Link_destruct(this->head);
+	Link_destruct(this->tail);
 	
 	free(this);
 }
 
 unsigned int Node_getPlace(struct Node * this)
 {
-	return Link_getNodePlace(this->head);
+	return this->place;
 }
 
 void Node_connect(struct Node * this, struct Node * destinationNode)
 {
-	Link_appendNode(this->head, Node_getPlace(destinationNode));
+	if (NULL == this->tail) {
+		this->tail = Link_construct(destinationNode, NULL);
+	} else {
+		this->tail = Link_construct(destinationNode, this->tail);
+	}
 }
 
