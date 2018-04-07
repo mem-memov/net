@@ -19,14 +19,19 @@ void Net_destruct(struct Net * this)
 	free(this);
 }
 
-struct Node * addNode(struct Net * this)
+char Net_canAddNode(struct Net * this)
+{
+	return Space_hasPlaceForLinks(this->space, 1);
+}
+
+struct Node * Net_addNode(struct Net * this)
 {
 	return Node_construct(
 		Space_addHeadLink(this->space)
 	);
 }
 
-struct Node * getNode(struct Net * this, int nodePlace)
+struct Node * Net_getNode(struct Net * this, unsigned int nodePlace)
 {
 	return Node_construct(
 		Space_getLink(this->space, nodePlace)

@@ -2,15 +2,19 @@
 #define LINK_H
 
 struct Link {
-	int nodePlace;
-	int nextLinkPlace;
+	unsigned int nodePlace;
+	unsigned int nextLinkPlace;
 };
 
 struct Link * Link_construct(
-	int nodePlace,
-	int nextLinkPlace
+	unsigned int nodePlace,
+	unsigned int nextLinkPlace
 );
 
 void Link_destruct(struct Link * this);
+
+unsigned int Link_getNodePlace(struct Link * this);
+
+void Link_appendNode(struct Link * this, unsigned int nodePlace);
 
 #endif

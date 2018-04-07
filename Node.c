@@ -18,5 +18,13 @@ void Node_destruct(struct Node * this)
 	free(this);
 }
 
+unsigned int Node_getPlace(struct Node * this)
+{
+	return Link_getNodePlace(this->head);
+}
 
+void Node_connect(struct Node * this, struct Node * destinationNode)
+{
+	Link_appendNode(this->head, Node_getPlace(destinationNode));
+}
 

@@ -12,8 +12,10 @@ struct Net * Net_construct(struct Space * space);
 
 void Net_destruct(struct Net * this);
 
-struct Node * addNode(struct Net * this);
+char Net_canAddNode(struct Net * this);
 
-struct Node * getNode(struct Net * this, int nodePlace);
+struct Node * Net_addNode(struct Net * this);
+
+struct Node * Net_getNode(struct Net * this, unsigned int nodePlace);
 
 #endif

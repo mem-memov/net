@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := net
 
 net: main.o Link.o Net.o Node.o Space.o
-	gcc main.o Link.o Net.o Node.o Space.o
+	gcc main.o Link.o Net.o Node.o Space.o -o net
 
 main.o: main.c
 	gcc -c main.c
