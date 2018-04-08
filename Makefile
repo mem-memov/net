@@ -1,10 +1,13 @@
 .DEFAULT_GOAL := net
 
-net: main.o Link.o Net.o Node.o
-	gcc main.o Link.o Net.o Node.o -o net
+net: main.o Error.o Link.o Net.o Node.o
+	gcc main.o Error.o Link.o Net.o Node.o -o net
 
 main.o: main.c
 	gcc -c main.c
+
+Error.o: Error.c Error.h
+	gcc -c Error.c
 
 Link.o: Link.c Link.h Node.h
 	gcc -c Link.c

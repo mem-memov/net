@@ -37,3 +37,4 @@ char Link_isConnected(struct Link * this, struct Node * node)
 	
 	return 0;
 }
+

@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "Error.h"
 #include "Net.h"
 
 int main(int argc, char** argv) {
-
-	struct Net * net = Net_construct(2, 1);
+	
+	struct Error * error = Error_construct();
+	struct Net * net = Net_construct(2, error);
 
 	char command[100];
 	unsigned int nodePlace;
@@ -15,8 +17,8 @@ int main(int argc, char** argv) {
 		scanf("%s", command);
 		
 		if (strcmp("create", command) == 0 || strcmp("+", command) == 0) {
-			
-			if (! Net_canAddNode(net)) {
+
+			if ( ! Net_canAddNode(net)) {
 				printf("No space for new nodes.\n");
 			} else {
 				struct Node * node = Net_addNode(net);
@@ -26,7 +28,7 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
-		if (strcmp("connect", command) == 0 || strcmp(">", command) == 0) {
+		if (strcmp("connect", command) == 0 || strcmp("^", command) == 0) {
 			
 			printf( "origin node:");
 			scanf("%u", &nodePlace);

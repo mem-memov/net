@@ -5,12 +5,12 @@
 
 struct Net {
 	unsigned int size;
-	unsigned int increment;
-	struct Node ** nodes;
 	unsigned int offset;
+	struct Node ** nodes;
+	struct Error * error;
 };
 
-struct Net * Net_construct(unsigned int size, unsigned int increment);
+struct Net * Net_construct(unsigned int size, struct Error * error);
 
 void Net_destruct(struct Net * this);
 

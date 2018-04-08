@@ -1,16 +1,16 @@
 #include "Net.h"
 #include <stdlib.h>
+#include "Error.h"
 #include "Node.h"
 
-struct Net * Net_construct(unsigned int size, unsigned int increment)
+struct Net * Net_construct(unsigned int size, struct Error * error)
 {
 	struct Net * this = malloc(sizeof(struct Net));
 	
 	this->size = size;
-	this->increment = increment;
-	
-	this->nodes = (struct Node **)malloc(sizeof(unsigned int) * this->size);
 	this->offset = 0;
+	this->nodes = (struct Node **)malloc(sizeof(unsigned int) * this->size);
+	this->error = error;
 
 	return this;
 }
@@ -24,31 +24,16 @@ void Net_destruct(struct Net * this)
 
 char Net_canAddNode(struct Net * this)
 {
-	if (this->offset >= this->size) {
-		
-		unsigned int newSize = this->size + this->increment;
-		struct Node ** newNodes = (struct Node **)realloc(this->nodes, newSize);
-		
-		if (NULL == newNodes) {
-			return 0;
-		}
-
-		this->nodes = newNodes;
-		this->size = newSize;
-		
-		if (this->offset >= this->size) {
-			return 0;
-		}
+	if (this->offset < this->size) {
+		return 1;
 	}
 	
-	return 1;
+	return 0;
 }
 
 struct Node * Net_addNode(struct Net * this)
 {
-	if ( ! Net_canAddNode(this)) {
-		exit(1);
-	}
+	Error_netHasNoSpaceLeft(Net_canAddNode(this));
 	
 	struct Node * node = Node_construct(this->offset + 1);
 	
