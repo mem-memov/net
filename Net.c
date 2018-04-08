@@ -44,7 +44,18 @@ struct Node * Net_addNode(struct Net * this)
 	return node;
 }
 
-struct Node * Net_getNode(struct Net * this, unsigned int nodePlace)
+char Net_hasNode(struct Net * this, unsigned int place)
 {
-	return this->nodes[nodePlace - 1];
+	if (this->offset < place) {
+		return 0;
+	}
+	
+	return 1;
+}
+
+struct Node * Net_getNode(struct Net * this, unsigned int place)
+{
+	Error_netHasNoSuchNode(Net_hasNode(this, place), place);
+	
+	return this->nodes[place - 1];
 }

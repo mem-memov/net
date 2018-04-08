@@ -18,6 +18,8 @@ char Net_canAddNode(struct Net * this);
 
 struct Node * Net_addNode(struct Net * this);
 
-struct Node * Net_getNode(struct Net * this, unsigned int nodePlace);
+char Net_hasNode(struct Net * this, unsigned int place);
+
+struct Node * Net_getNode(struct Net * this, unsigned int place);
 
 #endif

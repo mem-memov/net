@@ -7,10 +7,13 @@
 int main(int argc, char** argv) {
 	
 	struct Error * error = Error_construct();
-	struct Net * net = Net_construct(2, error);
+	struct Net * net = Net_construct(5, error);
 
 	char command[100];
-	unsigned int nodePlace;
+	unsigned int place;
+	struct Node * node;
+	struct Node * originNode;
+	struct Node * destinationNode;
 
 	while (1) {
 		printf( "Enter a command:");
@@ -21,7 +24,7 @@ int main(int argc, char** argv) {
 			if ( ! Net_canAddNode(net)) {
 				printf("No space for new nodes.\n");
 			} else {
-				struct Node * node = Net_addNode(net);
+				node = Net_addNode(net);
 				printf("Node created: %d\n", Node_getPlace(node));
 			}
 
@@ -31,21 +34,33 @@ int main(int argc, char** argv) {
 		if (strcmp("connect", command) == 0 || strcmp("^", command) == 0) {
 			
 			printf( "origin node:");
-			scanf("%u", &nodePlace);
+			scanf("%u", &place);
 			
-			struct Node * originNode = Net_getNode(net, nodePlace);
+			originNode = Net_getNode(net, place);
 			
 			printf( "destination node:");
-			scanf("%u", &nodePlace);
+			scanf("%u", &place);
 			
-			struct Node * destinationNode = Net_getNode(net, nodePlace);
+			destinationNode = Net_getNode(net, place);
 			
 			Node_connect(originNode, destinationNode);
 			
 			continue;
 		}
 
-		if (strcmp("exit", command) == 0) {
+		if (strcmp("read", command) == 0 || strcmp(":", command) == 0) {
+			
+			printf( "node:");
+			scanf("%u", &place);
+			
+			node = Net_getNode(net, place);
+			
+			Node_export(node);
+			
+			continue;
+		}
+
+		if (strcmp("exit", command) == 0 || strcmp("q", command) == 0) {
 			break;
 		}
 		

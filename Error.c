@@ -23,3 +23,11 @@ void Error_netHasNoSpaceLeft(char hasSpaceForNode)
 	}
 }
 
+void Error_netHasNoSuchNode(char hasNode, unsigned int place)
+{
+	if ( ! hasNode) {
+		fprintf(stderr, "Error_netHasNoSuchNode: node %u is missing.\n", place);
+		exit(1);
+	}
+}
+

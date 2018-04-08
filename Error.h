@@ -11,4 +11,6 @@ void Error_destruct(struct Error * error);
 
 void Error_netHasNoSpaceLeft(char hasSpaceForNodes);
 
+void Error_netHasNoSuchNode(char hasNode, unsigned int place);
+
 #endif

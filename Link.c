@@ -1,5 +1,7 @@
 #include "Link.h"
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "Node.h"
 
 struct Link * Link_construct(
@@ -38,3 +40,11 @@ char Link_isConnected(struct Link * this, struct Node * node)
 	return 0;
 }
 
+void Link_export(struct Link * this)
+{
+	fprintf(stdout, "%u\n", Node_getPlace(this->node));
+	
+	if (NULL != this->previous) {
+		Link_export(this->previous);
+	}
+}

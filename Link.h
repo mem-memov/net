@@ -15,8 +15,10 @@ struct Link * Link_construct(
 
 void Link_destruct(struct Link * this);
 
-unsigned int Link_getNodePlace(struct Link * this);
+unsigned int Link_getplace(struct Link * this);
 
 char Link_isConnected(struct Link * this, struct Node * node);
+
+void Link_export(struct Link * this);
 
 #endif
