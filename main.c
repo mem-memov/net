@@ -60,6 +60,13 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
+		if (strcmp("export", command) == 0 || strcmp(">", command) == 0) {
+
+			Net_export(net);
+			
+			continue;
+		}
+
 		if (strcmp("exit", command) == 0 || strcmp("q", command) == 0) {
 			break;
 		}

@@ -41,6 +41,8 @@ void Node_export(struct Node * this)
 {
 	fprintf(stdout, "%u\n", this->place);
 	
-	Link_export(this->tail);
+	if (NULL != this->tail) {
+		Link_export(this->tail);
+	}
 }
 

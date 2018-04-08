@@ -1,5 +1,7 @@
 #include "Net.h"
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "Error.h"
 #include "Node.h"
 
@@ -58,4 +60,19 @@ struct Node * Net_getNode(struct Net * this, unsigned int place)
 	Error_netHasNoSuchNode(Net_hasNode(this, place), place);
 	
 	return this->nodes[place - 1];
+}
+
+void Net_export(struct Net * this)
+{
+	struct Node * node;
+	unsigned int offset = 0;
+	
+	fprintf(stdout, "%u\n", this->offset);
+	
+	while (offset < this->offset) {
+		node = Net_getNode(this, offset + 1);
+		fprintf(stdout, "\n");
+		Node_export(node);
+		offset++;
+	}
 }

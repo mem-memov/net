@@ -22,4 +22,6 @@ char Net_hasNode(struct Net * this, unsigned int place);
 
 struct Node * Net_getNode(struct Net * this, unsigned int place);
 
+void Net_export(struct Net * this);
+
 #endif
