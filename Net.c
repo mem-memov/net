@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include "Node.h"
 
-struct Net * Net_construct(unsigned int size)
+struct Net * Net_construct(unsigned int size, unsigned int increment)
 {
 	struct Net * this = malloc(sizeof(struct Net));
 	
 	this->size = size;
+	this->increment = increment;
 	
-	this->nodes = malloc(sizeof(unsigned int) * this->size);
+	this->nodes = (struct Node **)malloc(sizeof(unsigned int) * this->size);
 	this->offset = 0;
 
 	return this;
@@ -24,14 +25,31 @@ void Net_destruct(struct Net * this)
 char Net_canAddNode(struct Net * this)
 {
 	if (this->offset >= this->size) {
-		return 0;
-	} else {
-		return 1;
+		
+		unsigned int newSize = this->size + this->increment;
+		struct Node ** newNodes = (struct Node **)realloc(this->nodes, newSize);
+		
+		if (NULL == newNodes) {
+			return 0;
+		}
+
+		this->nodes = newNodes;
+		this->size = newSize;
+		
+		if (this->offset >= this->size) {
+			return 0;
+		}
 	}
+	
+	return 1;
 }
 
 struct Node * Net_addNode(struct Net * this)
 {
+	if ( ! Net_canAddNode(this)) {
+		exit(1);
+	}
+	
 	struct Node * node = Node_construct(this->offset + 1);
 	
 	* (this->nodes + this->offset) = node;

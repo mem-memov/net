@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv) {
 
-	struct Net * net = Net_construct(6);
+	struct Net * net = Net_construct(2, 1);
 
 	char command[100];
 	unsigned int nodePlace;
