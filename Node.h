@@ -1,6 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <stdio.h>
 #include "Link.h"
 
 struct Node {
@@ -16,6 +17,6 @@ unsigned int Node_getPlace(struct Node * this);
 
 void Node_connect(struct Node * this, struct Node * destinationNode);
 
-void Node_export(struct Node * this);
+void Node_export(struct Node * this, FILE * file);
 
 #endif

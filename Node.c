@@ -37,12 +37,12 @@ void Node_connect(struct Node * this, struct Node * destinationNode)
 	}
 }
 
-void Node_export(struct Node * this)
+void Node_export(struct Node * this, FILE * file)
 {
-	fprintf(stdout, "%u\n", this->place);
+	fprintf(file, "%u\n", this->place);
 	
 	if (NULL != this->tail) {
-		Link_export(this->tail);
+		Link_export(this->tail, file);
 	}
 }
 

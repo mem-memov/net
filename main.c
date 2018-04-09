@@ -14,10 +14,13 @@ int main(int argc, char** argv) {
 	struct Node * node;
 	struct Node * originNode;
 	struct Node * destinationNode;
+	char filePath[300];
+	FILE * file;
 
 	while (1) {
 		printf( "Enter a command:");
 		scanf("%s", command);
+		printf("You entered: %s\n", command);
 		
 		if (strcmp("create", command) == 0 || strcmp("+", command) == 0) {
 
@@ -55,14 +58,26 @@ int main(int argc, char** argv) {
 			
 			node = Net_getNode(net, place);
 			
-			Node_export(node);
+			Node_export(node, stdout);
 			
 			continue;
 		}
 
-		if (strcmp("export", command) == 0 || strcmp(">", command) == 0) {
+		if (strcmp("export", command) == 0 || strcmp(">>", command) == 0) {
 
-			Net_export(net);
+			printf( "target file path:");
+			scanf("%s", filePath);
+
+			file = fopen(filePath, "w+");
+			Net_export(net, file);
+			fclose(file);
+			
+			continue;
+		}
+
+		if (strcmp("show", command) == 0 || strcmp(">", command) == 0) {
+
+			Net_export(net, stdout);
 			
 			continue;
 		}

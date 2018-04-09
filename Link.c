@@ -40,11 +40,11 @@ char Link_isConnected(struct Link * this, struct Node * node)
 	return 0;
 }
 
-void Link_export(struct Link * this)
+void Link_export(struct Link * this, FILE * file)
 {
-	fprintf(stdout, "%u\n", Node_getPlace(this->node));
-	
 	if (NULL != this->previous) {
-		Link_export(this->previous);
+		Link_export(this->previous, file);
 	}
+	
+	fprintf(file, "%u\n", Node_getPlace(this->node));
 }

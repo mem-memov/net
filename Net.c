@@ -62,17 +62,17 @@ struct Node * Net_getNode(struct Net * this, unsigned int place)
 	return this->nodes[place - 1];
 }
 
-void Net_export(struct Net * this)
+void Net_export(struct Net * this, FILE * file)
 {
 	struct Node * node;
 	unsigned int offset = 0;
 	
-	fprintf(stdout, "%u\n", this->offset);
+	fprintf(file, "%u\n", this->offset);
 	
 	while (offset < this->offset) {
 		node = Net_getNode(this, offset + 1);
-		fprintf(stdout, "\n");
-		Node_export(node);
+		fprintf(file, "\n");
+		Node_export(node, file);
 		offset++;
 	}
 }
