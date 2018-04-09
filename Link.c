@@ -27,6 +27,15 @@ void Link_destruct(struct Link * this)
 	free(this);
 }
 
+void Link_count(struct Link * this, unsigned int * count)
+{
+	* count = (* count) + 1;
+	
+	if (NULL != this->previous) {
+		Link_count(this->previous, count);
+	}
+}
+
 char Link_isConnected(struct Link * this, struct Node * node)
 {
 	if (node == this->node) {

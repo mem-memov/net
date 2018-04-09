@@ -17,6 +17,8 @@ unsigned int Node_getPlace(struct Node * this);
 
 void Node_connect(struct Node * this, struct Node * destinationNode);
 
+unsigned int Node_count(struct Node * this);
+
 void Node_export(struct Node * this, FILE * file);
 
 #endif

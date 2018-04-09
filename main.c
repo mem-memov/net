@@ -75,6 +75,18 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
+		if (strcmp("import", command) == 0 || strcmp("<<", command) == 0) {
+
+			printf( "source file path:");
+			scanf("%s", filePath);
+
+			file = fopen(filePath, "r");
+			Net_import(net, file);
+			fclose(file);
+			
+			continue;
+		}
+
 		if (strcmp("show", command) == 0 || strcmp(">", command) == 0) {
 
 			Net_export(net, stdout);

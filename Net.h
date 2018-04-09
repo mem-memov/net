@@ -25,4 +25,6 @@ struct Node * Net_getNode(struct Net * this, unsigned int place);
 
 void Net_export(struct Net * this, FILE * file);
 
+void Net_import(struct Net * this, FILE * file);
+
 #endif

@@ -76,3 +76,40 @@ void Net_export(struct Net * this, FILE * file)
 		offset++;
 	}
 }
+
+void Net_import(struct Net * this, FILE * file)
+{
+	unsigned int total;
+	
+	fscanf(file, "%u\n", &total);
+	
+	fprintf(stdout, "%u\n", total);
+	
+	struct Node * node;
+	
+	do {
+		node = Net_addNode(this);
+	} while(Node_getPlace(node) < total);
+	
+	unsigned int originPlace;
+	unsigned int destinationPlace;
+	struct Node * originNode;
+	struct Node * destinationNode;
+	
+	unsigned int index;
+	
+	unsigned int place;
+	unsigned int count;
+	
+	for (originPlace = 1; originPlace <= total; originPlace++) {
+		originNode = Net_getNode(this, originPlace);
+		fscanf(file, "%u\n", &place);
+		fscanf(file, "%u\n", &count);
+		for (index = 0; index < count; index++) {
+			fscanf(file, "%u\n", &destinationPlace);
+			destinationNode = Net_getNode(this, destinationPlace);
+			Node_connect(originNode, destinationNode);
+		}
+		fscanf(file, "\n");
+	}
+}

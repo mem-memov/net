@@ -16,7 +16,7 @@ struct Link * Link_construct(
 
 void Link_destruct(struct Link * this);
 
-unsigned int Link_getplace(struct Link * this);
+void Link_count(struct Link * this, unsigned int * count);
 
 char Link_isConnected(struct Link * this, struct Node * node);
 

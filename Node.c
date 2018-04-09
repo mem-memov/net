@@ -37,12 +37,23 @@ void Node_connect(struct Node * this, struct Node * destinationNode)
 	}
 }
 
+unsigned int Node_count(struct Node * this)
+{
+	unsigned int count = 0;
+	
+	if (NULL != this->tail) {
+		Link_count(this->tail, &count);
+	}
+	
+	return count;
+}
+
 void Node_export(struct Node * this, FILE * file)
 {
 	fprintf(file, "%u\n", this->place);
+	fprintf(file, "%u\n", Node_count(this));
 	
 	if (NULL != this->tail) {
 		Link_export(this->tail, file);
 	}
 }
-
