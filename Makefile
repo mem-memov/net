@@ -1,22 +1,16 @@
 .DEFAULT_GOAL := net
 
-net: main.o Error.o Link.o Net.o Node.o
-	gcc main.o Error.o Link.o Net.o Node.o -o net
+net: main.o Gap.o Space.o
+	gcc main.o Gap.o Space.o -o net
 
 main.o: main.c
 	gcc -c main.c
 
-Error.o: Error.c Error.h
-	gcc -c Error.c
+Gap.o: Gap.c Gap.h
+	gcc -c Gap.c
 
-Link.o: Link.c Link.h Node.h
-	gcc -c Link.c
-
-Net.o: Net.c Net.h Node.h
-	gcc -c Net.c
-
-Node.o: Node.c Node.h Link.h
-	gcc -c Node.c
+Space.o: Space.c Space.h Gap.h
+	gcc -c Space.c
 	
 clean:
 	rm --force *.o net
