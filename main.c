@@ -32,6 +32,21 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
+		if (strcmp("remove", command) == 0 || strcmp(".", command) == 0) {
+
+			printf("node: ");
+			scanf("%u", &place);
+
+			if ( ! Space_isNode(space, place)) {
+				printf("%u is not a node\n", place);
+				continue;
+			}
+			
+			Space_removeNode(space, place);
+
+			continue;
+		}
+
 		if (strcmp("connect", command) == 0 || strcmp("+", command) == 0) {
 			
 			printf("origin node:");
@@ -55,6 +70,29 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
+		if (strcmp("disconnect", command) == 0 || strcmp("-", command) == 0) {
+			
+			printf("origin node:");
+			scanf("%u", &origin);
+			
+			if ( ! Space_isNode(space, origin)) {
+				printf("%u is not a node\n", origin);
+				continue;
+			}
+
+			printf("destination node:");
+			scanf("%u", &destination);
+			
+			if ( ! Space_isNode(space, destination)) {
+				printf("%u is not a node\n", destination);
+				continue;
+			}
+
+			Space_disconnectNodes(space, origin, destination);
+			
+			continue;
+		}
+
 		if (strcmp("read", command) == 0 || strcmp(":", command) == 0) {
 			
 			printf("node: ");
@@ -74,7 +112,7 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
-		if (strcmp("export", command) == 0 || strcmp(">>", command) == 0) {
+		if (strcmp("export", command) == 0 || strcmp(">", command) == 0) {
 
 			printf( "target file path:");
 			scanf("%s", filePath);
@@ -86,7 +124,7 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
-		if (strcmp("import", command) == 0 || strcmp("<<", command) == 0) {
+		if (strcmp("import", command) == 0 || strcmp("<", command) == 0) {
 
 			printf( "source file path:");
 			scanf("%s", filePath);

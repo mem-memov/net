@@ -46,6 +46,7 @@ unsigned int Space_addNode(struct Space * this)
 	
 	if (NULL != gap) {
 		place = Gap_getPlace(gap);
+		printf("%u\n", place);
 		this->gap = Gap_getNext(gap);
 		Gap_destruct(gap);
 	} else {
@@ -61,42 +62,48 @@ unsigned int Space_addNode(struct Space * this)
 
 void Space_removeNode(struct Space * this, unsigned int place)
 {
-	unsigned int current = 1;
+	unsigned int current;
+	unsigned int next;
 	
-	while (current < this->places[0]) {
+	// remove the node
+	
+	current = place;
+	
+	while (0 != this->places[current + 1]) {
+		this->places[current] = 0;
+		this->places[current + 1] = 0;
 		
-		if (this->places[current] == place) {
-			this->places[current] = 0;
+		if (NULL == this->gap) {
+			this->gap = Gap_construct(current, NULL);
+		} else {
+			this->gap = Gap_construct(current, this->gap);
 		}
 		
-		current++;
+		current = this->places[current + 1];
 	}
+	
+	// remove connections to the node
 	
 	current = 1;
 	
 	while (current < this->places[0]) {
 		
-		if (0 == this->places[this->places[current + 1]]) {
-			this->places[current + 1] = this->places[this->places[current] + 1];
-			this->places[this->places[current] + 1] = 0;
-		}
+		next = this->places[current + 1];
 		
-		current++;
-	}
-	
-	current = 1;
-	
-	while (current < this->places[0]) {
-		
-		if (0 == this->places[current] && 0 == this->places[current + 1]) {
+		if (place == next) {
+			this->places[current + 1] = this->places[next + 1];
+			
+			this->places[next] = 0;
+			this->places[next + 1] = 0;
+
 			if (NULL == this->gap) {
-				this->gap = Gap_construct(current, NULL);
+				this->gap = Gap_construct(next, NULL);
 			} else {
-				this->gap = Gap_construct(current, this->gap);
+				this->gap = Gap_construct(next, this->gap);
 			}
 		}
 		
-		current++;
+		current += 2;
 	}
 }
 
@@ -204,5 +211,20 @@ void Space_import(struct Space * this, FILE * file)
 
 	if (bodyItems != this->places[0] - 1) {
 		exit(1);
+	}
+	
+	unsigned int current = 1;
+	
+	while (current < this->places[0]) {
+		
+		if (0 == this->places[current] && 0 == this->places[current + 1]) {
+			if (NULL == this->gap) {
+				this->gap = Gap_construct(current, NULL);
+			} else {
+				this->gap = Gap_construct(current, this->gap);
+			}
+		}
+		
+		current += 2;
 	}
 }
