@@ -12,7 +12,7 @@ struct Space * Space_construct(unsigned int size)
 	}
 	
 	this->size = size;
-	this->places = malloc(sizeof(unsigned int) * size);
+	this->places = (unsigned int *)malloc(sizeof(unsigned int) * size);
 	this->places[0] = 1;
 	this->gap = NULL;
 
@@ -181,10 +181,18 @@ char Space_isNode(struct Space * this, unsigned int place)
 
 void Space_export(struct Space * this, FILE * file)
 {
-	size_t result = fwrite(this->places, sizeof(unsigned int), this->places[0], file);
+	unsigned int index;
+	
+	for (index = 0; index < this->places[0]; index++) {
+		size_t result = fwrite(&this->places[index], sizeof(unsigned int), 1, file);
+	}
 }
 
 void Space_import(struct Space * this, FILE * file)
 {
-	size_t result = fread(this->places, sizeof(unsigned int), this->places[0], file);
+	unsigned int index;
+	
+	for (index = 0; index < this->places[0]; index++) {
+		size_t result = fread(&this->places[index], sizeof(unsigned int), 1, file);
+	}
 }
