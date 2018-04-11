@@ -186,5 +186,7 @@ void Space_export(struct Space * this, FILE * file)
 
 void Space_import(struct Space * this, FILE * file)
 {
-	size_t result = fread(this->places, sizeof(unsigned int), this->places[0], file);
+	size_t result = fread(this->places, sizeof(unsigned int), 1, file);
+	
+	size_t result_1 = fread(this->places + 1, sizeof(unsigned int), this->places[0], file);
 }
