@@ -181,12 +181,28 @@ char Space_isNode(struct Space * this, unsigned int place)
 
 void Space_export(struct Space * this, FILE * file)
 {
-	size_t result = fwrite(this->places, sizeof(unsigned int), this->places[0], file);
+	size_t totalItems = fwrite(this->places, sizeof(unsigned int), this->places[0], file);
+	
+	if (totalItems != this->places[0]) {
+		exit(1);
+	}
 }
 
 void Space_import(struct Space * this, FILE * file)
 {
-	size_t result = fread(this->places, sizeof(unsigned int), 1, file);
+	size_t headItems = fread(this->places, sizeof(unsigned int), 1, file);
 	
-	size_t result_1 = fread(this->places + 1, sizeof(unsigned int), this->places[0], file);
+	if (headItems != 1) {
+		exit(1);
+	}
+	
+	if (this->size < this->places[0]) {
+		exit(1);
+	}
+	
+	size_t bodyItems = fread(this->places + 1, sizeof(unsigned int), this->places[0] - 1, file);
+
+	if (bodyItems != this->places[0] - 1) {
+		exit(1);
+	}
 }
