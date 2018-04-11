@@ -1,10 +1,11 @@
 #ifndef SPACE_H
 #define SPACE_H
 
+#include <stdio.h>
+
 struct Space {
 	unsigned int size;
 	unsigned int * places;
-	unsigned int next;
 	struct Gap * gap;
 };
 
@@ -22,8 +23,12 @@ void Space_connectNodes(struct Space * this, unsigned int origin, unsigned int d
 
 void Space_disconnectNodes(struct Space * this, unsigned int origin, unsigned int destination);
 
-unsigned int Space_getNode(struct Space * this, unsigned int * place);
+unsigned int Space_getNode(struct Space * this, unsigned int next, unsigned int * place);
 
 char Space_isNode(struct Space * this, unsigned int place);
+
+void Space_export(struct Space * this, FILE * file);
+
+void Space_import(struct Space * this, FILE * file);
 
 #endif

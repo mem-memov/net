@@ -13,11 +13,11 @@ int main(int argc, char** argv) {
 	unsigned int origin;
 	unsigned int destination;
 	unsigned int next;
-//	char filePath[300];
-//	FILE * file;
+	char filePath[300];
+	FILE * file;
 
 	while (1) {
-		printf( "Enter a command:");
+		printf("Enter a command: ");
 		scanf("%s", command);
 		
 		if (strcmp("create", command) == 0 || strcmp("*", command) == 0) {
@@ -34,11 +34,21 @@ int main(int argc, char** argv) {
 
 		if (strcmp("connect", command) == 0 || strcmp("+", command) == 0) {
 			
-			printf( "origin node:");
+			printf("origin node:");
 			scanf("%u", &origin);
+			
+			if ( ! Space_isNode(space, origin)) {
+				printf("%u is not a node\n", origin);
+				continue;
+			}
 
-			printf( "destination node:");
+			printf("destination node:");
 			scanf("%u", &destination);
+			
+			if ( ! Space_isNode(space, destination)) {
+				printf("%u is not a node\n", destination);
+				continue;
+			}
 
 			Space_connectNodes(space, origin, destination);
 			
@@ -47,47 +57,46 @@ int main(int argc, char** argv) {
 
 		if (strcmp("read", command) == 0 || strcmp(":", command) == 0) {
 			
-			printf( "node:");
+			printf("node: ");
 			scanf("%u", &place);
+
+			if ( ! Space_isNode(space, place)) {
+				printf("%u is not a node\n", place);
+				continue;
+			}
 			
-			do {
-				next = Space_getNode(space, &place);
+			next = place;
+			while (0 != next) {
+				next = Space_getNode(space, next, &place);
 				printf("%u\n", place);
-			} while (0 != next);
+			} 
 			
 			continue;
 		}
 
-//		if (strcmp("export", command) == 0 || strcmp(">>", command) == 0) {
-//
-//			printf( "target file path:");
-//			scanf("%s", filePath);
-//
-//			file = fopen(filePath, "w+");
-//			Net_export(net, file);
-//			fclose(file);
-//			
-//			continue;
-//		}
-//
-//		if (strcmp("import", command) == 0 || strcmp("<<", command) == 0) {
-//
-//			printf( "source file path:");
-//			scanf("%s", filePath);
-//
-//			file = fopen(filePath, "r");
-//			Net_import(net, file);
-//			fclose(file);
-//			
-//			continue;
-//		}
-//
-//		if (strcmp("show", command) == 0 || strcmp(">", command) == 0) {
-//
-//			Net_export(net, stdout);
-//			
-//			continue;
-//		}
+		if (strcmp("export", command) == 0 || strcmp(">>", command) == 0) {
+
+			printf( "target file path:");
+			scanf("%s", filePath);
+
+			file = fopen(filePath, "wb");
+			Space_export(space, file);
+			fclose(file);
+			
+			continue;
+		}
+
+		if (strcmp("import", command) == 0 || strcmp("<<", command) == 0) {
+
+			printf( "source file path:");
+			scanf("%s", filePath);
+
+			file = fopen(filePath, "rb");
+			Space_import(space, file);
+			fclose(file);
+			
+			continue;
+		}
 
 		if (strcmp("exit", command) == 0 || strcmp("q", command) == 0) {
 			break;
