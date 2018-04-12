@@ -1,7 +1,7 @@
 #include "Gap.h"
 #include <stdlib.h>
 
-struct Gap * Gap_construct(unsigned int place, struct Gap * next)
+struct Gap * Gap_construct(size_t place, struct Gap * next)
 {
 	struct Gap * this = malloc(sizeof(struct Gap));
 	
@@ -20,9 +20,9 @@ void Gap_destruct(struct Gap * this)
 	free(this);
 }
 
-unsigned int Gap_getPlace(struct Gap * this)
+size_t Gap_getPlace(struct Gap * this)
 {
-	unsigned int place = this->place;
+	size_t place = this->place;
 	this->place = 0;
 	
 	return place;
@@ -31,7 +31,9 @@ unsigned int Gap_getPlace(struct Gap * this)
 struct Gap * Gap_getNext(struct Gap * this)
 {
 	struct Gap * next = this->next;
+
 	this->next = NULL;
+	Gap_destruct(this);
 	
 	return next;
 }

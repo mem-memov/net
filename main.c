@@ -9,10 +9,10 @@ int main(int argc, char** argv) {
 	struct Space * space = Space_construct(100);
 
 	char command[100];
-	unsigned int place;
-	unsigned int origin;
-	unsigned int destination;
-	unsigned int next;
+	size_t place;
+	size_t origin;
+	size_t destination;
+	size_t next;
 	char filePath[300];
 	FILE * file;
 
