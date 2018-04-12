@@ -4,17 +4,17 @@
 struct Link {
 	size_t * places;
         
-        size_t place;
+	size_t place;
 	
 	// origin chain
-	size_t * inNode;
-	size_t * outPrevious;
-	size_t * outNext;
+	size_t * incomingNode;
+	size_t * outgoingPrevious;
+	size_t * outgoingNext;
 	
 	// destination chain
-	size_t * outNode;
-	size_t * inPrevious;
-	size_t * inNext;
+	size_t * outgoingNode;
+	size_t * incomingPrevious;
+	size_t * incomingNext;
 };
 
 struct Link * Link_construct(size_t * places);
@@ -25,7 +25,11 @@ void Link_bind(struct Link * this, size_t place);
 
 size_t Link_getPlace(struct Node * this);
 
-void Link_create(struct Link * this, struct Node * originNode, struct Node * destinationNode);
+void Link_create(struct Link * this, size_t place, size_t origin, size_t destination);
+
+void Link_joinOutgoingChain(struct Link * this, size_t previous, size_t next);
+
+void Link_joinIncomingChain(struct Link * this, size_t previous, size_t next);
 
 void Link_read(struct Link * this, size_t place);
 

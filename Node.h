@@ -4,10 +4,10 @@
 struct Node {
 	size_t * place;
 	size_t * data;
-	size_t * outCount;
-	size_t * inCount;
-	size_t * outLink;
-	size_t * inLink;
+	size_t * outgoingLinkCount;
+	size_t * incomingLinkCount;
+	size_t * outgoingLink;
+	size_t * incomingLink;
         
 	size_t * places;
 };
@@ -24,8 +24,8 @@ size_t Node_getPlace(struct Node * this);
 
 char Node_isSame(struct Node * this, struct Node * that);
 
-void Node_addInLink(struct Node * this, struct Link * link);
+void Node_addIncomingLink(struct Node * this, struct Link * link);
 
-void Node_addOutLink(struct Node * this, struct Link * link);
+void Node_addOutgoingLink(struct Node * this, struct Link * link);
 
 #endif

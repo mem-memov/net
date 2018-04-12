@@ -20,12 +20,12 @@ void Link_bind(struct Link * this, size_t place)
 {
 	this->place = place;
 	
-    this->inNode = this->places[place] + 0;
-    this->outPreviou = this->places[place] + 1;
-    this->outNext = this->places[place] + 2;
-    this->outNode = this->places[place] + 3;
-    this->inPrevious = this->places[place] + 4;
-    this->inNext = this->places[place] + 5;
+    this->incomingNode = this->places[place] + 0;
+    this->outgoingPrevious = this->places[place] + 1;
+    this->outgoingNext = this->places[place] + 2;
+    this->outgoingNode = this->places[place] + 3;
+    this->incomingPrevious = this->places[place] + 4;
+    this->incomingNext = this->places[place] + 5;
 }
 
 size_t Link_getPlace(struct Node * this)
@@ -33,19 +33,33 @@ size_t Link_getPlace(struct Node * this)
 	return this->place;
 }
 
-void Link_create(struct Link * this, size_t place, struct Node * originNode, struct Node * destinationNode)
+void Link_create(struct Link * this, size_t place, size_t origin, size_t destination)
 {
 	Link_bind(struct Link * this, size_t place);
 	
-	(*this->inNode) = Node_getPlace(destinationNode);
-	(*this->outPrevious) = 0;
-	(*this->outNext) = 0;
-	(*this->outNode) = Node_getPlace(originNode);
-	(*this->inPrevious) = 0;	
-	(*this->inNext) = 0;
+	(*this->incomingNode) = destination;
+	(*this->outgoingPrevious) = 0;
+	(*this->outgoingNext) = 0;
+	(*this->outgoingNode) = origin;
+	(*this->incomingPrevious) = 0;	
+	(*this->incomingNext) = 0;
+}
+
+void Link_joinOutgoingChain(struct Link * this, size_t previous, size_t next)
+{
+	(*this->outgoingPrevious) = previous;
+	(*this->outgoingNext) = next;
+}
+
+void Link_joinIncomingChain(struct Link * this, size_t previous, size_t next)
+{
+	(*this->incomingPrevious) = previous;
+	(*this->incomingNext) = next;
+}
+
+void Link_append(struct Link * this, size_t previous)
+{
 	
-	Node_addOutLink(originNode, this);
-	Node_addInLink(originNode, this);
 }
 
 void Link_read(struct Link * this, size_t place)

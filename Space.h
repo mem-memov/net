@@ -11,6 +11,8 @@ struct Space {
 	size_t * places;
 	struct Net * net;
 	struct Gap * gap;
+	struct Node * node;
+	struct Link * link;
 };
 
 struct Space * Space_construct(size_t size);
