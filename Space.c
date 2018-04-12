@@ -18,10 +18,10 @@ struct Space * Space_construct(size_t spaceSize)
 	this->entrySize = 6;
 	this->placeSize = sizeof(size_t);
 	this->places = (size_t *)malloc(this->spaceSize * this->entrySize * this->placeSize);
-	this->net = Net_construct(this->places, this->spaceSize, this->entrySize, this->placeSize);
+	this->net = Net_construct(this->places, this->spaceSize, this->entrySize);
 	this->gap = NULL;
 	
-	Net_create(this->net);
+	Net_create(this->net, this->placeSize);
 
 	return this;
 }
@@ -106,20 +106,18 @@ void Space_removeNode(struct Space * this, size_t place)
 
 void Space_connectNodes(struct Space * this, size_t origin, size_t destination)
 {
+	if (origin == destination) {
+		exit(1);
+	}
+	
 	struct Node * originNode = Node_construct(this->places);
 	Node_read(originNode, origin);
 	
 	struct Node * destinationNode = Node_construct(this->places);
 	Node_read(destinationNode, destination);
 	
-	if (Node_isSame(originNode, destinationNode)) {
-		exit(1);
-	}
-	
 	struct Link * link = Link_construct(this->places);
-	
 	size_t place = Net_createEntry(this->net, this->gap);
-	
 	Link_create(link, place, originNode, destinationNode);
 	
 	

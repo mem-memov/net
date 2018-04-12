@@ -14,11 +14,11 @@ struct Net {
 	size_t linkCount;
 };
 
-struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize, size_t placeSize);
+struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize);
 
 void Net_destruct(struct Net * this);
 
-void Net_create(struct Net * this);
+void Net_create(struct Net * this, size_t placeSize);
 
 char Net_hasSpaceForEntry(struct Net * this);
 

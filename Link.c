@@ -16,35 +16,39 @@ void Link_destruct(struct Link * this)
 	free(this);
 }
 
+void Link_bind(struct Link * this, size_t place)
+{
+	this->place = place;
+	
+    this->inNode = this->places[place] + 0;
+    this->outPreviou = this->places[place] + 1;
+    this->outNext = this->places[place] + 2;
+    this->outNode = this->places[place] + 3;
+    this->inPrevious = this->places[place] + 4;
+    this->inNext = this->places[place] + 5;
+}
+
+size_t Link_getPlace(struct Node * this)
+{
+	return this->place;
+}
+
 void Link_create(struct Link * this, size_t place, struct Node * originNode, struct Node * destinationNode)
 {
-	this->inNode = Node_getPlace(destinationNode);
-	this->places[place][0] = this->inNode;
+	Link_bind(struct Link * this, size_t place);
 	
-	this->outPrevious = 0;
-	this->places[place][1] = this->outPrevious;
+	(*this->inNode) = Node_getPlace(destinationNode);
+	(*this->outPrevious) = 0;
+	(*this->outNext) = 0;
+	(*this->outNode) = Node_getPlace(originNode);
+	(*this->inPrevious) = 0;	
+	(*this->inNext) = 0;
 	
-	this->outNext = 0;
-	this->places[place][2] = this->outNext;
-	
-			
-	this->outNode = Node_getPlace(originNode);
-	this->places[place][3] = this->outNode;
-	
-	this->inPrevious = 0;
-	this->places[place][4] = this->inPrevious;
-	
-	this->inNext = 0;
-	this->places[place][5] = this->inNext;
+	Node_addOutLink(originNode, this);
+	Node_addInLink(originNode, this);
 }
 
 void Link_read(struct Link * this, size_t place)
 {
-	this->inNode = this->places[place][0];
-	this->outPrevious = this->places[place][1];
-	this->outNext = this->places[place][2];	
-			
-	this->outNode = this->places[place][3];
-	this->inPrevious = this->places[place][4];
-	this->inNext = this->places[place][5];
+	Link_bind(struct Link * this, size_t place);
 }
