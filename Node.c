@@ -41,6 +41,11 @@ void Node_create(struct Node * this, size_t place)
 void Node_read(struct Node * this, size_t place)
 {
 	Node_bind(this, place);
+	
+	if ( ! Node_isNode(this) )
+	{
+		exit(1);
+	}
 }
 
 size_t Node_getPlace(struct Node * this)
@@ -50,7 +55,8 @@ size_t Node_getPlace(struct Node * this)
 
 char Node_isNode(struct Node * this)
 {
-	if (this->places[(*this->place)] == (*this->place)) {
+	if ( this->places[(*this->place)] == (*this->place) )
+	{
 		return 1;
 	}
 	
@@ -59,7 +65,8 @@ char Node_isNode(struct Node * this)
 
 char Node_isSame(struct Node * this, struct Node * that)
 {
-	if (* this->place == Node_getPlace(that)) {
+	if ( (*this->place) == Node_getPlace(that) )
+	{
 		return 1;
 	}
 	
@@ -68,7 +75,8 @@ char Node_isSame(struct Node * this, struct Node * that)
 
 char Node_hasInLink(struct Node * this)
 {
-	if (* this->inLink != 0) {
+	if ( (*this->inLink) != 0 )
+	{
 		return 1;
 	}
 	
@@ -77,9 +85,11 @@ char Node_hasInLink(struct Node * this)
 
 void Node_addInLink(struct Node * this, struct Link * link)
 {
-	if ( ! Node_hasInLink(this)) {
-		* this->inLink = Link_getPlace(link);
-		* this->inLinkCount = 1;
+	if ( ! Node_hasInLink(this))
+	{
+		(*this->inLink) = Link_getPlace(link);
+		(*this->inLinkCount) = 1;
+		
 	} else {
 		
 	}
@@ -89,10 +99,11 @@ void Node_addInLink(struct Node * this, struct Link * link)
 
 void Node_setOutLink(struct Node * this, struct Link * link)
 {
-	if (Node_hasOutLink(this)) {
+	if (Node_hasOutLink(this))
+	{
 		exit(1);
 	}
 	
-	* this->outLink = Link_getPlace(link);
-	* this->outLinkCount = 1;
+	(*this->outLink) = Link_getPlace(link);
+	(*this->outLinkCount) = 1;
 }

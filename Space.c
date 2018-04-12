@@ -112,42 +112,13 @@ void Space_connectNodes(struct Space * this, size_t origin, size_t destination)
 	
 	struct Node * originNode = Node_construct(this->places);
 	Node_read(originNode, origin);
-	
+
 	struct Node * destinationNode = Node_construct(this->places);
 	Node_read(destinationNode, destination);
-	
+
 	struct Link * link = Link_construct(this->places);
 	size_t place = Net_createEntry(this->net, this->gap);
 	Link_create(link, place, originNode, destinationNode);
-	
-	
-	
-	
-	if (! Space_isNode(this, origin) || ! Space_isNode(this, destination)) {
-		exit(1);
-	}
-	
-	size_t last = origin;
-	size_t place;
-
-	while (0 != this->places[last + 1]) {
-		last = this->places[last + 1];
-	}
-
-	struct Gap * gap = this->gap;
-	if (NULL != gap) {
-		this->places[last + 1] = Gap_getPlace(gap);
-		this->gap = Gap_getNext(gap);
-		Gap_destruct(gap);
-	} else {
-		this->places[last + 1] = this->places[0];
-		this->places[0] += 2;
-	}
-
-	place = this->places[last + 1];
-	
-	this->places[place] = destination;
-	this->places[place + 1] = 0;
 }
 
 void Space_disconnectNodes(struct Space * this, size_t origin, size_t destination)
