@@ -96,6 +96,9 @@ char Node_hasOutgoingLink(struct Node * this)
 
 void Node_addIncomingLink(struct Node * this, struct Link * link)
 {
+	(*this->incomingLink) = Link_getPlace(link);
+	(*this->incomingLinkCount) += 1;
+	
 	if ( ! Node_hasIncomingLink(this))
 	{
 		Link_joinIncomingChain(link, (*this->place), 0);
@@ -103,10 +106,9 @@ void Node_addIncomingLink(struct Node * this, struct Link * link)
 	} else {
 		
 		Link_joinIncomingChain(link, (*this->place), (*this->incomingLink));
+		Link_read(this->link, (*this->incomingLink));
+		Link_append(this->link, Link_getPlace(link));
 	}
-	
-	(*this->incomingLink) = Link_getPlace(link);
-	(*this->incomingLinkCount) += 1;
 }
 
 void Node_addOutgoingLink(struct Node * this, struct Link * link)
