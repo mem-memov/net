@@ -1,6 +1,7 @@
 #ifndef SPACE_H
 #define SPACE_H
 
+#include <stdlib.h>
 #include <stdio.h>
 #include "Net.h"
 

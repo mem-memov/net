@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 				printf("No space for new nodes.\n");
 			} else {
 				place = Space_addNode(space);
-				printf("Node created: %u\n", place);
+				printf("Node created: %zu\n", place);
 			}
 
 			continue;
@@ -35,10 +35,10 @@ int main(int argc, char** argv) {
 		if (strcmp("remove", command) == 0 || strcmp(".", command) == 0) {
 
 			printf("node: ");
-			scanf("%u", &place);
+			scanf("%zu", &place);
 
 			if ( ! Space_isNode(space, place)) {
-				printf("%u is not a node\n", place);
+				printf("%zu is not a node\n", place);
 				continue;
 			}
 			
@@ -50,18 +50,18 @@ int main(int argc, char** argv) {
 		if (strcmp("connect", command) == 0 || strcmp("+", command) == 0) {
 			
 			printf("origin node:");
-			scanf("%u", &origin);
+			scanf("%zu", &origin);
 			
 			if ( ! Space_isNode(space, origin)) {
-				printf("%u is not a node\n", origin);
+				printf("%zu is not a node\n", origin);
 				continue;
 			}
 
 			printf("destination node:");
-			scanf("%u", &destination);
+			scanf("%zu", &destination);
 			
 			if ( ! Space_isNode(space, destination)) {
-				printf("%u is not a node\n", destination);
+				printf("%zu is not a node\n", destination);
 				continue;
 			}
 
@@ -73,18 +73,18 @@ int main(int argc, char** argv) {
 		if (strcmp("disconnect", command) == 0 || strcmp("-", command) == 0) {
 			
 			printf("origin node:");
-			scanf("%u", &origin);
+			scanf("%zu", &origin);
 			
 			if ( ! Space_isNode(space, origin)) {
-				printf("%u is not a node\n", origin);
+				printf("%zu is not a node\n", origin);
 				continue;
 			}
 
 			printf("destination node:");
-			scanf("%u", &destination);
+			scanf("%zu", &destination);
 			
 			if ( ! Space_isNode(space, destination)) {
-				printf("%u is not a node\n", destination);
+				printf("%zu is not a node\n", destination);
 				continue;
 			}
 
@@ -96,17 +96,17 @@ int main(int argc, char** argv) {
 		if (strcmp("read", command) == 0 || strcmp(":", command) == 0) {
 			
 			printf("node: ");
-			scanf("%u", &place);
+			scanf("%zu", &place);
 
 			if ( ! Space_isNode(space, place)) {
-				printf("%u is not a node\n", place);
+				printf("%zu is not a node\n", place);
 				continue;
 			}
 			
 			next = place;
 			while (0 != next) {
 				next = Space_getNode(space, next, &place);
-				printf("%u\n", place);
+				printf("%zu\n", place);
 			} 
 			
 			continue;

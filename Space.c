@@ -6,6 +6,8 @@
 #include "Net.h"
 #include "Node.h"
 
+#include <stdio.h>
+
 struct Space * Space_construct(size_t spaceSize)
 {
 	struct Space * this = malloc(sizeof(struct Space));
@@ -57,7 +59,7 @@ char Space_hasFreePlace(struct Space * this)
 size_t Space_addNode(struct Space * this)
 {
 	size_t place = Net_createEntry(this->net, this->gap);
-
+	
 	Node_create(this->node, place);
 
 	return place;
@@ -161,11 +163,9 @@ size_t Space_getNode(struct Space * this, size_t next, size_t * place)
 
 char Space_isNode(struct Space * this, size_t place)
 {
-	if (this->places[place] == place && place > 0 && place < this->places[0]) {
-		return 1;
-	}
+	Node_read(this->node, place);
 
-	return 0;
+	return Node_isNode(this->node);
 }
 
 void Space_export(struct Space * this, FILE * file)
@@ -185,7 +185,7 @@ void Space_import(struct Space * this, FILE * file)
 		exit(1);
 	}
 	
-	if (this->size < this->places[0]) {
+	if (this->spaceSize < this->places[0]) {
 		exit(1);
 	}
 	

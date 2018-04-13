@@ -1,6 +1,8 @@
 #ifndef GAP_H
 #define GAP_H
 
+#include <stdlib.h>
+
 struct Gap {
 	size_t place;
 	struct Gap * next;

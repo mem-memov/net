@@ -19,15 +19,15 @@ void Link_bind(struct Link * this, size_t place)
 {
 	this->place = place;
 	
-    this->incomingNode = this->places[place] + 0;
-    this->outgoingPrevious = this->places[place] + 1;
-    this->outgoingNext = this->places[place] + 2;
-    this->outgoingNode = this->places[place] + 3;
-    this->incomingPrevious = this->places[place] + 4;
-    this->incomingNext = this->places[place] + 5;
+    this->incomingNode = this->places + place + 0;
+    this->outgoingPrevious = this->places + place + 1;
+    this->outgoingNext = this->places + place + 2;
+    this->outgoingNode = this->places + place + 3;
+    this->incomingPrevious = this->places + place + 4;
+    this->incomingNext = this->places + place + 5;
 }
 
-size_t Link_getPlace(struct Node * this)
+size_t Link_getPlace(struct Link * this)
 {
 	return this->place;
 }
@@ -38,7 +38,7 @@ void Link_create(struct Link * this, size_t place, size_t origin, size_t destina
 		exit(1);
 	}
 	
-	Link_bind(struct Link * this, size_t place);
+	Link_bind(this, place);
 	
 	(*this->incomingNode) = destination;
 	(*this->outgoingPrevious) = 0;
@@ -72,5 +72,5 @@ void Link_moveBackwardsInIncomingChain(struct Link * this, size_t previous)
 
 void Link_read(struct Link * this, size_t place)
 {
-	Link_bind(struct Link * this, size_t place);
+	Link_bind(this, place);
 }

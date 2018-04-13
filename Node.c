@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "Link.h"
 
+#include <stdio.h>
+
 struct Node * Node_construct(size_t * places)
 {
 	struct Node * this = malloc(sizeof(struct Node));
@@ -9,7 +11,7 @@ struct Node * Node_construct(size_t * places)
 	this->places = places;
 	
 	// pool
-	this->link = Link_create(places);
+	this->link = Link_construct(places);
 
 	return this;
 }
@@ -21,12 +23,12 @@ void Node_destruct(struct Node * this)
 
 void Node_bind(struct Node * this, size_t place)
 {
-	this->place = this->places[place] + 0;
-	this->data = this->places[place] + 1;
-	this->outgoingLinkCount = this->places[place] + 2;
-	this->incomingLinkCount = this->places[place] + 3;
-	this->outgoingLink = this->places[place] + 4;
-	this->incomingLink = this->places[place] + 5;	
+	this->place = this->places + place + 0;
+	this->data = this->places + place + 1;
+	this->outgoingLinkCount = this->places + place + 2;
+	this->incomingLinkCount = this->places + place + 3;
+	this->outgoingLink = this->places + place + 4;
+	this->incomingLink = this->places + place + 5;	
 }
 
 void Node_create(struct Node * this, size_t place)

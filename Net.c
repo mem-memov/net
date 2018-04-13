@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "Gap.h"
 
+#include <stdio.h>
+
 struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize)
 {
 	struct Net * this = malloc(sizeof(struct Net));
@@ -18,7 +20,7 @@ void Net_destruct(struct Net * this)
 	free(this);
 }
 
-viod Net_bind(struct Net * this)
+void Net_bind(struct Net * this)
 {
 	this->one = this->places + 0;
 	this->data = this->places + 1;
@@ -35,14 +37,14 @@ void Net_create(struct Net * this, size_t placeSize)
 	(*this->one) = 1;
 	(*this->data) = 0;
 	(*this->placeSize) = placeSize;
-	(*this->nextPlace) = 1;
+	(*this->nextPlace) = this->entrySize;
 	(*this->nodeCount) = 0;
 	(*this->linkCount) = 0;
 }
 
 char Net_hasSpaceForEntry(struct Net * this)
 {
-	if ( (*this->nextPlace) < (*this->spaceSize) ) {
+	if ( (*this->nextPlace) < this->spaceSize ) {
 		return 1;
 	}
 	
@@ -61,10 +63,10 @@ size_t Net_createEntry(struct Net * this, struct Gap * gap)
 		place = Gap_getPlace(gap);
 		gap = Gap_getNext(gap);
 	} else {
-		place = (*this->nextPlace) * (*this->entrySize);
+		place = (*this->nextPlace);
 	}
-	
-	(*this->nextPlace) += (*this->entrySize);
+
+	(*this->nextPlace) += this->entrySize;
 	
 	return place;
 }

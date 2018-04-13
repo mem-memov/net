@@ -1,6 +1,8 @@
 #ifndef LINK_H
 #define LINK_H
 
+#include <stdlib.h>
+
 struct Link {
 	size_t * places;
         
@@ -30,6 +32,10 @@ void Link_create(struct Link * this, size_t place, size_t origin, size_t destina
 void Link_joinOutgoingChain(struct Link * this, size_t previous, size_t next);
 
 void Link_joinIncomingChain(struct Link * this, size_t previous, size_t next);
+
+void Link_moveBackwardsInOutgoingChain(struct Link * this, size_t previous);
+
+void Link_moveBackwardsInIncomingChain(struct Link * this, size_t previous);
 
 void Link_read(struct Link * this, size_t place);
 

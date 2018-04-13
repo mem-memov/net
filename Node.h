@@ -1,6 +1,8 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <stdlib.h>
+
 struct Node {
 	size_t * place;
 	size_t * data;
@@ -23,6 +25,8 @@ void Node_create(struct Node * this, size_t place);
 void Node_read(struct Node * this, size_t place);
 
 size_t Node_getPlace(struct Node * this);
+
+char Node_isNode(struct Node * this);
 
 char Node_isSame(struct Node * this, struct Node * that);
 
