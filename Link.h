@@ -23,7 +23,7 @@ void Link_destruct(struct Link * this);
 
 void Link_bind(struct Link * this, size_t place);
 
-size_t Link_getPlace(struct Node * this);
+size_t Link_getPlace(struct Link * this);
 
 void Link_create(struct Link * this, size_t place, size_t origin, size_t destination);
 

@@ -12,6 +12,8 @@ struct Space {
 	struct Net * net;
 	struct Gap * gap;
 	struct Node * node;
+	struct Node * originNode;
+	struct Node * destinationNode;
 	struct Link * link;
 };
 

@@ -1,5 +1,6 @@
 #include "Net.h"
 #include <stdlib.h>
+#include "Gap.h"
 
 struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize)
 {

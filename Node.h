@@ -10,6 +10,8 @@ struct Node {
 	size_t * incomingLink;
         
 	size_t * places;
+	
+	struct Link * link;
 };
 
 struct Node * Node_construct(size_t * places);

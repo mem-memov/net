@@ -23,6 +23,8 @@ struct Space * Space_construct(size_t spaceSize)
 	
 	// pool
 	this->node = Node_construct(this->places);
+	this->originNode = Node_construct(this->places);
+	this->destinationNode = Node_construct(this->places);
 	this->link = Link_construct(this->places);
 	
 	Net_create(this->net, this->placeSize);
@@ -110,32 +112,14 @@ void Space_removeNode(struct Space * this, size_t place)
 
 void Space_connectNodes(struct Space * this, size_t origin, size_t destination)
 {
-	if (origin == destination) {
-		exit(1);
-	}
-	
-	Node_read(this->node, origin);
-	
-	if ( ! Node_isNode(this->node))
-	{
-		exit(1);
-	}
-	
-	Node_read(this->node, destination);
-	
-	if ( ! Node_isNode(this->node))
-	{
-		exit(1);
-	}
-	
+	Node_read(this->originNode, origin);
+	Node_read(this->destinationNode, destination);
+
 	size_t link = Net_createEntry(this->net, this->gap);
 	Link_create(this->link, link, origin, destination);
 
-	Node_read(this->node, origin);
-	Node_addOutgoingLink(this->node, this->link);
-
-	Node_read(this->node, destination);
-	Node_addIncomingLink(this->node, this->link);
+	Node_addOutgoingLink(this->originNode, this->link);
+	Node_addIncomingLink(this->destinationNode, this->link);
 }
 
 void Space_disconnectNodes(struct Space * this, size_t origin, size_t destination)

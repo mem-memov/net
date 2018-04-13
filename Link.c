@@ -1,6 +1,5 @@
 #include "Link.h"
 #include <stdlib.h>
-#include "Node.h"
 
 struct Link * Link_construct(size_t * places)
 {
@@ -35,6 +34,10 @@ size_t Link_getPlace(struct Node * this)
 
 void Link_create(struct Link * this, size_t place, size_t origin, size_t destination)
 {
+	if (origin == destination) {
+		exit(1);
+	}
+	
 	Link_bind(struct Link * this, size_t place);
 	
 	(*this->incomingNode) = destination;
@@ -57,9 +60,14 @@ void Link_joinIncomingChain(struct Link * this, size_t previous, size_t next)
 	(*this->incomingNext) = next;
 }
 
-void Link_append(struct Link * this, size_t previous)
+void Link_moveBackwardsInOutgoingChain(struct Link * this, size_t previous)
 {
-	
+	(*this->outgoingPrevious) = previous;
+}
+
+void Link_moveBackwardsInIncomingChain(struct Link * this, size_t previous)
+{
+	(*this->incomingPrevious) = previous;
 }
 
 void Link_read(struct Link * this, size_t place)

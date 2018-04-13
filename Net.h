@@ -1,6 +1,8 @@
 #ifndef NET_H
 #define NET_H
 
+#include "Gap.h"
+
 struct Net {
 	size_t * places;
 	size_t spaceSize;

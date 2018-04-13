@@ -7,6 +7,9 @@ struct Node * Node_construct(size_t * places)
 	struct Node * this = malloc(sizeof(struct Node));
 
 	this->places = places;
+	
+	// pool
+	this->link = Link_create(places);
 
 	return this;
 }
@@ -96,9 +99,6 @@ char Node_hasOutgoingLink(struct Node * this)
 
 void Node_addIncomingLink(struct Node * this, struct Link * link)
 {
-	(*this->incomingLink) = Link_getPlace(link);
-	(*this->incomingLinkCount) += 1;
-	
 	if ( ! Node_hasIncomingLink(this))
 	{
 		Link_joinIncomingChain(link, (*this->place), 0);
@@ -107,17 +107,26 @@ void Node_addIncomingLink(struct Node * this, struct Link * link)
 		
 		Link_joinIncomingChain(link, (*this->place), (*this->incomingLink));
 		Link_read(this->link, (*this->incomingLink));
-		Link_append(this->link, Link_getPlace(link));
+		Link_moveBackwardsInIncomingChain(this->link, Link_getPlace(link));
 	}
+	
+	(*this->incomingLink) = Link_getPlace(link);
+	(*this->incomingLinkCount) += 1;
 }
 
 void Node_addOutgoingLink(struct Node * this, struct Link * link)
 {
-	if (Node_hasOutgoingLink(this))
+	if ( ! Node_hasOutgoingLink(this))
 	{
-		exit(1);
+		Link_joinOutgoingChain(link, (*this->place), 0);
+		
+	} else {
+		
+		Link_joinOutgoingChain(link, (*this->place), (*this->outgoingLink));
+		Link_read(this->link, (*this->outgoingLink));
+		Link_moveBackwardsInOutgoingChain(this->link, Link_getPlace(link));
 	}
 	
 	(*this->outgoingLink) = Link_getPlace(link);
-	(*this->outgoingLinkCount) = 1;
+	(*this->outgoingLinkCount) += 1;
 }
