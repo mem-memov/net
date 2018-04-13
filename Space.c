@@ -129,28 +129,38 @@ void Space_disconnectNodes(struct Space * this, size_t origin, size_t destinatio
 	Node_read(this->originNode, origin);
 	Node_read(this->destinationNode, destination);
 	
-	size_t current = origin;
-	size_t next = this->places[origin + 1];
-
-	while (this->places[next] != destination) {
-		
-		current = next;
-		next = this->places[current + 1];
-		
-		if (next >= this->places[0]) {
-			exit(1);
-		}
+	size_t link = Node_findOutgoingLink(this->originNode, destination);
+	
+	if (0 == link) {
+		return;
 	}
 	
-	this->places[current + 1] = this->places[next + 1];
-	this->places[next] = 0;
-	this->places[next + 1] = 0;
+	Link_read(this->link, link);
+	Link_delete(this->link);
 	
-	if (NULL == this->gap) {
-		this->gap = Gap_construct(next, NULL);
-	} else {
-		this->gap = Gap_construct(next, this->gap);
-	}
+	
+//	size_t current = origin;
+//	size_t next = this->places[origin + 1];
+//
+//	while (this->places[next] != destination) {
+//		
+//		current = next;
+//		next = this->places[current + 1];
+//		
+//		if (next >= this->places[0]) {
+//			exit(1);
+//		}
+//	}
+//	
+//	this->places[current + 1] = this->places[next + 1];
+//	this->places[next] = 0;
+//	this->places[next + 1] = 0;
+//	
+//	if (NULL == this->gap) {
+//		this->gap = Gap_construct(next, NULL);
+//	} else {
+//		this->gap = Gap_construct(next, this->gap);
+//	}
 }
 
 size_t Space_getNode(struct Space * this, size_t next, size_t * place)
