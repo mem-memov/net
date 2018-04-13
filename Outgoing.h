@@ -17,4 +17,7 @@ void Outgoing_destruct(struct Outgoing * this);
 
 void Outgoing_create(struct Outgoing * this, size_t place, size_t destination);
 
+void Outgoing_read(struct Outgoing * this, size_t place);
+
+
 #endif

@@ -17,4 +17,6 @@ void Incoming_destruct(struct Incoming * this);
 
 void Incoming_create(struct Incoming * this, size_t place, size_t origin);
 
+void Incoming_read(struct Incoming * this, size_t place);
+
 #endif

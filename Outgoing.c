@@ -32,3 +32,8 @@ void Outgoing_create(struct Outgoing * this, size_t place, size_t destination)
 	(*this->previous) = 0;
 	(*this->next) = 0;
 }
+
+void Outgoing_read(struct Outgoing * this, size_t place)
+{
+	Outgoing_bind(this, place);
+}

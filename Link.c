@@ -43,6 +43,14 @@ void Link_create(struct Link * this, size_t place, size_t origin, size_t destina
 	Incoming_create(this->incoming, place, origin);
 }
 
+void Link_read(struct Link * this, size_t place)
+{
+	this->place = place;
+	
+	Outgoing_read(this->outgoing, this->place);
+	Incoming_read(this->incoming, this->place);
+}
+
 void Link_joinOutgoing(struct Link * this, size_t previous, size_t next)
 {
 	(*this->outgoingPrevious) = previous;
@@ -63,11 +71,6 @@ void Link_moveBackwardsInOutgoing(struct Link * this, size_t previous)
 void Link_moveBackwardsInIncoming(struct Link * this, size_t previous)
 {
 	(*this->incomingPrevious) = previous;
-}
-
-void Link_read(struct Link * this, size_t place)
-{
-	this->place = place;
 }
 
 char Link_isOutgoingToNode(struct Link * this, size_t destination)
