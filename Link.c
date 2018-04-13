@@ -74,3 +74,21 @@ void Link_read(struct Link * this, size_t place)
 {
 	Link_bind(this, place);
 }
+
+char Link_isOutgoingToNode(struct Link * this, size_t destination)
+{
+	if ( (*this->incomingNode) == destination) {
+		return 1;
+	}
+	
+	return 0;
+}
+
+char Link_isLastOutgoing(struct Link * this)
+{
+	if ( (*this->outgoingNext) == 0) {
+		return 1;
+	}
+	
+	return 0;
+}

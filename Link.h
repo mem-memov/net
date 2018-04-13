@@ -39,4 +39,6 @@ void Link_moveBackwardsInIncomingChain(struct Link * this, size_t previous);
 
 void Link_read(struct Link * this, size_t place);
 
+char Link_isOutgoingToNode(struct Link * this, size_t destination);
+
 #endif

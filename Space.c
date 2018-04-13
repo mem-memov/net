@@ -126,9 +126,8 @@ void Space_connectNodes(struct Space * this, size_t origin, size_t destination)
 
 void Space_disconnectNodes(struct Space * this, size_t origin, size_t destination)
 {
-	if (! Space_isNode(this, origin) || ! Space_isNode(this, destination)) {
-		exit(1);
-	}
+	Node_read(this->originNode, origin);
+	Node_read(this->destinationNode, destination);
 	
 	size_t current = origin;
 	size_t next = this->places[origin + 1];
