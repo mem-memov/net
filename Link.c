@@ -1,8 +1,6 @@
 #include "Link.h"
 #include <stdlib.h>
-#include "Incoming.h"
-#include "Node.h"
-#include "Outgoing.h"
+#include "Direction.h"
 
 struct Link * Link_construct(size_t * places)
 {
@@ -11,12 +9,19 @@ struct Link * Link_construct(size_t * places)
 	this->places = places;
 
 	// pool
-	this->outgoing = Outgoing_construct(this->places);
-	this->previousOutgoing = Outgoing_construct(this->places);
-	this->nextOutgoing = Outgoing_construct(this->places);
-	this->incoming = Incoming_construct(this->places);
-	this->previousIncoming = Incoming_construct(this->places);
-	this->nextIncoming = Incoming_construct(this->places);
+	this->outgoing = Direction_construct(this->places);
+	Direction_setPool(
+		this->outgoing, 
+		Direction_construct(this->places), 
+		Direction_construct(this->places)
+	);
+
+	this->incoming = Direction_construct(this->places);
+	Direction_setPool(
+		this->incoming, 
+		Direction_construct(this->places), 
+		Direction_construct(this->places)
+	);
 
 	return this;
 }
@@ -24,11 +29,7 @@ struct Link * Link_construct(size_t * places)
 void Link_destruct(struct Link * this)
 {
 	free(this->outgoing);
-	free(this->previousOutgoing);
-	free(this->nextOutgoing);
 	free(this->incoming);
-	free(this->previousIncoming);
-	free(this->nextIncoming);
 	
 	free(this);
 }
@@ -46,64 +47,65 @@ void Link_create(struct Link * this, size_t place, size_t origin, size_t destina
 	
 	this->place = place;
 	
-	Outgoing_create(this->outgoing, place, destination);
-	Incoming_create(this->incoming, place, origin);
+	Direction_create(this->outgoing, place, destination);
+	Direction_create(this->incoming, place, origin);
 }
 
 void Link_read(struct Link * this, size_t place)
 {
 	this->place = place;
 	
-	Outgoing_read(this->outgoing, this->place);
-	Incoming_read(this->incoming, this->place);
+	Direction_read(this->outgoing, this->place);
+	Direction_read(this->incoming, this->place);
 }
 
 void Link_joinOutgoing(struct Link * this, size_t previous, size_t next)
 {
-	Outgoing_joinChain(this->outgoing, previous, next);
+	Direction_joinChain(this->outgoing, previous, next);
 }
 
 void Link_joinIncoming(struct Link * this, size_t previous, size_t next)
 {
-	Incoming_joinChain(this->incoming, previous, next);
+	Direction_joinChain(this->incoming, previous, next);
 }
 
 void Link_shiftOutgoing(struct Link * this, size_t previous)
 {
-	Outgoing_append(this->outgoing, previous);
+	Direction_append(this->outgoing, previous);
 }
 
 void Link_shiftIncoming(struct Link * this, size_t previous)
 {
-	Incoming_append(this->incoming, previous);
+	Direction_append(this->incoming, previous);
 }
 
 char Link_isOutgoingToNode(struct Link * this, size_t destination)
 {
-	return Outgoing_hasNode(this->outgoing, destination);
+	return Direction_hasNode(this->outgoing, destination);
 }
 
 char Link_isIncomingFromNode(struct Link * this, size_t origin)
 {
-	return Incoming_hasNode(this->incoming, origin);
+	return Direction_hasNode(this->incoming, origin);
 }
 
 size_t Link_getNextOutgoing(struct Link * this)
 {
-	return Outgoing_getNext(this->outgoing);
+	return Direction_getNext(this->outgoing);
 }
 
 size_t Link_getNextIncoming(struct Link * this)
 {
-	return Incoming_getNext(this->incoming);
+	return Direction_getNext(this->incoming);
 }
 
 void Link_delete(struct Link * this)
 {
-	
+	Direction_delete(this->outgoing);
+	Direction_delete(this->incoming);
 }
 
 size_t Link_getOutgoingNode(struct Link * this)
 {
-	return Outgoing_getNode(this->outgoing);
+	return Direction_getNode(this->outgoing);
 }

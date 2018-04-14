@@ -49,4 +49,6 @@ void Net_import(struct Net * this, FILE * file);
 
 void Net_scanForGaps(struct Net * this);
 
+void Net_addGap(struct Net * this, size_t place);
+
 #endif

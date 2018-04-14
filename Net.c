@@ -159,10 +159,15 @@ void Net_scanForGaps(struct Net * this)
 			break;
 		}
 		
-		if (NULL == this->gap) {
-			this->gap = Gap_construct(entryPlace, NULL);
-		} else {
-			this->gap = Gap_construct(entryPlace, this->gap);
-		}
+		Net_addGap(this, entryPlace);
+	}
+}
+
+void Net_addGap(struct Net * this, size_t place)
+{
+	if (NULL == this->gap) {
+		this->gap = Gap_construct(place, NULL);
+	} else {
+		this->gap = Gap_construct(place, this->gap);
 	}
 }

@@ -2,6 +2,7 @@
 #define LINK_H
 
 #include <stdlib.h>
+#include "Direction.h"
 
 struct Link {
 	size_t * places;
@@ -10,11 +11,7 @@ struct Link {
 	
 	// pool
 	struct Outgoing * outgoing;
-	struct Outgoing * previousOutgoing;
-	struct Outgoing * nextOutgoing;
 	struct Incoming * incoming;	
-	struct Incoming * previousIncoming;	
-	struct Incoming * nextIncoming;
 };
 
 struct Link * Link_construct(size_t * places);
