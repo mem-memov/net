@@ -101,7 +101,7 @@ void Node_addIncomingLink(struct Node * this, struct Link * link)
 	} else {
 		Link_joinIncoming(link, (*this->place), (*this->incomingLink));
 		Link_read(this->link, (*this->incomingLink));
-		Link_moveBackwardsInIncoming(this->link, Link_getPlace(link));
+		Link_shiftIncoming(this->link, Link_getPlace(link));
 	}
 	
 	(*this->incomingLink) = Link_getPlace(link);
@@ -115,11 +115,30 @@ void Node_addOutgoingLink(struct Node * this, struct Link * link)
 	} else {
 		Link_joinOutgoing(link, (*this->place), (*this->outgoingLink));
 		Link_read(this->link, (*this->outgoingLink));
-		Link_moveBackwardsInOutgoing(this->link, Link_getPlace(link));
+		Link_shiftOutgoing(this->link, Link_getPlace(link));
 	}
 	
 	(*this->outgoingLink) = Link_getPlace(link);
 	(*this->outgoingLinkCount) += 1;
+}
+
+size_t Node_findIncomingLink(struct Node * this, size_t origin)
+{
+	if ( ! Node_hasIncomingLink(this)) {
+		return 0;
+	}
+
+	size_t incomingLink = (*this->incomingLink);
+	
+	do {
+		Link_read(this->link, incomingLink);
+		if (Link_isIncomingFromNode(this->link, origin)) {
+			return incomingLink;
+		}
+		incomingLink = Link_getNextIncoming(this->link);
+	} while( 0 != incomingLink );
+	
+	return 0;
 }
 
 size_t Node_findOutgoingLink(struct Node * this, size_t destination)
@@ -127,7 +146,7 @@ size_t Node_findOutgoingLink(struct Node * this, size_t destination)
 	if ( ! Node_hasOutgoingLink(this)) {
 		return 0;
 	}
-	
+
 	size_t outgoingLink = (*this->outgoingLink);
 	
 	do {
@@ -135,7 +154,17 @@ size_t Node_findOutgoingLink(struct Node * this, size_t destination)
 		if (Link_isOutgoingToNode(this->link, destination)) {
 			return outgoingLink;
 		}
-	} while( ! Link_isLastOutgoing(this->link));
+		outgoingLink = Link_getNextOutgoing(this->link);
+	} while( 0 != outgoingLink );
+	
+	return 0;
+}
+
+char Node_hasMoreOutgoingLinks(struct Node * this)
+{
+	if ( (*this->outgoingLinkCount) > (*this->incomingLinkCount)) {
+		return 1;
+	}
 	
 	return 0;
 }

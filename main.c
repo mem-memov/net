@@ -5,7 +5,7 @@
 
 
 int main(int argc, char** argv) {
-
+	printf("88888");
 	struct Space * space = Space_construct(100);
 
 	char command[100];

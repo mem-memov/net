@@ -1,6 +1,8 @@
 #include "Link.h"
 #include <stdlib.h>
+#include "Incoming.h"
 #include "Node.h"
+#include "Outgoing.h"
 
 struct Link * Link_construct(size_t * places)
 {
@@ -53,42 +55,42 @@ void Link_read(struct Link * this, size_t place)
 
 void Link_joinOutgoing(struct Link * this, size_t previous, size_t next)
 {
-	(*this->outgoingPrevious) = previous;
-	(*this->outgoingNext) = next;
+	Outgoing_joinChain(this->outgoing, previous, next);
 }
 
 void Link_joinIncoming(struct Link * this, size_t previous, size_t next)
 {
-	(*this->incomingPrevious) = previous;
-	(*this->incomingNext) = next;
+	Incoming_joinChain(this->incoming, previous, next);
 }
 
-void Link_moveBackwardsInOutgoing(struct Link * this, size_t previous)
+void Link_shiftOutgoing(struct Link * this, size_t previous)
 {
-	(*this->outgoingPrevious) = previous;
+	Outgoing_append(this->outgoing, previous);
 }
 
-void Link_moveBackwardsInIncoming(struct Link * this, size_t previous)
+void Link_shiftIncoming(struct Link * this, size_t previous)
 {
-	(*this->incomingPrevious) = previous;
+	Incoming_append(this->incoming, previous);
 }
 
 char Link_isOutgoingToNode(struct Link * this, size_t destination)
 {
-	if ( (*this->incomingNode) == destination) {
-		return 1;
-	}
-	
-	return 0;
+	return Outgoing_hasNode(this->outgoing, destination);
 }
 
-char Link_isLastOutgoing(struct Link * this)
+char Link_isIncomingFromNode(struct Link * this, size_t origin)
 {
-	if ( (*this->outgoingNext) == 0) {
-		return 1;
-	}
-	
-	return 0;
+	return Incoming_hasNode(this->incoming, origin);
+}
+
+size_t Link_getNextOutgoing(struct Link * this)
+{
+	return Outgoing_getNext(this->outgoing);
+}
+
+size_t Link_getNextIncoming(struct Link * this)
+{
+	return Incoming_getNext(this->incoming);
 }
 
 void Link_delete(struct Link * this)

@@ -33,12 +33,18 @@ void Link_joinOutgoing(struct Link * this, size_t previous, size_t next);
 
 void Link_joinIncoming(struct Link * this, size_t previous, size_t next);
 
-void Link_moveBackwardsInOutgoing(struct Link * this, size_t previous);
+void Link_shiftOutgoing(struct Link * this, size_t previous);
 
-void Link_moveBackwardsInIncoming(struct Link * this, size_t previous);
+void Link_shiftIncoming(struct Link * this, size_t previous);
 
 void Link_read(struct Link * this, size_t place);
 
 char Link_isOutgoingToNode(struct Link * this, size_t destination);
+
+char Link_isIncomingFromNode(struct Link * this, size_t origin);
+
+size_t Link_getNextOutgoing(struct Link * this);
+
+size_t Link_getNextIncoming(struct Link * this);
 
 #endif
