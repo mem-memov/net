@@ -171,5 +171,5 @@ char Node_hasMoreOutgoingLinks(struct Node * this)
 
 void Node_readOutgoingLink(struct Node * this, struct Link * link)
 {
-	Link_read(this->link, (*this->outgoingLink));
+	Link_read(link, (*this->outgoingLink));
 }

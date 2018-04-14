@@ -170,7 +170,6 @@ size_t Space_getOutgoingNodes(struct Space * this, size_t next, size_t * place)
 	} else {
 		Link_read(this->link, next);
 		(*place) = Link_getOutgoingNode(this->link);
-		
 	}
 
 	return Link_getNextOutgoing(this->link);
@@ -178,6 +177,10 @@ size_t Space_getOutgoingNodes(struct Space * this, size_t next, size_t * place)
 
 char Space_isNode(struct Space * this, size_t place)
 {
+	if (Net_isHead(this->net, place)) {
+		return 0;
+	}
+	
 	Node_read(this->node, place);
 
 	return Node_isNode(this->node);
@@ -196,7 +199,7 @@ void Space_import(struct Space * this, FILE * file)
 		exit(1);
 	}
 	
-	Net_create(this->net, this->placeSize);
+	Net_read(this->net);
 	
 	if (Net_isSpaceCut(this->net)) {
 		exit(1);

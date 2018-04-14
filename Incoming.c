@@ -24,9 +24,9 @@ void Incoming_bind(struct Incoming * this, size_t place)
 {
 	this->place = place;
 	
-    this->node = this->places + place + 0;
-    this->previous = this->places + place + 1;
-    this->next = this->places + place + 2;
+    this->node = this->places + place + 3;
+    this->previous = this->places + place + 4;
+    this->next = this->places + place + 5;
 }
 
 void Incoming_create(struct Incoming * this, size_t place, size_t origin)

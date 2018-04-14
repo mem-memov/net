@@ -24,6 +24,10 @@ void Net_destruct(struct Net * this);
 
 void Net_create(struct Net * this, size_t placeSize);
 
+void Net_read(struct Net * this);
+
+char Net_isHead(struct Net * this, size_t place);
+
 char Net_isSpaceCut(struct Net * this);
 
 char Net_hasSpaceForEntry(struct Net * this);

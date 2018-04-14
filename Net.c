@@ -42,9 +42,23 @@ void Net_create(struct Net * this, size_t placeSize)
 	(*this->linkCount) = 0;
 }
 
+void Net_read(struct Net * this)
+{
+	Net_bind(this);
+}
+
+char Net_isHead(struct Net * this, size_t place)
+{
+	if (place < this->entrySize) {
+		return 1;
+	}
+	
+	return 0;
+}
+
 char Net_isSpaceCut(struct Net * this)
 {
-	if ( (*this->nextPlace) > this->spaceSize ) {
+	if ( (*this->nextPlace) - 1 > this->spaceSize ) {
 		return 1;
 	}
 	
@@ -111,9 +125,9 @@ void Net_export(struct Net * this, FILE * file)
 
 void Net_import(struct Net * this, FILE * file)
 {
-	size_t placeCount = fread(this->places + this->entrySize, (*this->placeSize), (*this->nextPlace) - 1, file);
+	size_t placeCount = fread(this->places + this->entrySize, (*this->placeSize), (*this->nextPlace), file);
 
-	if ( placeCount != (*this->nextPlace) - 1 ) {
+	if ( placeCount != (*this->nextPlace) - this->entrySize ) {
 		exit(1);
 	}
 }
