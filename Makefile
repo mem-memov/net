@@ -24,7 +24,7 @@ Node.o: Node.c Node.h Link.h
 Outgoing.o: Outgoing.c Outgoing.h
 	gcc -c Outgoing.c
 
-Space.o: Space.c Space.h Gap.h Link.h Net.h Node.h 
+Space.o: Space.c Space.h Link.h Net.h Node.h 
 	gcc -c Space.c
 	
 clean:

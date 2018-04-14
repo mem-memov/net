@@ -11,7 +11,7 @@ struct Space {
 	size_t placeSize;
 	size_t * places;
 	struct Net * net;
-	struct Gap * gap;
+
 	struct Node * node;
 	struct Node * originNode;
 	struct Node * destinationNode;

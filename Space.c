@@ -1,7 +1,6 @@
 #include "Space.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "Gap.h"
 #include "Link.h"
 #include "Net.h"
 #include "Node.h"
@@ -19,8 +18,7 @@ struct Space * Space_construct(size_t spaceSize)
 	this->placeSize = sizeof(size_t);
 	this->places = (size_t *)malloc(this->spaceSize * this->entrySize * this->placeSize);
 	this->net = Net_construct(this->places, this->spaceSize, this->entrySize);
-	this->gap = NULL;
-	
+
 	// pool
 	this->node = Node_construct(this->places);
 	this->originNode = Node_construct(this->places);
@@ -34,10 +32,6 @@ struct Space * Space_construct(size_t spaceSize)
 
 void Space_destruct(struct Space * this)
 {
-	if (NULL != this->gap) {
-		Gap_destruct(this->gap);
-	}
-	
 	free(this->places);
 	free(this->net);
 	
@@ -56,7 +50,7 @@ char Space_hasFreePlace(struct Space * this)
 
 size_t Space_addNode(struct Space * this)
 {
-	size_t place = Net_createEntry(this->net, this->gap);
+	size_t place = Net_createEntry(this->net);
 	
 	Node_create(this->node, place);
 
@@ -65,49 +59,49 @@ size_t Space_addNode(struct Space * this)
 
 void Space_removeNode(struct Space * this, size_t place)
 {
-	size_t current;
-	size_t next;
-	
-	// remove the node
-	
-	current = place;
-	
-	while (0 != this->places[current + 1]) {
-		this->places[current] = 0;
-		this->places[current + 1] = 0;
-		
-		if (NULL == this->gap) {
-			this->gap = Gap_construct(current, NULL);
-		} else {
-			this->gap = Gap_construct(current, this->gap);
-		}
-		
-		current = this->places[current + 1];
-	}
-	
-	// remove connections to the node
-	
-	current = 1;
-	
-	while (current < this->places[0]) {
-		
-		next = this->places[current + 1];
-		
-		if (place == next) {
-			this->places[current + 1] = this->places[next + 1];
-			
-			this->places[next] = 0;
-			this->places[next + 1] = 0;
-
-			if (NULL == this->gap) {
-				this->gap = Gap_construct(next, NULL);
-			} else {
-				this->gap = Gap_construct(next, this->gap);
-			}
-		}
-		
-		current += 2;
-	}
+//	size_t current;
+//	size_t next;
+//	
+//	// remove the node
+//	
+//	current = place;
+//	
+//	while (0 != this->places[current + 1]) {
+//		this->places[current] = 0;
+//		this->places[current + 1] = 0;
+//		
+//		if (NULL == this->gap) {
+//			this->gap = Gap_construct(current, NULL);
+//		} else {
+//			this->gap = Gap_construct(current, this->gap);
+//		}
+//		
+//		current = this->places[current + 1];
+//	}
+//	
+//	// remove connections to the node
+//	
+//	current = 1;
+//	
+//	while (current < this->places[0]) {
+//		
+//		next = this->places[current + 1];
+//		
+//		if (place == next) {
+//			this->places[current + 1] = this->places[next + 1];
+//			
+//			this->places[next] = 0;
+//			this->places[next + 1] = 0;
+//
+//			if (NULL == this->gap) {
+//				this->gap = Gap_construct(next, NULL);
+//			} else {
+//				this->gap = Gap_construct(next, this->gap);
+//			}
+//		}
+//		
+//		current += 2;
+//	}
 }
 
 void Space_connectNodes(struct Space * this, size_t origin, size_t destination)
@@ -115,7 +109,7 @@ void Space_connectNodes(struct Space * this, size_t origin, size_t destination)
 	Node_read(this->originNode, origin);
 	Node_read(this->destinationNode, destination);
 
-	size_t link = Net_createEntry(this->net, this->gap);
+	size_t link = Net_createEntry(this->net);
 	Link_create(this->link, link, origin, destination);
 
 	Node_addOutgoingLink(this->originNode, this->link);
@@ -206,21 +200,4 @@ void Space_import(struct Space * this, FILE * file)
 	}
 	
 	Net_import(this->net, file);
-	
-
-	
-//	size_t current = 1;
-//	
-//	while (current < this->places[0]) {
-//		
-//		if (0 == this->places[current] && 0 == this->places[current + 1]) {
-//			if (NULL == this->gap) {
-//				this->gap = Gap_construct(current, NULL);
-//			} else {
-//				this->gap = Gap_construct(current, this->gap);
-//			}
-//		}
-//		
-//		current += 2;
-//	}
 }

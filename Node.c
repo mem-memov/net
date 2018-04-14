@@ -18,6 +18,8 @@ struct Node * Node_construct(size_t * places)
 
 void Node_destruct(struct Node * this)
 {
+	free(this->link);
+	
 	free(this);
 }
 

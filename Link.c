@@ -23,6 +23,13 @@ struct Link * Link_construct(size_t * places)
 
 void Link_destruct(struct Link * this)
 {
+	free(this->outgoing);
+	free(this->previousOutgoing);
+	free(this->nextOutgoing);
+	free(this->incoming);
+	free(this->previousIncoming);
+	free(this->nextIncoming);
+	
 	free(this);
 }
 

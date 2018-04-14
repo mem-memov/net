@@ -11,12 +11,17 @@ struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize)
 	this->places = places;
 	this->spaceSize = spaceSize;
 	this->entrySize = entrySize;
+	this->gap = NULL;
 
 	return this;
 }
 
 void Net_destruct(struct Net * this)
 {
+	if (NULL != this->gap) {
+		Gap_destruct(this->gap);
+	}
+	
 	free(this);
 }
 
@@ -74,7 +79,7 @@ char Net_hasSpaceForEntry(struct Net * this)
 	return 0;
 }
 
-size_t Net_createEntry(struct Net * this, struct Gap * gap)
+size_t Net_createEntry(struct Net * this)
 {
 	if ( ! Net_hasSpaceForEntry(this)) {
 		exit(1);
@@ -82,9 +87,9 @@ size_t Net_createEntry(struct Net * this, struct Gap * gap)
 	
 	size_t place;
 
-	if (NULL != gap) {
-		place = Gap_getPlace(gap);
-		gap = Gap_getNext(gap);
+	if (NULL != this->gap) {
+		place = Gap_getPlace(this->gap);
+		this->gap = Gap_getNext(this->gap);
 	} else {
 		place = (*this->nextPlace);
 	}
@@ -129,5 +134,35 @@ void Net_import(struct Net * this, FILE * file)
 
 	if ( placeCount != (*this->nextPlace) - this->entrySize ) {
 		exit(1);
+	}
+	
+	Net_scanForGaps(this);
+}
+
+void Net_scanForGaps(struct Net * this)
+{
+	size_t entryPlace;
+	char entryPosition;
+	char isEmpty;
+	
+	for ( entryPlace = this->entrySize; entryPlace < (*this->nextPlace); entryPlace++ ) {
+
+		isEmpty = 1;
+		for (entryPosition = 0; entryPosition < this->entrySize; entryPosition++ ) {
+			if (this->places[entryPlace + entryPosition] != 0) {
+				isEmpty = 0;
+				break;
+			}
+		}
+
+		if (! isEmpty) {
+			break;
+		}
+		
+		if (NULL == this->gap) {
+			this->gap = Gap_construct(entryPlace, NULL);
+		} else {
+			this->gap = Gap_construct(entryPlace, this->gap);
+		}
 	}
 }
