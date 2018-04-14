@@ -29,6 +29,8 @@ void Incoming_append(struct Incoming * this, size_t previous);
 
 char Incoming_hasNode(struct Incoming * this, size_t node);
 
+size_t Incoming_getNode(struct Incoming * this);
+
 size_t Incoming_getNext(struct Incoming * this);
 
 #endif

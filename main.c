@@ -5,7 +5,7 @@
 
 
 int main(int argc, char** argv) {
-	printf("88888");
+	
 	struct Space * space = Space_construct(100);
 
 	char command[100];
@@ -105,7 +105,7 @@ int main(int argc, char** argv) {
 			
 			next = place;
 			while (0 != next) {
-				next = Space_getNode(space, next, &place);
+				next = Space_getOutgoingNodes(space, next, &place);
 				printf("%zu\n", place);
 			} 
 			

@@ -6,8 +6,6 @@
 #include "Net.h"
 #include "Node.h"
 
-#include <stdio.h>
-
 struct Space * Space_construct(size_t spaceSize)
 {
 	struct Space * this = malloc(sizeof(struct Space));
@@ -163,11 +161,19 @@ void Space_disconnectNodes(struct Space * this, size_t origin, size_t destinatio
 //	}
 }
 
-size_t Space_getNode(struct Space * this, size_t next, size_t * place)
+size_t Space_getOutgoingNodes(struct Space * this, size_t next, size_t * place)
 {
-	* place = this->places[next];
-	
-	return this->places[next + 1];
+	if ( next == (*place) ) {
+		Node_read(this->node, next);
+		Node_readOutgoingLink(this->node, this->link);
+		(*place) = Link_getOutgoingNode(this->link);
+	} else {
+		Link_read(this->link, next);
+		(*place) = Link_getOutgoingNode(this->link);
+		
+	}
+
+	return Link_getNextOutgoing(this->link);
 }
 
 char Space_isNode(struct Space * this, size_t place)
@@ -179,43 +185,39 @@ char Space_isNode(struct Space * this, size_t place)
 
 void Space_export(struct Space * this, FILE * file)
 {
-	size_t totalItems = fwrite(this->places, sizeof(size_t), this->places[0], file);
-	
-	if (totalItems != this->places[0]) {
-		exit(1);
-	}
+	Net_export(this->net, file);
 }
 
 void Space_import(struct Space * this, FILE * file)
 {
-	size_t headItems = fread(this->places, sizeof(size_t), 1, file);
+	size_t headPlaces = fread(this->places, this->placeSize, this->entrySize, file);
 	
-	if (headItems != 1) {
+	if (headPlaces != this->entrySize) {
 		exit(1);
 	}
 	
-	if (this->spaceSize < this->places[0]) {
+	Net_create(this->net, this->placeSize);
+	
+	if (Net_isSpaceCut(this->net)) {
 		exit(1);
 	}
 	
-	size_t bodyItems = fread(this->places + 1, sizeof(size_t), this->places[0] - 1, file);
+	Net_import(this->net, file);
+	
 
-	if (bodyItems != this->places[0] - 1) {
-		exit(1);
-	}
 	
-	size_t current = 1;
-	
-	while (current < this->places[0]) {
-		
-		if (0 == this->places[current] && 0 == this->places[current + 1]) {
-			if (NULL == this->gap) {
-				this->gap = Gap_construct(current, NULL);
-			} else {
-				this->gap = Gap_construct(current, this->gap);
-			}
-		}
-		
-		current += 2;
-	}
+//	size_t current = 1;
+//	
+//	while (current < this->places[0]) {
+//		
+//		if (0 == this->places[current] && 0 == this->places[current + 1]) {
+//			if (NULL == this->gap) {
+//				this->gap = Gap_construct(current, NULL);
+//			} else {
+//				this->gap = Gap_construct(current, this->gap);
+//			}
+//		}
+//		
+//		current += 2;
+//	}
 }

@@ -1,8 +1,8 @@
 #include "Net.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include "Gap.h"
 
-#include <stdio.h>
 
 struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize)
 {
@@ -40,6 +40,15 @@ void Net_create(struct Net * this, size_t placeSize)
 	(*this->nextPlace) = this->entrySize;
 	(*this->nodeCount) = 0;
 	(*this->linkCount) = 0;
+}
+
+char Net_isSpaceCut(struct Net * this)
+{
+	if ( (*this->nextPlace) > this->spaceSize ) {
+		return 1;
+	}
+	
+	return 0;
 }
 
 char Net_hasSpaceForEntry(struct Net * this)
@@ -91,3 +100,20 @@ void Net_decrementLinks(struct Net * this)
 	(*this->linkCount) -= 1;
 }
 
+void Net_export(struct Net * this, FILE * file)
+{
+	size_t placeCount = fwrite(this->places, (*this->placeSize), (*this->nextPlace), file);
+	
+	if ( placeCount != (*this->nextPlace) ) {
+		exit(1);
+	}
+}
+
+void Net_import(struct Net * this, FILE * file)
+{
+	size_t placeCount = fread(this->places + this->entrySize, (*this->placeSize), (*this->nextPlace) - 1, file);
+
+	if ( placeCount != (*this->nextPlace) - 1 ) {
+		exit(1);
+	}
+}

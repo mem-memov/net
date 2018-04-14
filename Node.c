@@ -168,3 +168,8 @@ char Node_hasMoreOutgoingLinks(struct Node * this)
 	
 	return 0;
 }
+
+void Node_readOutgoingLink(struct Node * this, struct Link * link)
+{
+	Link_read(this->link, (*this->outgoingLink));
+}

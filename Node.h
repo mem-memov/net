@@ -40,4 +40,6 @@ size_t Node_findOutgoingLink(struct Node * this, size_t destination);
 
 char Node_hasMoreOutgoingLinks(struct Node * this);
 
+void Node_readOutgoingLink(struct Node * this, struct Link * link);
+
 #endif

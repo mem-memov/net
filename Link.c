@@ -9,10 +9,8 @@ struct Link * Link_construct(size_t * places)
 	struct Link * this = malloc(sizeof(struct Link));
 	
 	this->places = places;
-	
+
 	// pool
-	this->originNode = Node_construct(this->places);
-	this->destinationNode = Node_construct(this->places);
 	this->outgoing = Outgoing_construct(this->places);
 	this->previousOutgoing = Outgoing_construct(this->places);
 	this->nextOutgoing = Outgoing_construct(this->places);
@@ -96,4 +94,9 @@ size_t Link_getNextIncoming(struct Link * this)
 void Link_delete(struct Link * this)
 {
 	
+}
+
+size_t Link_getOutgoingNode(struct Link * this)
+{
+	return Outgoing_getNode(this->outgoing);
 }

@@ -9,8 +9,6 @@ struct Link {
 	size_t place;
 	
 	// pool
-	struct Node * originNode;
-	struct Node * destinationNode;
 	struct Outgoing * outgoing;
 	struct Outgoing * previousOutgoing;
 	struct Outgoing * nextOutgoing;
@@ -46,5 +44,9 @@ char Link_isIncomingFromNode(struct Link * this, size_t origin);
 size_t Link_getNextOutgoing(struct Link * this);
 
 size_t Link_getNextIncoming(struct Link * this);
+
+void Link_delete(struct Link * this);
+
+size_t Link_getOutgoingNode(struct Link * this);
 
 #endif

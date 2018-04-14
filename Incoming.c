@@ -63,6 +63,11 @@ char Incoming_hasNode(struct Incoming * this, size_t node)
 	return 0;
 }
 
+size_t Incoming_getNode(struct Incoming * this)
+{
+	return (*this->node);
+}
+
 size_t Incoming_getNext(struct Incoming * this)
 {
 	return (*this->next);
