@@ -42,4 +42,8 @@ char Node_hasMoreOutgoingLinks(struct Node * this);
 
 void Node_readOutgoingLink(struct Node * this, struct Link * link);
 
+void Node_deleteOutgoingLink(struct Node * this);
+
+void Node_deleteIncomingLink(struct Node * this);
+
 #endif

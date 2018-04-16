@@ -29,6 +29,8 @@ void Net_read(struct Net * this);
 
 char Net_isHead(struct Net * this, size_t place);
 
+char Net_isInside(struct Net * this, size_t place);
+
 char Net_isSpaceCut(struct Net * this);
 
 char Net_hasSpaceForEntry(struct Net * this);

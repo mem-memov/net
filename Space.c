@@ -131,12 +131,19 @@ void Space_disconnectNodes(struct Space * this, size_t origin, size_t destinatio
 	Link_delete(this->link);
 	
 	Net_addGap(this->net, link);
+	
+	Node_deleteOutgoingLink(this->originNode);
+	Node_deleteIncomingLink(this->destinationNode);
 }
 
 size_t Space_getOutgoingNodes(struct Space * this, size_t next, size_t * place)
 {
+	Node_read(this->node, next);
+	if ( ! Node_hasOutgoingLink(this) ) {
+		return 0;
+	}
+	
 	if ( next == (*place) ) {
-		Node_read(this->node, next);
 		Node_readOutgoingLink(this->node, this->link);
 		(*place) = Link_getOutgoingNode(this->link);
 	} else {
@@ -150,6 +157,10 @@ size_t Space_getOutgoingNodes(struct Space * this, size_t next, size_t * place)
 char Space_isNode(struct Space * this, size_t place)
 {
 	if (Net_isHead(this->net, place)) {
+		return 0;
+	}
+	
+	if ( ! Net_isInside(this->net, place) ) {
 		return 0;
 	}
 	

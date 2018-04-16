@@ -173,3 +173,29 @@ void Node_readOutgoingLink(struct Node * this, struct Link * link)
 {
 	Link_read(link, (*this->outgoingLink));
 }
+
+void Node_deleteOutgoingLink(struct Node * this)
+{
+	if ( 0 == (*this->outgoingLinkCount) ) {
+		exit(1);
+	}
+	
+	(*this->outgoingLinkCount) = (*this->outgoingLinkCount) - 1;
+	
+	if ( 0 == (*this->outgoingLinkCount) ) {
+		(*this->outgoingLink) = 0;
+	}
+}
+
+void Node_deleteIncomingLink(struct Node * this)
+{
+	if ( 0 == (*this->incomingLinkCount) ) {
+		exit(1);
+	}
+	
+	(*this->incomingLinkCount) = (*this->incomingLinkCount) - 1;
+	
+	if ( 0 == (*this->incomingLinkCount) ) {
+		(*this->incomingLink) = 0;
+	}
+}

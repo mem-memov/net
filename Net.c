@@ -61,6 +61,15 @@ char Net_isHead(struct Net * this, size_t place)
 	return 0;
 }
 
+char Net_isInside(struct Net * this, size_t place)
+{
+	if ( place < (*this->nextPlace) ) {
+		return 1;
+	}
+	
+	return 0;
+}
+
 char Net_isSpaceCut(struct Net * this)
 {
 	if ( (*this->nextPlace) - 1 > this->spaceSize ) {
