@@ -11,7 +11,6 @@ struct Direction {
 	char offset;
 
 	// pool
-	struct Direction * previousDirection;
 	struct Direction * nextDirection;
 	
 	// identifier
@@ -27,7 +26,7 @@ struct Direction * Direction_constructOutgoing(size_t * places);
 
 struct Direction * Direction_constructIncoming(size_t * places);
 
-void Direction_setPool(struct Direction * this, struct Direction * previousDirection, struct Direction * nextDirection);
+void Direction_setPool(struct Direction * this, struct Direction * nextDirection);
 
 size_t Direction_getPlace(struct Direction * this);
 

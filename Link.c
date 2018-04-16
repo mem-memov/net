@@ -9,18 +9,16 @@ struct Link * Link_construct(size_t * places)
 	this->places = places;
 
 	// pool
-	this->outgoing = Direction_construct(this->places);
+	this->outgoing = Direction_constructOutgoing(this->places);
 	Direction_setPool(
 		this->outgoing, 
-		Direction_construct(this->places), 
-		Direction_construct(this->places)
+		Direction_constructOutgoing(this->places)
 	);
 
-	this->incoming = Direction_construct(this->places);
+	this->incoming = Direction_constructIncoming(this->places);
 	Direction_setPool(
 		this->incoming, 
-		Direction_construct(this->places), 
-		Direction_construct(this->places)
+		Direction_constructIncoming(this->places)
 	);
 
 	return this;

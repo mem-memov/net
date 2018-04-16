@@ -8,8 +8,7 @@ struct Direction * Direction_construct(size_t * places, char offset)
 	this->places = places;
 	
 	this->offset = offset;
-	
-	this->previousDirection = NULL;
+
 	this->nextDirection = NULL;
 
 	return this;
@@ -25,9 +24,8 @@ struct Direction * Direction_constructIncoming(size_t * places)
 	return Direction_construct(places, 3);
 }
 
-void Direction_setPool(struct Direction * this, struct Direction * previousDirection, struct Direction * nextDirection)
+void Direction_setPool(struct Direction * this, struct Direction * nextDirection)
 {
-	this->previousDirection = previousDirection;
 	this->nextDirection = nextDirection;
 }
 
@@ -44,10 +42,9 @@ size_t Direction_getPlace(struct Direction * this)
 void Direction_bind(struct Direction * this, size_t place)
 {
 	this->place = place;
-	
-    this->node = this->places + place + 0;
-    this->previous = this->places + place + 1;
-    this->next = this->places + place + 2;
+    this->node = this->places + place + this->offset + 0;
+    this->previous = this->places + place + this->offset + 1;
+    this->next = this->places + place + this->offset + 2;
 }
 
 void Direction_create(struct Direction * this, size_t place, size_t destination)
