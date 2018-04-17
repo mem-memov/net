@@ -30,6 +30,10 @@ char Node_isNode(struct Node * this);
 
 char Node_isSame(struct Node * this, struct Node * that);
 
+char Node_hasIncomingLink(struct Node * this);
+
+char Node_hasOutgoingLink(struct Node * this);
+
 void Node_addIncomingLink(struct Node * this, struct Link * link);
 
 void Node_addOutgoingLink(struct Node * this, struct Link * link);

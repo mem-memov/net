@@ -12,7 +12,8 @@ int main(int argc, char** argv) {
 	size_t place;
 	size_t origin;
 	size_t destination;
-	size_t next;
+	size_t link;
+	size_t node;
 	char filePath[300];
 	FILE * file;
 
@@ -103,13 +104,14 @@ int main(int argc, char** argv) {
 				continue;
 			}
 			
-			next = place;
-			while (0 != next) {
-				if (next != place) {
-					printf("%zu\n", place);
+			link = 0;
+			node = 0;
+			do {
+				Space_getOutgoingNodes(space, &place, &link, &node);
+				if (0 != node) {
+					printf("%zu\n", node);
 				}
-				Space_getOutgoingNodes(space, &next, &place);
-			} 
+			} while (0 != link);
 			
 			continue;
 		}

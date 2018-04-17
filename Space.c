@@ -136,22 +136,20 @@ void Space_disconnectNodes(struct Space * this, size_t origin, size_t destinatio
 	Node_deleteIncomingLink(this->destinationNode);
 }
 
-void Space_getOutgoingNodes(struct Space * this, size_t * next, size_t * place)
+void Space_getOutgoingNodes(struct Space * this, const size_t * origin, size_t * link, size_t * target)
 {
-	Node_read(this->node, (*next));
-	if ( ! Node_hasOutgoingLink(this->node) ) {
-		return 0;
+	if ( 0 == (*link) && 0 == (*target)) { // starting point
+		Node_read(this->node, (*origin));
+		if ( ! Node_hasOutgoingLink(this->node) ) {
+			return;
+		}
+		Node_readOutgoingLink(this->node, this->link);
+	} else {
+		Link_read(this->link, (*link));
 	}
 	
-	if ( (*next) == (*place) ) {
-		Node_readOutgoingLink(this->node, this->link);
-		(*place) = Link_getOutgoingNode(this->link);
-	} else {
-		Link_read(this->link, (*next));
-		(*place) = Link_getOutgoingNode(this->link);
-	}
-
-	return Link_getNextOutgoing(this->link);
+	(*link) = Link_getNextOutgoing(this->link);
+	(*target) = Link_getOutgoingNode(this->link);
 }
 
 char Space_isNode(struct Space * this, size_t place)
