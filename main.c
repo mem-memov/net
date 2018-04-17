@@ -105,8 +105,10 @@ int main(int argc, char** argv) {
 			
 			next = place;
 			while (0 != next) {
-				next = Space_getOutgoingNodes(space, next, &place);
-				printf("%zu\n", place);
+				if (next != place) {
+					printf("%zu\n", place);
+				}
+				Space_getOutgoingNodes(space, &next, &place);
 			} 
 			
 			continue;

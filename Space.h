@@ -32,7 +32,7 @@ void Space_connectNodes(struct Space * this, size_t origin, size_t destination);
 
 void Space_disconnectNodes(struct Space * this, size_t origin, size_t destination);
 
-size_t Space_getOutgoingNodes(struct Space * this, size_t next, size_t * place);
+void Space_getOutgoingNodes(struct Space * this, size_t * next, size_t * place);
 
 char Space_isNode(struct Space * this, size_t place);
 
