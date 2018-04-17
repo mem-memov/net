@@ -46,10 +46,16 @@ void Node_create(struct Node * this, size_t place)
 void Node_read(struct Node * this, size_t place)
 {
 	Node_bind(this, place);
-	
-	if ( ! Node_isNode(this) ) {
+}
+
+void Node_delete(struct Node * this)
+{
+	if ( 0 != (*this->outgoingLinkCount) || 0 != (*this->incomingLinkCount) || 0 != (*this->outgoingLink) || 0 != (*this->incomingLink) ) {
 		exit(1);
 	}
+
+	(*this->place) = 0;
+	(*this->data) = 0;
 }
 
 size_t Node_getPlace(struct Node * this)
@@ -59,7 +65,7 @@ size_t Node_getPlace(struct Node * this)
 
 char Node_isNode(struct Node * this)
 {
-	if ( this->places[(*this->place)] == (*this->place) ) {
+	if ( this->places[(*this->place)] == (*this->place) && 0 != (*this->place) ) {
 		return 1;
 	}
 	
@@ -172,6 +178,11 @@ char Node_hasMoreOutgoingLinks(struct Node * this)
 void Node_readOutgoingLink(struct Node * this, struct Link * link)
 {
 	Link_read(link, (*this->outgoingLink));
+}
+
+void Node_readIncomingLink(struct Node * this, struct Link * link)
+{
+	Link_read(link, (*this->incomingLink));
 }
 
 void Node_deleteOutgoingLink(struct Node * this)

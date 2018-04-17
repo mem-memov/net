@@ -107,3 +107,8 @@ size_t Link_getOutgoingNode(struct Link * this)
 {
 	return Direction_getNode(this->outgoing);
 }
+
+size_t Link_getIncomingNode(struct Link * this)
+{
+	return Direction_getNode(this->incoming);
+}

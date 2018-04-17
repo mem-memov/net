@@ -46,4 +46,6 @@ void Link_delete(struct Link * this);
 
 size_t Link_getOutgoingNode(struct Link * this);
 
+size_t Link_getIncomingNode(struct Link * this);
+
 #endif

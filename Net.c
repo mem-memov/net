@@ -81,7 +81,7 @@ char Net_isSpaceCut(struct Net * this)
 
 char Net_hasSpaceForEntry(struct Net * this)
 {
-	if ( (*this->nextPlace) < this->spaceSize ) {
+	if ( (*this->nextPlace) < this->spaceSize && NULL == this->gap ) {
 		return 1;
 	}
 	

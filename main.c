@@ -116,6 +116,22 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
+
+		if (strcmp("delete", command) == 0 || strcmp("x", command) == 0) {
+			
+			printf("node: ");
+			scanf("%zu", &place);
+
+			if ( ! Space_isNode(space, place)) {
+				printf("%zu is not a node\n", place);
+				continue;
+			}
+			
+			Space_removeNode(space, place);
+			
+			continue;
+		}
+
 		if (strcmp("export", command) == 0 || strcmp(">", command) == 0) {
 
 			printf( "target file path:");

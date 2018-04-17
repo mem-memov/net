@@ -34,6 +34,8 @@ void Space_disconnectNodes(struct Space * this, size_t origin, size_t destinatio
 
 void Space_getOutgoingNodes(struct Space * this, const size_t * origin, size_t * link, size_t * target);
 
+void Space_getIncomingNodes(struct Space * this, const size_t * target, size_t * link, size_t * origin);
+
 char Space_isNode(struct Space * this, size_t place);
 
 void Space_export(struct Space * this, FILE * file);

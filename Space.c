@@ -53,55 +53,41 @@ size_t Space_addNode(struct Space * this)
 	size_t place = Net_createEntry(this->net);
 	
 	Node_create(this->node, place);
+	
+	Net_incrementNodes(this->net);
 
 	return place;
 }
 
 void Space_removeNode(struct Space * this, size_t place)
 {
-//	size_t current;
-//	size_t next;
-//	
-//	// remove the node
-//	
-//	current = place;
-//	
-//	while (0 != this->places[current + 1]) {
-//		this->places[current] = 0;
-//		this->places[current + 1] = 0;
-//		
-//		if (NULL == this->gap) {
-//			this->gap = Gap_construct(current, NULL);
-//		} else {
-//			this->gap = Gap_construct(current, this->gap);
-//		}
-//		
-//		current = this->places[current + 1];
-//	}
-//	
-//	// remove connections to the node
-//	
-//	current = 1;
-//	
-//	while (current < this->places[0]) {
-//		
-//		next = this->places[current + 1];
-//		
-//		if (place == next) {
-//			this->places[current + 1] = this->places[next + 1];
-//			
-//			this->places[next] = 0;
-//			this->places[next + 1] = 0;
-//
-//			if (NULL == this->gap) {
-//				this->gap = Gap_construct(next, NULL);
-//			} else {
-//				this->gap = Gap_construct(next, this->gap);
-//			}
-//		}
-//		
-//		current += 2;
-//	}
+	size_t link;
+	size_t node;
+
+	link = 0;
+	node = 0;
+	do {
+		Space_getOutgoingNodes(this, &place, &link, &node);
+		if ( 0 != node) {
+			Space_disconnectNodes(this, place, node);
+		}
+	} while (0 != link);
+
+	link = 0;
+	node = 0;
+	do {
+		Space_getIncomingNodes(this, &place, &link, &node);
+		if ( 0 != node) {
+			Space_disconnectNodes(this, node, place);
+		}
+	} while (0 != link);
+	
+	Node_read(this->node, place);
+	Node_delete(this->node);
+	
+	Net_decrementNodes(this->net);
+	
+	Net_addGap(this->net, place);
 }
 
 void Space_connectNodes(struct Space * this, size_t origin, size_t destination)
@@ -114,6 +100,8 @@ void Space_connectNodes(struct Space * this, size_t origin, size_t destination)
 
 	Node_addOutgoingLink(this->originNode, this->link);
 	Node_addIncomingLink(this->destinationNode, this->link);
+	
+	Net_incrementLinks(this->net);
 }
 
 void Space_disconnectNodes(struct Space * this, size_t origin, size_t destination)
@@ -134,6 +122,8 @@ void Space_disconnectNodes(struct Space * this, size_t origin, size_t destinatio
 	
 	Node_deleteOutgoingLink(this->originNode);
 	Node_deleteIncomingLink(this->destinationNode);
+	
+	Net_decrementLinks(this->net);
 }
 
 void Space_getOutgoingNodes(struct Space * this, const size_t * origin, size_t * link, size_t * target)
@@ -150,6 +140,22 @@ void Space_getOutgoingNodes(struct Space * this, const size_t * origin, size_t *
 	
 	(*link) = Link_getNextOutgoing(this->link);
 	(*target) = Link_getOutgoingNode(this->link);
+}
+
+void Space_getIncomingNodes(struct Space * this, const size_t * target, size_t * link, size_t * origin)
+{
+	if ( 0 == (*link) && 0 == (*origin)) { // starting point
+		Node_read(this->node, (*target));
+		if ( ! Node_hasIncomingLink(this->node) ) {
+			return;
+		}
+		Node_readIncomingLink(this->node, this->link);
+	} else {
+		Link_read(this->link, (*link));
+	}
+	
+	(*link) = Link_getNextIncoming(this->link);
+	(*origin) = Link_getIncomingNode(this->link);
 }
 
 char Space_isNode(struct Space * this, size_t place)

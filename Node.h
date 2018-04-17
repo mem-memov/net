@@ -24,6 +24,8 @@ void Node_create(struct Node * this, size_t place);
 
 void Node_read(struct Node * this, size_t place);
 
+void Node_delete(struct Node * this);
+
 size_t Node_getPlace(struct Node * this);
 
 char Node_isNode(struct Node * this);
@@ -45,6 +47,8 @@ size_t Node_findOutgoingLink(struct Node * this, size_t destination);
 char Node_hasMoreOutgoingLinks(struct Node * this);
 
 void Node_readOutgoingLink(struct Node * this, struct Link * link);
+
+void Node_readIncomingLink(struct Node * this, struct Link * link);
 
 void Node_deleteOutgoingLink(struct Node * this);
 
