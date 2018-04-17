@@ -1,4 +1,5 @@
-*.o
+**/*.o
 net
+**/test
 nbproject
 data

@@ -1,13 +1,16 @@
 .DEFAULT_GOAL := net
 
-net: main.o Gap.o Direction.o Link.o Net.o Node.o Space.o
-	gcc main.o Gap.o Direction.o Link.o Net.o Node.o Space.o -o net
+net: main.o Gap.o GapError.o Direction.o Link.o Net.o Node.o Space.o
+	gcc main.o Gap.o GapError.o Direction.o Link.o Net.o Node.o Space.o -o net
 
 main.o: main.c
 	gcc -c main.c
 
-Gap.o: Gap.c Gap.h
+Gap.o: Gap.c Gap.h GapError.h
 	gcc -c Gap.c
+
+GapError.o: GapError.c GapError.h
+	gcc -c GapError.c
 
 Direction.o: Direction.c Direction.h
 	gcc -c Direction.c

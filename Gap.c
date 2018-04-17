@@ -1,5 +1,6 @@
 #include "Gap.h"
 #include <stdlib.h>
+#include "GapError.h"
 
 struct Gap * Gap_construct(size_t place, struct Gap * next)
 {
@@ -16,12 +17,14 @@ void Gap_destruct(struct Gap * this)
 	if (NULL != this->next) {
 		Gap_destruct(this->next);
 	}
-	
+
 	free(this);
 }
 
 size_t Gap_getPlace(struct Gap * this)
 {
+	GapError_placeCanBeReadOnlyOnce(this->place);
+
 	size_t place = this->place;
 	this->place = 0;
 	
