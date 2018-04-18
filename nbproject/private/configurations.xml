@@ -19,14 +19,10 @@
         <in>Space.h</in>
         <in>main.c</in>
       </df>
-      <df name="test">
+      <df name="tests">
         <df name="Gap">
-          <in>GapError.c</in>
-          <in>Makefile</in>
-          <in>main.c</in>
         </df>
       </df>
-      <in>.gitignore</in>
     </df>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
