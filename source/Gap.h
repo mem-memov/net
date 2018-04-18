@@ -2,10 +2,11 @@
 #define GAP_H
 
 #include <stdlib.h>
+#include "GapError.h"
 
 struct Gap;
 
-struct Gap * Gap_construct(size_t place, struct Gap * next);
+struct Gap * Gap_construct(size_t place, struct Gap * next, struct GapError * error);
 
 void Gap_destruct(struct Gap * this);
 

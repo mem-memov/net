@@ -17,14 +17,14 @@ void GapError_destruct(struct GapError * this)
 	free(this);
 }
 
-void GapError_zeroPlaceIsReservedForInvalidGap(size_t place)
+void GapError_zeroPlaceIsReservedForInvalidGap(struct GapError * this, size_t place)
 {
 	if (0 == place) {
 		exit(1);
 	}
 }
 
-void GapError_placeCanBeReadOnlyOnce(size_t place)
+void GapError_placeCanBeReadOnlyOnce(struct GapError * this, size_t place)
 {
 	if (0 == place) {
 		exit(1);

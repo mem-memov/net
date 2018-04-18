@@ -18,7 +18,7 @@ Direction.o: Direction.c Direction.h
 Link.o: Link.c Link.h Direction.h
 	gcc -c Link.c
 
-Net.o: Net.c Net.h Gap.h
+Net.o: Net.c Net.h Gap.h GapError.h
 	gcc -c Net.c
 
 Node.o: Node.c Node.h Link.h

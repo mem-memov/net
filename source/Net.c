@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Gap.h"
+#include "GapError.h"
 
 struct Net {
 	size_t * places;
@@ -187,9 +188,11 @@ void Net_scanForGaps(struct Net * this)
 
 void Net_addGap(struct Net * this, size_t place)
 {
+	struct GapError * error = GapError_construct();
+	
 	if (NULL == this->gap) {
-		this->gap = Gap_construct(place, NULL);
+		this->gap = Gap_construct(place, NULL, error);
 	} else {
-		this->gap = Gap_construct(place, this->gap);
+		this->gap = Gap_construct(place, this->gap, error);
 	}
 }
