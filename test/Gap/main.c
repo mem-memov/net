@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "../../source/Gap.h"
+#include "../../source/Gap.c"
 
 void test_it_contructs_a_tail_gap()
 {
@@ -31,11 +31,11 @@ void test_it_supplies_entry_place()
 	size_t result = Gap_getPlace(gap);
 	
 	assert(result == place && "A gap supplies the beginning of an unused entry.");
-	assert(gap->place == 0 && "A gap can supply only once.");
+	assert(gap->place == 0 && "A gap can supply only once. It gets erased after the first use.");
 }
 
-int main(int argc, char** argv) {
-
+int main(int argc, char** argv)
+{
 	test_it_contructs_a_tail_gap();
 	test_it_contructs_a_head_gap();
 	test_it_supplies_entry_place();
