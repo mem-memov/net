@@ -5,18 +5,7 @@
 #include <stdio.h>
 #include "Net.h"
 
-struct Space {
-	size_t spaceSize;
-	size_t entrySize;
-	size_t placeSize;
-	size_t * places;
-	struct Net * net;
-
-	struct Node * node;
-	struct Node * originNode;
-	struct Node * destinationNode;
-	struct Link * link;
-};
+struct Space;
 
 struct Space * Space_construct(size_t size);
 

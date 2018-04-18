@@ -3,24 +3,7 @@
 
 #include <stdlib.h>
 
-struct Direction {
-	// store
-	size_t * places;
-	
-	// type
-	char offset;
-
-	// pool
-	struct Direction * nextDirection;
-	
-	// identifier
-	size_t place;
-
-	// fields
-	size_t * node;
-	size_t * previous;
-	size_t * next;
-};
+struct Direction;
 
 struct Direction * Direction_constructOutgoing(size_t * places);
 

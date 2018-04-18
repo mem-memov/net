@@ -3,6 +3,19 @@
 #include <stdio.h>
 #include "Gap.h"
 
+struct Net {
+	size_t * places;
+	size_t spaceSize;
+	size_t entrySize;
+	struct Gap * gap;
+	
+	size_t * one;
+	size_t * data;
+	size_t * placeSize;
+	size_t * nextPlace;
+	size_t * nodeCount;
+	size_t * linkCount;
+};
 
 struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize)
 {

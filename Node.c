@@ -2,6 +2,19 @@
 #include <stdlib.h>
 #include "Link.h"
 
+struct Node {
+	size_t * place;
+	size_t * data;
+	size_t * outgoingLinkCount;
+	size_t * incomingLinkCount;
+	size_t * outgoingLink;
+	size_t * incomingLink;
+        
+	size_t * places;
+	
+	struct Link * link;
+};
+
 struct Node * Node_construct(size_t * places)
 {
 	struct Node * this = malloc(sizeof(struct Node));

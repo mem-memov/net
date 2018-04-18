@@ -3,10 +3,7 @@
 
 #include <stdlib.h>
 
-struct Gap {
-	size_t place;
-	struct Gap * next;
-};
+struct Gap;
 
 struct Gap * Gap_construct(size_t place, struct Gap * next);
 

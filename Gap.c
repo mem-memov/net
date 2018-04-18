@@ -2,8 +2,15 @@
 #include <stdlib.h>
 #include "GapError.h"
 
+struct Gap {
+	size_t place;
+	struct Gap * next;
+};
+
 struct Gap * Gap_construct(size_t place, struct Gap * next)
 {
+	GapError_zeroPlaceIsReservedForInvalidGap(place);
+	
 	struct Gap * this = malloc(sizeof(struct Gap));
 	
 	this->place = place;

@@ -4,15 +4,7 @@
 #include <stdlib.h>
 #include "Direction.h"
 
-struct Link {
-	size_t * places;
-        
-	size_t place;
-	
-	// pool
-	struct Outgoing * outgoing;
-	struct Incoming * incoming;	
-};
+struct Link;
 
 struct Link * Link_construct(size_t * places);
 

@@ -5,6 +5,19 @@
 #include "Net.h"
 #include "Node.h"
 
+struct Space {
+	size_t spaceSize;
+	size_t entrySize;
+	size_t placeSize;
+	size_t * places;
+	struct Net * net;
+
+	struct Node * node;
+	struct Node * originNode;
+	struct Node * destinationNode;
+	struct Link * link;
+};
+
 struct Space * Space_construct(size_t spaceSize)
 {
 	struct Space * this = malloc(sizeof(struct Space));
