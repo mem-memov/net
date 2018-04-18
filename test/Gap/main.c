@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "../../Gap.h"
+#include "../../source/Gap.h"
 
 void test_it_contructs_a_tail_gap()
 {
