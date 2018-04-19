@@ -27,6 +27,7 @@ void Gap_destruct(struct Gap * this)
 		Gap_destruct(this->next);
 	}
 
+	free(this->error);
 	free(this);
 }
 

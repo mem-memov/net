@@ -35,7 +35,7 @@ void test_it_supplies_entry_place()
 	size_t result = Gap_getPlace(gap);
 	
 	assert(result == place && "A gap supplies the beginning of an unused entry.");
-	assert(gap->place == 10 && "A gap can supply only once. It gets erased after the first use.");
+	assert(gap->place == 0 && "A gap can supply only once. It gets erased after the first use.");
 }
 
 void test_it_checks_entry_place_is_invalid()
