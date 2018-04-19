@@ -142,28 +142,31 @@ void test_it_denies_directing_to_a_particular_node()
 
 void test_it_supplies_the_node_it_directs_to()
 {
-	size_t places[12] = {1, 2, 3, 4, 5, 6};
-	struct Direction * direction = Direction_constructIncoming(places);
+    // 6 -> 12
+	size_t places[24] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	struct Direction * direction = Direction_constructOutgoing(places);
 	
-	size_t place = 0;
+	size_t place = 18;
 	Direction_read(direction, place);
 
 	size_t result = Direction_getNode(direction);
 	
-	assert(result == 4 && result == places[3] && "A direction supplies the place a node occupies that it points to.");
+	assert(result == 12 && result == places[18] && "A direction supplies the place a node occupies that it points to.");
 }
 
 void test_it_supplies_the_place_of_the_next_direction()
 {
-	size_t places[12] = {1, 2, 3, 4, 5, 6};
-	struct Direction * direction = Direction_constructIncoming(places);
+    // 6 -> 12
+    // 6 -> 18
+	size_t places[36] = {0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,6,30,6,12,0,  18,24,0,6,18,0};
+	struct Direction * direction = Direction_constructOutgoing(places);
 	
-	size_t place = 0;
+	size_t place = 24;
 	Direction_read(direction, place);
 
 	size_t result = Direction_getNext(direction);
 	
-	assert(result == 6 && result == places[5] && "A direction supplies the place of the next direction in the chain.");
+	assert(result == 30 && result == places[26] && "A direction supplies the place of the next direction in the chain.");
 }
 
 void test_it_gets_deleted_with_reconnection()
@@ -188,16 +191,14 @@ void test_it_gets_deleted_with_reconnection()
 	assert((*nextDirection->previous) == 6 && places[31] == 6 && "The previous direction gets reconnected.");
 }
 
-oid test_it_gets_deleted_without_reconnection()
+void test_it_gets_deleted_without_reconnection()
 {
     // 6 -> 12
-	size_t places[36] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	size_t places[24] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
 	
 	struct Direction * direction = Direction_constructOutgoing(places);
 	
 	struct Direction * nextDirection = Direction_constructOutgoing(places);
-	size_t trashValue = 333333;
-	(*nextDirection->previous) = trashValue;
 	Direction_setPool(direction, nextDirection);
 	
 	size_t place = 18;
@@ -208,7 +209,6 @@ oid test_it_gets_deleted_without_reconnection()
 	assert((*direction->node) == 0 && places[18] == 0 && "All fields of a deleted direction are set to zero.");
 	assert((*direction->previous) == 0 && places[19] == 0 && "All fields of a deleted direction are set to zero.");
 	assert((*direction->next) == 0 && places[20] == 0 && "All fields of a deleted direction are set to zero.");
-	assert((*nextDirection->previous) == trashValue && places[31] == trashValue && "The previous direction doesn't get reconnected.");
 }
 
 int main(int argc, char** argv)
