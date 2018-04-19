@@ -112,9 +112,15 @@ size_t Direction_getNext(struct Direction * this)
 
 void Direction_delete(struct Direction * this)
 {
-	Direction_read(this->nextDirection, (*this->next));
-	Direction_append(this->nextDirection, (*this->previous));
+	if (0 == (*this->previous)) {
+		exit(1);
+	}
 	
+	if (0 != (*this->next)) {
+		Direction_read(this->nextDirection, (*this->next));
+		Direction_append(this->nextDirection, (*this->previous));
+	}
+
 	(*this->node) = 0;
 	(*this->previous) = 0;
 	(*this->next) = 0;
