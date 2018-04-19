@@ -35,19 +35,20 @@ void test_it_supplies_entry_place()
 	size_t result = Gap_getPlace(gap);
 	
 	assert(result == place && "A gap supplies the beginning of an unused entry.");
-	assert(gap->place == 0 && "A gap can supply only once. It gets erased after the first use.");
+	assert(gap->place == 10 && "A gap can supply only once. It gets erased after the first use.");
 }
 
 void test_it_checks_entry_place_is_invalid()
 {
 	struct GapError * error = GapError_construct();
 	error->method = "";
-	error->place = 777;
+	error->place = 0;
 
-	struct Gap * gap = Gap_construct(0, NULL, error);
+	size_t place = 555;
+	struct Gap * gap = Gap_construct(place, NULL, error);
 	
 	assert(0 == strcmp(error->method, "GapError_zeroPlaceIsReservedForInvalidGap"));
-	assert(0 == error->place && "GapError_zeroPlaceIsReservedForInvalidGap place");
+	assert(place == error->place && "GapError_zeroPlaceIsReservedForInvalidGap place");
 }
 
 int main(int argc, char** argv)
