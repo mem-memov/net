@@ -82,12 +82,20 @@ void Direction_read(struct Direction * this, size_t place)
 
 void Direction_joinChain(struct Direction * this, size_t previous, size_t next)
 {
-	(*this->previous) = previous;
-	(*this->next) = next;
+	if (0 == previous || 0 == next || previous == next) {
+		exit(1);
+	}
+	
+	(*this->previous) = previous; // a node entry
+	(*this->next) = next; // direction that pointed to the node before
 }
 
 void Direction_append(struct Direction * this, size_t previous)
 {
+	if (0 == previous) {
+		exit(1);
+	}
+	
 	(*this->previous) = previous;
 }
 
