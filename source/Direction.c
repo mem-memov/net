@@ -88,7 +88,7 @@ void Direction_read(struct Direction * this, size_t place)
 
 void Direction_joinChain(struct Direction * this, size_t previous, size_t next)
 {
-	DirectionError_forbidZeroAndEqualtyForPreviousAndNext(this->error, previous, next);
+	DirectionError_forbidZeroAndEqualtyForPreviousAndNext(this->error, & previous, & next);
 	
 	(*this->previous) = previous; // a node entry
 	(*this->next) = next; // direction that pointed to the node before

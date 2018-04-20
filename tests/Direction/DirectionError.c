@@ -26,9 +26,9 @@ void DirectionError_forbidZeroPlaceForPrevious(struct DirectionError * this, siz
 	this->previous = (*previous);
 }
 
-void DirectionError_forbidZeroAndEqualtyForPreviousAndNext(struct DirectionError * this, size_t previous, size_t next)
+void DirectionError_forbidZeroAndEqualtyForPreviousAndNext(struct DirectionError * this, size_t * previous, size_t * next)
 {
 	this->method = "DirectionError_forbidZeroAndEqualtyForPreviousAndNext";
-	this->previous = previous;
-	this->next = next;
+	this->previous = (*previous);
+	this->next = (*next);
 }

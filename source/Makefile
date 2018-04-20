@@ -1,34 +1,35 @@
-.DEFAULT_GOAL := net
+CC=gcc
+CFLAGS= -dNDEBUG
 
 net: main.o Gap.o GapError.o Direction.o DirectionError.o Link.o Net.o Node.o Space.o
-	gcc main.o Gap.o GapError.o Direction.o DirectionError.o Link.o Net.o Node.o Space.o -o net
+	$(CC) main.o Gap.o GapError.o Direction.o DirectionError.o Link.o Net.o Node.o Space.o -o net
 
 main.o: main.c
-	gcc -c main.c
+	$(CC) $(CFLAGS) -c main.c
 
 Gap.o: Gap.c Gap.h GapError.h
-	gcc -c Gap.c
+	$(CC) $(CFLAGS) -c Gap.c
 
 GapError.o: GapError.c GapError.h
-	gcc -c GapError.c
+	$(CC) $(CFLAGS) -c GapError.c
 
 Direction.o: Direction.c Direction.h DirectionError.h
-	gcc -c Direction.c
+	$(CC) $(CFLAGS) -c Direction.c
 
 DirectionError.o: Direction.c DirectionError.h
-	gcc -c DirectionError.c
+	$(CC) $(CFLAGS) -c DirectionError.c
 
 Link.o: Link.c Link.h Direction.h DirectionError.h
-	gcc -c Link.c
+	$(CC) $(CFLAGS) -c Link.c
 
 Net.o: Net.c Net.h Gap.h GapError.h
-	gcc -c Net.c
+	$(CC) $(CFLAGS) -c Net.c
 
 Node.o: Node.c Node.h Link.h
-	gcc -c Node.c
+	$(CC) $(CFLAGS) -c Node.c
 
 Space.o: Space.c Space.h Link.h Net.h Node.h 
-	gcc -c Space.c
+	$(CC) $(CFLAGS) -c Space.c
 	
 clean:
 	rm --force *.o net

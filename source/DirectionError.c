@@ -1,5 +1,6 @@
 #include "DirectionError.h"
 #include <stdlib.h>
+#include <assert.h>
 
 struct DirectionError {
 
@@ -20,14 +21,10 @@ void DirectionError_destruct(struct DirectionError * this)
 
 void DirectionError_forbidZeroPlaceForPrevious(struct DirectionError * this, size_t * previous)
 {
-	if ( 0 == (*previous) ) {
-		exit(1);
-	}
+	assert( 0 != (*previous) );
 }
 
-void DirectionError_forbidZeroAndEqualtyForPreviousAndNext(struct DirectionError * this, size_t previous, size_t next)
+void DirectionError_forbidZeroAndEqualtyForPreviousAndNext(struct DirectionError * this, size_t * previous, size_t * next)
 {
-	if ( 0 == previous || 0 == next || previous == next ) {
-		exit(1);
-	}
+	assert( 0 != previous && 0 != next && previous != next );
 }

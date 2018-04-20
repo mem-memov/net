@@ -1,5 +1,6 @@
 #include "GapError.h"
 #include <stdlib.h>
+#include <assert.h>
 
 struct GapError {
 
@@ -20,15 +21,11 @@ void GapError_destruct(struct GapError * this)
 
 void GapError_zeroPlaceIsReservedForInvalidGap(struct GapError * this, size_t place)
 {
-	if (0 == place) {
-		exit(1);
-	}
+	assert(0 != place);
 }
 
 void GapError_placeCanBeReadOnlyOnce(struct GapError * this, size_t place)
 {
-	if (0 == place) {
-		exit(1);
-	}
+	assert(0 != place);
 }
 
