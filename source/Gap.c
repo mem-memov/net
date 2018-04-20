@@ -23,12 +23,8 @@ struct Gap * Gap_construct(size_t place, struct Gap * next, struct GapError * er
 
 void Gap_destruct(struct Gap * this)
 {
-	if (NULL != this->next) {
-		Gap_destruct(this->next);
-	}
-
-	free(this->error);
 	free(this);
+	this = NULL;
 }
 
 size_t Gap_getPlace(struct Gap * this)

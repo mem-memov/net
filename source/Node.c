@@ -32,6 +32,7 @@ void Node_destruct(struct Node * this)
 	free(this->link);
 	
 	free(this);
+	this = NULL;
 }
 
 void Node_bind(struct Node * this, size_t place)

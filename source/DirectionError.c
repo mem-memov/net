@@ -15,6 +15,7 @@ struct DirectionError * DirectionError_construct()
 void DirectionError_destruct(struct DirectionError * this)
 {
 	free(this);
+	this = NULL;
 }
 
 void DirectionError_forbidZeroPlaceForPrevious(struct DirectionError * this, size_t * previous)

@@ -56,6 +56,7 @@ void Direction_setPool(struct Direction * this, struct Direction * nextDirection
 void Direction_destruct(struct Direction * this)
 {
 	free(this);
+	this = NULL;
 }
 
 size_t Direction_getPlace(struct Direction * this)

@@ -20,7 +20,7 @@ struct Link * Link_construct(size_t * places)
 	this->places = places;
 
 	// pool
-	struct DirectionError * directionError = DirectionError_construct();
+	struct DirectionError * directionError = DirectionError_construct(); // TODO: destruct
 	
 	this->outgoing = Direction_constructOutgoing(this->places, directionError);
 	Direction_setPool(
@@ -43,6 +43,7 @@ void Link_destruct(struct Link * this)
 	free(this->incoming);
 	
 	free(this);
+	this = NULL;
 }
 
 size_t Link_getPlace(struct Link * this)

@@ -16,6 +16,8 @@ void test_it_contructs_an_outgoing_direction()
 	assert(direction->places == places && "A direction can access data in this store.");
 	assert(direction->offset == 0 && "An outgoing direction starts at the beginning of an entry.");
 	assert(direction->nextDirection == NULL && "A new direction is not connected to any other direction.");
+	
+	Direction_destruct(direction);
 }
 
 void test_it_contructs_an_imcoming_direction()
@@ -29,6 +31,8 @@ void test_it_contructs_an_imcoming_direction()
 	assert(direction->places == places && "A direction can access data in this store.");
 	assert(direction->offset == 3 && "An incoming direction starts right after the outgoing direction.");
 	assert(direction->nextDirection == NULL && "A new direction is not connected to any other direction.");
+	
+	Direction_destruct(direction);
 }
 
 void test_it_accepts_help_structures_to_avoid_eternal_cycle_when_constructing()
@@ -43,6 +47,9 @@ void test_it_accepts_help_structures_to_avoid_eternal_cycle_when_constructing()
 	Direction_setPool(direction, nextDirection);
 	
 	assert(direction->nextDirection == nextDirection && "A direction requires a helping set of pointers to operate on the next direction.");
+	
+	Direction_destruct(direction);
+	Direction_destruct(nextDirection);
 }
 
 void test_it_supplies_its_place_inside_the_storage_array()
@@ -59,6 +66,8 @@ void test_it_supplies_its_place_inside_the_storage_array()
 	size_t result = Direction_getPlace(direction);
 	
 	assert(result == place && "A direction keeps the place it is bound to inside the storage array.");
+	
+	Direction_destruct(direction);
 }
 
 void test_it_writes_values_of_a_fresh_direction_to_the_store()
@@ -76,6 +85,8 @@ void test_it_writes_values_of_a_fresh_direction_to_the_store()
 	assert((*direction->node) == destination && places[18] == destination && "A direction keeps the node it points to.");
 	assert((*direction->previous) == 0 && places[19] == 0 && "A new direction is not connected to any previous direction.");
 	assert((*direction->next) == 0 && places[20] == 0 && "A new direction is not connected to any following direction.");
+	
+	Direction_destruct(direction);
 }
 
 void test_it_reads_values_of_an_existing_direction_from_the_store()
@@ -94,6 +105,8 @@ void test_it_reads_values_of_an_existing_direction_from_the_store()
 	assert((*direction->node) == 12 && "A direction keeps the node it points to.");
 	assert((*direction->previous) == 6 && "A direction can be connected to a previous direction.");
 	assert((*direction->next) == 0 && "A new direction can be connected to a following direction.");
+	
+	Direction_destruct(direction);
 }
 
 void test_it_joins_chain_of_directions()
@@ -117,6 +130,9 @@ void test_it_joins_chain_of_directions()
 
 	assert((*direction->previous) == previousPlace && places[31] == previousPlace && "A direction gets connected to a previous entry (a node).");
 	assert((*direction->next) == nextPlace && places[32] == nextPlace && "A new direction gets connected to a following direction.");
+	
+	Direction_destruct(direction);
+	Direction_destruct(nextDirection);
 }
 
 void test_it_gets_appended_to_a_previous_direction()
@@ -133,6 +149,8 @@ void test_it_gets_appended_to_a_previous_direction()
 	Direction_append(direction, previousPlace);
 	
 	assert((*direction->previous) == previousPlace && places[19] == previousPlace && "A direction gets connected to a previous entry (a node).");
+	
+	Direction_destruct(direction);
 }
 
 void test_it_confirms_directing_to_a_particular_node()
@@ -151,6 +169,8 @@ void test_it_confirms_directing_to_a_particular_node()
 	size_t result = Direction_hasNode(direction, nodePlace);
 	
 	assert(result == 1 && "A direction confirms it points to a particular node.");
+	
+	Direction_destruct(direction);
 }
 
 void test_it_denies_directing_to_a_particular_node()
@@ -169,6 +189,8 @@ void test_it_denies_directing_to_a_particular_node()
 	size_t result = Direction_hasNode(direction, nodePlace);
 	
 	assert(result == 0 && "A direction denies it points to a particular node.");
+	
+	Direction_destruct(direction);
 }
 
 void test_it_supplies_the_node_it_directs_to()
@@ -186,6 +208,8 @@ void test_it_supplies_the_node_it_directs_to()
 	size_t result = Direction_getNode(direction);
 	
 	assert(result == 12 && result == places[18] && "A direction supplies the place a node occupies that it points to.");
+	
+	Direction_destruct(direction);
 }
 
 void test_it_supplies_the_place_of_the_next_direction()
@@ -202,6 +226,8 @@ void test_it_supplies_the_place_of_the_next_direction()
 	size_t result = Direction_getNext(direction);
 	
 	assert(result == 30 && result == places[26] && "A direction supplies the place of the next direction in the chain.");
+	
+	Direction_destruct(direction);
 }
 
 void test_it_gets_deleted_with_reconnection()
@@ -226,6 +252,9 @@ void test_it_gets_deleted_with_reconnection()
 	assert((*direction->previous) == 0 && places[25] == 0 && "All fields of a deleted direction are set to zero.");
 	assert((*direction->next) == 0 && places[26] == 0 && "All fields of a deleted direction are set to zero.");
 	assert((*nextDirection->previous) == 6 && places[31] == 6 && "The previous direction gets reconnected.");
+	
+	Direction_destruct(direction);
+	Direction_destruct(nextDirection);
 }
 
 void test_it_gets_deleted_without_reconnection()
@@ -248,6 +277,19 @@ void test_it_gets_deleted_without_reconnection()
 	assert((*direction->node) == 0 && places[18] == 0 && "All fields of a deleted direction are set to zero.");
 	assert((*direction->previous) == 0 && places[19] == 0 && "All fields of a deleted direction are set to zero.");
 	assert((*direction->next) == 0 && places[20] == 0 && "All fields of a deleted direction are set to zero.");
+	
+	Direction_destruct(direction);
+	Direction_destruct(nextDirection);
+}
+
+void test_it_forbids_zero_when_getting_appended()
+{
+//	struct DirectionError * error = DirectionError_construct();
+//	struct Direction * direction = Direction_constructOutgoing(places, error);
+//	
+//	Direction_append(direction, 0);
+	
+	
 }
 
 int main(int argc, char** argv)

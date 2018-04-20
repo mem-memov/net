@@ -15,8 +15,8 @@ struct GapError * GapError_construct()
 
 void GapError_destruct(struct GapError * this)
 {
-	free(this->method); 
 	free(this);
+	this = NULL;
 }
 
 void GapError_zeroPlaceIsReservedForInvalidGap(struct GapError * this, size_t place)

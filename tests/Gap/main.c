@@ -8,11 +8,15 @@
 void test_it_contructs_a_tail_gap()
 {
 	struct GapError * error = GapError_construct();
+	
 	size_t place = 6;
 	struct Gap * gap = Gap_construct(place, NULL, error);
-	
+
 	assert(gap->place == place && "A tail gap specifies the beginning of an unused entry.");
 	assert(gap->next == NULL && "A tail gap is not connected to any other gap.");
+	
+	Gap_destruct(gap);
+	GapError_destruct(error);
 }
 
 void test_it_contructs_a_head_gap()
@@ -24,6 +28,10 @@ void test_it_contructs_a_head_gap()
 	
 	assert(gap->place == place && "A head gap specifies the beginning of an unused entry.");
 	assert(gap->next == next && "A head gap is connected to some other gap.");
+	
+	Gap_destruct(next);
+	Gap_destruct(gap);
+	GapError_destruct(error);
 }
 
 void test_it_supplies_entry_place()
@@ -36,6 +44,9 @@ void test_it_supplies_entry_place()
 	
 	assert(result == place && "A gap supplies the beginning of an unused entry.");
 	assert(gap->place == 0 && "A gap can supply only once. It gets erased after the first use.");
+	
+	Gap_destruct(gap);
+	GapError_destruct(error);
 }
 
 void test_it_checks_entry_place_is_invalid()
@@ -49,6 +60,9 @@ void test_it_checks_entry_place_is_invalid()
 	
 	assert(0 == strcmp(error->method, "GapError_zeroPlaceIsReservedForInvalidGap"));
 	assert(place == error->place && "GapError_zeroPlaceIsReservedForInvalidGap place");
+	
+	Gap_destruct(gap);
+	GapError_destruct(error);
 }
 
 int main(int argc, char** argv)

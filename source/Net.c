@@ -37,6 +37,7 @@ void Net_destruct(struct Net * this)
 	}
 	
 	free(this);
+	this = NULL;
 }
 
 void Net_bind(struct Net * this)

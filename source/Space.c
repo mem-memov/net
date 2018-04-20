@@ -54,6 +54,7 @@ void Space_destruct(struct Space * this)
 	free(this->link);
 	
 	free(this);
+	this = NULL;
 }
 
 char Space_hasFreePlace(struct Space * this)
