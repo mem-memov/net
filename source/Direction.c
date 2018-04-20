@@ -1,5 +1,6 @@
 #include "Direction.h"
 #include <stdlib.h>
+#include "DirectionError.h"
 
 struct Direction {
 	// store
@@ -7,6 +8,8 @@ struct Direction {
 	
 	// type
 	char offset;
+	
+	struct DirectionError * error;
 
 	// pool
 	struct Direction * nextDirection;
@@ -20,27 +23,29 @@ struct Direction {
 	size_t * next;
 };
 
-struct Direction * Direction_construct(size_t * places, char offset)
+struct Direction * Direction_construct(size_t * places, char offset, struct DirectionError * error)
 {
 	struct Direction * this = malloc(sizeof(struct Direction));
 
 	this->places = places;
 	
 	this->offset = offset;
+	
+	this->error = error;
 
 	this->nextDirection = NULL;
 
 	return this;
 }
 
-struct Direction * Direction_constructOutgoing(size_t * places)
+struct Direction * Direction_constructOutgoing(size_t * places, struct DirectionError * error)
 {
-	return Direction_construct(places, 0);
+	return Direction_construct(places, 0, error);
 }
 
-struct Direction * Direction_constructIncoming(size_t * places)
+struct Direction * Direction_constructIncoming(size_t * places, struct DirectionError * error)
 {
-	return Direction_construct(places, 3);
+	return Direction_construct(places, 3, error);
 }
 
 void Direction_setPool(struct Direction * this, struct Direction * nextDirection)

@@ -2,12 +2,13 @@
 #define DIRECTION_H
 
 #include <stdlib.h>
+#include "DirectionError.h"
 
 struct Direction;
 
-struct Direction * Direction_constructOutgoing(size_t * places);
+struct Direction * Direction_constructOutgoing(size_t * places, struct DirectionError * error);
 
-struct Direction * Direction_constructIncoming(size_t * places);
+struct Direction * Direction_constructIncoming(size_t * places, struct DirectionError * error);
 
 void Direction_setPool(struct Direction * this, struct Direction * nextDirection);
 
