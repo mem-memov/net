@@ -87,9 +87,7 @@ void Direction_read(struct Direction * this, size_t place)
 
 void Direction_joinChain(struct Direction * this, size_t previous, size_t next)
 {
-	if (0 == previous || 0 == next || previous == next) {
-		exit(1);
-	}
+	DirectionError_forbidZeroAndEqualtyForPreviousAndNext(this->error, &previous, &next);
 	
 	(*this->previous) = previous; // a node entry
 	(*this->next) = next; // direction that pointed to the node before
@@ -97,9 +95,7 @@ void Direction_joinChain(struct Direction * this, size_t previous, size_t next)
 
 void Direction_append(struct Direction * this, size_t previous)
 {
-	if (0 == previous) {
-		exit(1);
-	}
+	DirectionError_forbidZeroPlaceForPrevious(this->error, &previous);
 	
 	(*this->previous) = previous;
 }
@@ -125,9 +121,7 @@ size_t Direction_getNext(struct Direction * this)
 
 void Direction_delete(struct Direction * this)
 {
-	if (0 == (*this->previous)) {
-		exit(1);
-	}
+	DirectionError_forbidZeroPlaceForPrevious(this->error, this->previous);
 	
 	if (0 != (*this->next)) {
 		Direction_read(this->nextDirection, (*this->next));
