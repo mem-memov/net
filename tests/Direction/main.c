@@ -16,7 +16,7 @@ void test_it_contructs_an_outgoing_direction()
 
 void test_it_contructs_an_imcoming_direction()
 {
-	size_t places[6] = {1, 2, 3, 4, 5, 6};
+	size_t places[] = {1, 2, 3, 4, 5, 6};
 	struct Direction * direction = Direction_constructIncoming(places);
 	
 	assert(direction->places == places && "A direction can access data in this store.");
@@ -26,7 +26,7 @@ void test_it_contructs_an_imcoming_direction()
 
 void test_it_accepts_help_structures_to_avoid_eternal_cycle_when_constructing()
 {
-	size_t places[6] = {1, 2, 3, 4, 5, 6};
+	size_t places[] = {1, 2, 3, 4, 5, 6};
 	struct Direction * direction = Direction_constructIncoming(places);
 	
 	struct Direction * nextDirection = Direction_constructIncoming(places);
@@ -37,7 +37,7 @@ void test_it_accepts_help_structures_to_avoid_eternal_cycle_when_constructing()
 
 void test_it_supplies_its_place_inside_the_storage_array()
 {
-	size_t places[6] = {1, 2, 3, 4, 5, 6};
+	size_t places[] = {1, 2, 3, 4, 5, 6};
 	struct Direction * direction = Direction_constructIncoming(places);
 	
 	size_t place = 0;
@@ -50,7 +50,7 @@ void test_it_supplies_its_place_inside_the_storage_array()
 
 void test_it_writes_values_of_a_fresh_direction_to_the_store()
 {
-	size_t places[12] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+	size_t places[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
 	struct Direction * direction = Direction_constructIncoming(places);
 	
 	size_t place = 0;
@@ -78,49 +78,53 @@ void test_it_reads_values_of_an_existing_direction_from_the_store()
 
 void test_it_joins_chain_of_directions()
 {
-	size_t places[18] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
+    // 6 -> 12
+    // 6 -> 18
+	//                 0             6              12              18               24               30
+	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,6,30,6,12,0,  18,0,0,0,0,0};
+	//                               ^ previous                                       ^ next           ^ new
+	size_t previousPlace = 6;
 	
-	struct Direction * previousDirection = Direction_constructIncoming(places);
-	size_t previousPlace = 0;
-	Direction_read(previousDirection, previousPlace);
-	
-	struct Direction * direction = Direction_constructIncoming(places);
-	size_t place = 6;
+	struct Direction * direction = Direction_constructOutgoing(places);
+	size_t place = 30;
 	Direction_read(direction, place);
 	
-	struct Direction * nextDirection = Direction_constructIncoming(places);
-	size_t nextPlace = 12;
+	struct Direction * nextDirection = Direction_constructOutgoing(places);
+	size_t nextPlace = 24;
 	Direction_read(nextDirection, nextPlace);
 	
 	Direction_joinChain(direction, previousPlace, nextPlace);
 
-	assert((*direction->previous) == previousPlace && places[10] == previousPlace && "A direction gets connected to a previous direction.");
-	assert((*direction->next) == nextPlace && places[11] == nextPlace && "A new direction gets connected to a following direction.");
+	assert((*direction->previous) == previousPlace && places[31] == previousPlace && "A direction gets connected to a previous entry (a node).");
+	assert((*direction->next) == nextPlace && places[32] == nextPlace && "A new direction gets connected to a following direction.");
 }
 
 void test_it_gets_appended_to_a_previous_direction()
 {
-	size_t places[12] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  0,0,0,0,0,0};
 	
-	struct Direction * direction = Direction_constructIncoming(places);
-	size_t place = 6;
+	struct Direction * direction = Direction_constructOutgoing(places);
+	size_t place = 18;
 	Direction_read(direction, place);
 	
-	size_t previousPlace = 0;
+	size_t previousPlace = 6;
 	Direction_append(direction, previousPlace);
 	
-	assert((*direction->previous) == previousPlace && places[10] == previousPlace && "A direction gets connected to a previous direction.");
+	assert((*direction->previous) == previousPlace && places[19] == previousPlace && "A direction gets connected to a previous direction.");
 }
 
 void test_it_confirms_directing_to_a_particular_node()
 {
-	size_t places[12] = {1, 2, 3, 4, 5, 6};
-	struct Direction * direction = Direction_constructIncoming(places);
+    // 6 -> 12
+	//                 0             6              12              18
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
 	
-	size_t place = 0;
+	struct Direction * direction = Direction_constructOutgoing(places);
+	
+	size_t place = 18;
 	Direction_read(direction, place);
 	
-	size_t nodePlace = 4;
+	size_t nodePlace = 12;
 	size_t result = Direction_hasNode(direction, nodePlace);
 	
 	assert(result == 1 && "A direction confirms it points to a particular node.");
@@ -128,13 +132,17 @@ void test_it_confirms_directing_to_a_particular_node()
 
 void test_it_denies_directing_to_a_particular_node()
 {
-	size_t places[12] = {1, 2, 3, 4, 5, 6};
-	struct Direction * direction = Direction_constructIncoming(places);
+    // 6 -> 12
+	//                 0             6              12              18              24
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0,  24,0,0,0,0,0};
+	//                                                               ^ direction     ^ some node
 	
-	size_t place = 0;
+	struct Direction * direction = Direction_constructOutgoing(places);
+	
+	size_t place = 18;
 	Direction_read(direction, place);
 	
-	size_t nodePlace = 90;
+	size_t nodePlace = 24;
 	size_t result = Direction_hasNode(direction, nodePlace);
 	
 	assert(result == 0 && "A direction denies it points to a particular node.");
@@ -143,7 +151,10 @@ void test_it_denies_directing_to_a_particular_node()
 void test_it_supplies_the_node_it_directs_to()
 {
     // 6 -> 12
-	size_t places[24] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                 0             6              12              18
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                                                               ^ direction
+	
 	struct Direction * direction = Direction_constructOutgoing(places);
 	
 	size_t place = 18;
@@ -158,7 +169,8 @@ void test_it_supplies_the_place_of_the_next_direction()
 {
     // 6 -> 12
     // 6 -> 18
-	size_t places[36] = {0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,6,30,6,12,0,  18,24,0,6,18,0};
+	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,6,30,6,12,0,  18,24,0,6,18,0};
+	
 	struct Direction * direction = Direction_constructOutgoing(places);
 	
 	size_t place = 24;
@@ -173,7 +185,9 @@ void test_it_gets_deleted_with_reconnection()
 {
     // 6 -> 12
     // 6 -> 18
-	size_t places[36] = {0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,6,30,6,12,0,  18,24,0,6,18,0};
+	//                 0             6              12              18               24               30
+	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,6,30,6,12,0,  18,24,0,6,18,0};
+	//                                                                                ^ direction
 	
 	struct Direction * direction = Direction_constructOutgoing(places);
 	
@@ -194,7 +208,9 @@ void test_it_gets_deleted_with_reconnection()
 void test_it_gets_deleted_without_reconnection()
 {
     // 6 -> 12
-	size_t places[24] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                 0             6              12              18
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                                                               ^ direction
 	
 	struct Direction * direction = Direction_constructOutgoing(places);
 	
