@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 struct DirectionError {
-	size_t * previous;
-	size_t * next;
+	size_t previous;
+	size_t next;
 	char * method;
 };
 
@@ -23,10 +23,10 @@ void DirectionError_destruct(struct DirectionError * this)
 void DirectionError_forbidZeroPlaceForPrevious(struct DirectionError * this, size_t * previous)
 {
 	this->method = "DirectionError_forbidZeroPlaceForPrevious";
-	this->previous = previous;
+	this->previous = (*previous);
 }
 
-void DirectionError_forbidZeroAndEqualtyForPreviousAndNext(struct DirectionError * this, size_t * previous, size_t * next)
+void DirectionError_forbidZeroAndEqualtyForPreviousAndNext(struct DirectionError * this, size_t previous, size_t next)
 {
 	this->method = "DirectionError_forbidZeroAndEqualtyForPreviousAndNext";
 	this->previous = previous;

@@ -25,9 +25,9 @@ void DirectionError_forbidZeroPlaceForPrevious(struct DirectionError * this, siz
 	}
 }
 
-void DirectionError_forbidZeroAndEqualtyForPreviousAndNext(struct DirectionError * this, size_t * previous, size_t * next)
+void DirectionError_forbidZeroAndEqualtyForPreviousAndNext(struct DirectionError * this, size_t previous, size_t next)
 {
-	if ( 0 == (*previous) || 0 == (*next) || (*previous) == (*next) ) {
+	if ( 0 == previous || 0 == next || previous == next ) {
 		exit(1);
 	}
 }
