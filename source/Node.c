@@ -116,7 +116,7 @@ char Node_hasOutgoingLink(struct Node * this)
 void Node_addIncomingLink(struct Node * this, struct Link * link)
 {
 	if ( ! Node_hasIncomingLink(this)) {
-		Link_joinIncoming(link, (*this->place), 0);
+		Link_shiftIncoming(link, (*this->place));
 	} else {
 		Link_joinIncoming(link, (*this->place), (*this->incomingLink));
 		Link_read(this->link, (*this->incomingLink));
@@ -130,7 +130,7 @@ void Node_addIncomingLink(struct Node * this, struct Link * link)
 void Node_addOutgoingLink(struct Node * this, struct Link * link)
 {
 	if ( ! Node_hasOutgoingLink(this)) {
-		Link_joinOutgoing(link, (*this->place), 0);
+		Link_shiftOutgoing(link, (*this->place));
 	} else {
 		Link_joinOutgoing(link, (*this->place), (*this->outgoingLink));
 		Link_read(this->link, (*this->outgoingLink));
