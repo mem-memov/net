@@ -3,7 +3,9 @@
 #include "../../source/DirectionError.h"
 
 struct Direction {
-
+	size_t place;
+	size_t destination;
+	char * method;
 };
 
 struct Direction * Direction_construct(size_t * places, char offset, struct DirectionError * error)
@@ -45,7 +47,9 @@ void Direction_bind(struct Direction * this, size_t place)
 
 void Direction_create(struct Direction * this, size_t place, size_t destination)
 {
-
+	this->place = place;
+	this->destination = destination;
+	this->method = "Direction_create";
 }
 
 void Direction_read(struct Direction * this, size_t place)
