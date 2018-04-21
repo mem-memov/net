@@ -64,10 +64,33 @@ void test_it_writes_new_link_to_store()
 	demolishTest();
 }
 
+void test_it_reads_link_fields_from_store()
+{
+    // 6 -> 12
+	//                 0             6              12              18 
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                               ^ node         ^ node          ^ link
+	prepareTest(places);
+	
+	size_t place = 18;
+	Link_read(link, place);
+	
+	assert(place == link->place && "An existing link keeps its place in the store.");
+
+	assert(0 == strcmp(outgoing->method, "Direction_read"));
+	assert(place == outgoing->place && "Direction_read place");
+	
+	assert(0 == strcmp(incoming->method, "Direction_read"));
+	assert(place == incoming->place && "Direction_read place");
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	test_it_provides_its_place_in_store();
 	test_it_writes_new_link_to_store();
+	test_it_reads_link_fields_from_store();
 
 	return (EXIT_SUCCESS);
 }

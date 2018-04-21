@@ -54,7 +54,8 @@ void Direction_create(struct Direction * this, size_t place, size_t destination)
 
 void Direction_read(struct Direction * this, size_t place)
 {
-
+	this->place = place;
+	this->method = "Direction_read";
 }
 
 void Direction_joinChain(struct Direction * this, size_t previous, size_t next)
