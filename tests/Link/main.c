@@ -23,7 +23,19 @@ void demolishTest()
 
 void test_it_provides_its_place_in_store()
 {
+    // 6 -> 12
+	//                 0             6              12              18 
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                               ^ node         ^ node          ^ link
+	prepareTest(places);
+
+	size_t place = 18;
+	link->place = place;
+	size_t result = Link_getPlace(link);
 	
+	assert(result == place && "A new link supplies its place in the store when requested.");
+	
+	demolishTest();
 }
 
 void test_it_writes_new_link_to_store()
