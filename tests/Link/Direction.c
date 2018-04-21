@@ -6,6 +6,13 @@ struct Direction {
 
 };
 
+struct Direction * Direction_construct(size_t * places, char offset, struct DirectionError * error)
+{
+	struct Direction * this = malloc(sizeof(struct Direction));
+
+	return this;
+}
+
 struct Direction * Direction_constructOutgoing(size_t * places, struct DirectionError * error)
 {
 	return Direction_construct(places, 0, error);
