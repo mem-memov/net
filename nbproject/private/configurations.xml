@@ -5,6 +5,8 @@
       <df name="source">
         <in>Direction.c</in>
         <in>Direction.h</in>
+        <in>DirectionError.c</in>
+        <in>DirectionError.h</in>
         <in>Gap.c</in>
         <in>Gap.h</in>
         <in>GapError.c</in>
@@ -20,7 +22,15 @@
         <in>main.c</in>
       </df>
       <df name="tests">
+        <df name="Direction">
+          <in>DirectionError.c</in>
+          <in>main.c</in>
+        </df>
         <df name="Gap">
+          <in>GapError.c</in>
+          <in>main.c</in>
+        </df>
+        <df name="Link">
         </df>
       </df>
     </df>

@@ -1,7 +1,6 @@
 #include "Link.h"
 #include <stdlib.h>
 #include "Direction.h"
-#include "DirectionError.h"
 
 struct Link {
 	size_t * places;
@@ -9,30 +8,19 @@ struct Link {
 	size_t place;
 	
 	// pool
-	struct Outgoing * outgoing;
-	struct Incoming * incoming;	
+	struct Direction * outgoing;
+	struct Direction * incoming;	
 };
 
-struct Link * Link_construct(size_t * places)
+struct Link * Link_construct(size_t * places, struct Direction * outgoing, struct Direction * incoming)
 {
 	struct Link * this = malloc(sizeof(struct Link));
 	
 	this->places = places;
 
 	// pool
-	struct DirectionError * directionError = DirectionError_construct(); // TODO: destruct
-	
-	this->outgoing = Direction_constructOutgoing(this->places, directionError);
-	Direction_setPool(
-		this->outgoing, 
-		Direction_constructOutgoing(this->places, directionError)
-	);
-
-	this->incoming = Direction_constructIncoming(this->places, directionError);
-	Direction_setPool(
-		this->incoming, 
-		Direction_constructIncoming(this->places, directionError)
-	);
+	this->outgoing = outgoing;
+	this->incoming = incoming;
 
 	return this;
 }

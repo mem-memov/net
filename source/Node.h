@@ -6,7 +6,7 @@
 
 struct Node;
 
-struct Node * Node_construct(size_t * places);
+struct Node * Node_construct(size_t * places, struct Link * link);
 
 void Node_destruct(struct Node * this);
 

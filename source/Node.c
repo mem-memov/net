@@ -15,14 +15,14 @@ struct Node {
 	struct Link * link;
 };
 
-struct Node * Node_construct(size_t * places)
+struct Node * Node_construct(size_t * places, struct Link * link)
 {
 	struct Node * this = malloc(sizeof(struct Node));
 
 	this->places = places;
 	
 	// pool
-	this->link = Link_construct(places);
+	this->link = link;
 
 	return this;
 }

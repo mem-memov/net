@@ -33,10 +33,60 @@ struct Space * Space_construct(size_t spaceSize)
 	this->net = Net_construct(this->places, this->spaceSize, this->entrySize);
 
 	// pool
-	this->node = Node_construct(this->places);
-	this->originNode = Node_construct(this->places);
-	this->destinationNode = Node_construct(this->places);
-	this->link = Link_construct(this->places);
+	struct DirectionError * directionError = DirectionError_construct(); // TODO: destruct
+	this->node = Node_construct(
+		this->places, 
+		Link_construct(
+			this->places,
+			Direction_constructOutgoing(
+				this->places,
+				directionError
+			),
+			Direction_constructIncoming(
+				this->places,
+				directionError
+			)
+		)
+	);
+	this->originNode = Node_construct(
+		this->places, 
+		Link_construct(
+			this->places,
+			Direction_constructOutgoing(
+				this->places,
+				directionError
+			),
+			Direction_constructIncoming(
+				this->places,
+				directionError
+			)
+		)
+	);
+	this->destinationNode = Node_construct(
+		this->places, 
+		Link_construct(
+			this->places,
+			Direction_constructOutgoing(
+				this->places,
+				directionError
+			),
+			Direction_constructIncoming(
+				this->places,
+				directionError
+			)
+		)
+	);
+	this->link = Link_construct(
+		this->places,
+		Direction_constructOutgoing(
+			this->places,
+			directionError
+		),
+		Direction_constructIncoming(
+			this->places,
+			directionError
+		)
+	);
 	
 	Net_create(this->net, this->placeSize);
 
@@ -46,12 +96,14 @@ struct Space * Space_construct(size_t spaceSize)
 void Space_destruct(struct Space * this)
 {
 	free(this->places);
-	free(this->net);
+	this->places = NULL;
 	
-	free(this->node);
-	free(this->originNode);
-	free(this->destinationNode);
-	free(this->link);
+	Net_destruct(this->net);
+	
+	Node_destruct(this->node);
+	Node_destruct(this->originNode);
+	Node_destruct(this->destinationNode);
+	Link_destruct(this->link);
 	
 	free(this);
 	this = NULL;
