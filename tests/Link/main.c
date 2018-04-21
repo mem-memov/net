@@ -86,11 +86,35 @@ void test_it_reads_link_fields_from_store()
 	demolishTest();
 }
 
+void test_it_joins_chain_of_outgoing_directions()
+{
+    // 6 -> 12
+    // 6 -> 18
+	//                 0             6              12              18               24               30
+	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,0,0,6,0,0};
+	//                               ^ node         ^ node           ^ node          ^ link            ^ new link
+	prepareTest(places);
+	
+	size_t place = 30;
+	Link_read(link, place);
+	
+	size_t previous = 6;
+	size_t next = 24;
+	Link_joinOutgoing(link, previous, next);
+	
+	assert(0 == strcmp(outgoing->method, "Direction_joinChain"));
+	assert(previous == outgoing->previous && "Direction_joinChain previous");
+	assert(next == outgoing->next && "Direction_joinChain next");
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	test_it_provides_its_place_in_store();
 	test_it_writes_new_link_to_store();
 	test_it_reads_link_fields_from_store();
+	test_it_joins_chain_of_outgoing_directions();
 
 	return (EXIT_SUCCESS);
 }

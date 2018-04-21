@@ -5,6 +5,8 @@
 struct Direction {
 	size_t place;
 	size_t destination;
+	size_t previous;
+	size_t next;
 	char * method;
 };
 
@@ -60,7 +62,9 @@ void Direction_read(struct Direction * this, size_t place)
 
 void Direction_joinChain(struct Direction * this, size_t previous, size_t next)
 {
-
+	this->previous = previous;
+	this->next = next;
+	this->method = "Direction_joinChain";
 }
 
 void Direction_append(struct Direction * this, size_t previous)

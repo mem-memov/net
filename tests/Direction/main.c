@@ -255,24 +255,24 @@ void test_it_supplies_the_place_of_the_next_direction()
 void test_it_gets_deleted_with_reconnection()
 {
     // 6 -> 12
-    // 6 -> 18
+    // 6 -> 18 gets deleted
 	//                 0             6              12              18               24               30
-	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,6,30,6,12,0,  18,24,0,6,18,0};
-	//                                                                                ^ outgoing
+	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0};
+	//                                                                                                ^ outgoing
 	
 	prepareTest(places);
 	
 	Direction_setPool(outgoing, nextOutgoing);
 	
-	size_t place = 24;
+	size_t place = 30;
 	Direction_read(outgoing, place);
 	
 	Direction_delete(outgoing);
 	
-	assert((*outgoing->node) == 0 && places[24] == 0 && "All fields of a deleted direction are set to zero.");
-	assert((*outgoing->previous) == 0 && places[25] == 0 && "All fields of a deleted direction are set to zero.");
-	assert((*outgoing->next) == 0 && places[26] == 0 && "All fields of a deleted direction are set to zero.");
-	assert((*nextOutgoing->previous) == 6 && places[31] == 6 && "The previous direction gets reconnected.");
+	assert((*outgoing->node) == 0 && places[30] == 0 && "All fields of a deleted direction are set to zero.");
+	assert((*outgoing->previous) == 0 && places[31] == 0 && "All fields of a deleted direction are set to zero.");
+	assert((*outgoing->next) == 0 && places[32] == 0 && "All fields of a deleted direction are set to zero.");
+	assert((*nextOutgoing->previous) == 6 && places[25] == 6 && "The previous direction gets reconnected.");
 	
 	demolishTest();
 }
