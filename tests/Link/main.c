@@ -109,12 +109,79 @@ void test_it_joins_chain_of_outgoing_directions()
 	demolishTest();
 }
 
+void test_it_joins_chain_of_incoming_directions()
+{
+    // 6 -> 12
+    // 6 -> 18
+	//                 0             6              12              18               24               30
+	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,0,0,6,0,0};
+	//                               ^ node         ^ node           ^ node          ^ link            ^ new link
+	prepareTest(places);
+	
+	size_t place = 30;
+	Link_read(link, place);
+	
+	size_t previous = 18;
+	size_t next = 0;
+	Link_joinIncoming(link, previous, next);
+	
+	assert(0 == strcmp(incoming->method, "Direction_joinChain"));
+	assert(previous == incoming->previous && "Direction_joinChain previous");
+	assert(next == incoming->next && "Direction_joinChain next");
+	
+	demolishTest();
+}
+
+void test_it_gets_shifted_back_in_outgoing_chain()
+{
+    // 6 -> 12
+    // 6 -> 18
+	//                 0             6              12              18               24 +             30
+	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0};
+	//                               ^ node         ^ node           ^ node          ^ shifted link   ^ new link
+	prepareTest(places);
+	
+	size_t place = 24;
+	Link_read(link, place);
+	
+	size_t previous = 30;
+	Link_shiftOutgoing(link, previous);
+	
+	assert(0 == strcmp(outgoing->method, "Direction_append"));
+	assert(previous == outgoing->previous && "Direction_append previous");
+	
+	demolishTest();
+}
+
+void test_it_gets_shifted_back_in_incoming_chain()
+{
+    // 6 -> 12
+	//                 0             6              12              18               24         +
+	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0};
+	//                               ^ node         ^ node           ^ node          ^ shifted link
+	prepareTest(places);
+	
+	size_t place = 24;
+	Link_read(link, place);
+	
+	size_t previous = 12;
+	Link_shiftIncoming(link, previous);
+	
+	assert(0 == strcmp(incoming->method, "Direction_append"));
+	assert(previous == incoming->previous && "Direction_append previous");
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	test_it_provides_its_place_in_store();
 	test_it_writes_new_link_to_store();
 	test_it_reads_link_fields_from_store();
 	test_it_joins_chain_of_outgoing_directions();
+	test_it_joins_chain_of_incoming_directions();
+	test_it_gets_shifted_back_in_outgoing_chain();
+	test_it_gets_shifted_back_in_incoming_chain();
 
 	return (EXIT_SUCCESS);
 }

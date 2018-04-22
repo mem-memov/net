@@ -69,7 +69,8 @@ void Direction_joinChain(struct Direction * this, size_t previous, size_t next)
 
 void Direction_append(struct Direction * this, size_t previous)
 {
-
+	this->previous = previous;
+	this->method = "Direction_append";
 }
 
 char Direction_hasNode(struct Direction * this, size_t node)
