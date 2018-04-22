@@ -31,6 +31,8 @@
           <in>main.c</in>
         </df>
         <df name="Link">
+          <in>Direction.c</in>
+          <in>main.c</in>
         </df>
       </df>
     </df>

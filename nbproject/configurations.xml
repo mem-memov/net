@@ -76,10 +76,6 @@
         <cTool flags="0">
         </cTool>
       </item>
-      <item path="tests/Direction/Direction.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="tests/Link/Direction.c" ex="false" tool="0" flavor2="0">
-      </item>
     </conf>
   </confs>
 </configurationDescriptor>
