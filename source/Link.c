@@ -27,8 +27,8 @@ struct Link * Link_construct(size_t * places, struct Direction * outgoing, struc
 
 void Link_destruct(struct Link * this)
 {
-	free(this->outgoing);
-	free(this->incoming);
+	Direction_destruct(this->outgoing);
+	Direction_destruct(this->incoming);
 	
 	free(this);
 	this = NULL;
