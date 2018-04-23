@@ -29,7 +29,7 @@ struct Node * Node_construct(size_t * places, struct Link * link)
 
 void Node_destruct(struct Node * this)
 {
-	free(this->link);
+	Link_destruct(this->link);
 	
 	free(this);
 	this = NULL;
