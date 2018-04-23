@@ -11,8 +11,8 @@ struct Direction * incoming;
 
 void prepareTest(size_t * places)
 {
-	outgoing = malloc(sizeof(struct Direction));
-	incoming = malloc(sizeof(struct Direction));
+	outgoing = Direction_mock();
+	incoming = Direction_mock();
 	link = Link_construct(places, outgoing, incoming);
 }
 
@@ -21,7 +21,7 @@ void demolishTest()
 	Link_destruct(link);
 }
 
-void test_it_provides_its_place_in_store()
+void it_provides_its_place_in_store()
 {
     // 6 -> 12
 	//                 0             6              12              18 
@@ -38,7 +38,7 @@ void test_it_provides_its_place_in_store()
 	demolishTest();
 }
 
-void test_it_writes_new_link_to_store()
+void it_writes_new_link_to_store()
 {
     // 6 -> 12
 	//                 0             6              12              18 
@@ -64,7 +64,7 @@ void test_it_writes_new_link_to_store()
 	demolishTest();
 }
 
-void test_it_reads_link_fields_from_store()
+void it_reads_link_fields_from_store()
 {
     // 6 -> 12
 	//                 0             6              12              18 
@@ -86,7 +86,7 @@ void test_it_reads_link_fields_from_store()
 	demolishTest();
 }
 
-void test_it_joins_chain_of_outgoing_directions()
+void it_joins_chain_of_outgoing_directions()
 {
     // 6 -> 12
     // 6 -> 18
@@ -109,7 +109,7 @@ void test_it_joins_chain_of_outgoing_directions()
 	demolishTest();
 }
 
-void test_it_joins_chain_of_incoming_directions()
+void it_joins_chain_of_incoming_directions()
 {
     // 6 -> 12
     // 6 -> 18
@@ -132,13 +132,11 @@ void test_it_joins_chain_of_incoming_directions()
 	demolishTest();
 }
 
-void test_it_gets_shifted_back_in_outgoing_chain()
+void it_gets_shifted_back_in_outgoing_chain()
 {
-    // 6 -> 12
-    // 6 -> 18
 	//                 0             6              12              18               24 +             30
 	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0};
-	//                               ^ node         ^ node           ^ node          ^ shifted link   ^ new link
+	//                               ^ node         ^ node           ^ node          ^ 6 -> 12        ^ 6 -> 18
 	prepareTest(places);
 	
 	size_t place = 24;
@@ -153,18 +151,17 @@ void test_it_gets_shifted_back_in_outgoing_chain()
 	demolishTest();
 }
 
-void test_it_gets_shifted_back_in_incoming_chain()
+void it_gets_shifted_back_in_incoming_chain()
 {
-    // 6 -> 12
-	//                 0             6              12              18               24         +
-	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0};
-	//                               ^ node         ^ node           ^ node          ^ shifted link
+	//                 0             6              12              18               24       +      30
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,2,0,30,  18,0,0,1,0,30,   12,6,0,6,30,0,  12,18,0,18,12,24};
+	//                               ^ node         ^ node           ^ node          ^ 6 -> 12       ^ 18 -> 12
 	prepareTest(places);
 	
 	size_t place = 24;
 	Link_read(link, place);
 	
-	size_t previous = 12;
+	size_t previous = 30;
 	Link_shiftIncoming(link, previous);
 	
 	assert(0 == strcmp(incoming->method, "Direction_append"));
@@ -173,15 +170,209 @@ void test_it_gets_shifted_back_in_incoming_chain()
 	demolishTest();
 }
 
+void it_confirms_connection_to_outgoing_node()
+{
+    // 6 -> 12
+	//                 0             6              12              18 
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                               ^ node         ^ node          ^ link
+	prepareTest(places);
+	
+	size_t place = 18;
+	Link_read(link, place);
+	
+	size_t destination = 12;
+	outgoing->result = 1;
+	size_t result = Link_isOutgoingToNode(link, destination);
+	
+	assert(0 == strcmp(outgoing->method, "Direction_hasNode"));
+	assert(destination == outgoing->node && "Direction_hasNode node");
+	assert(result == outgoing->result && "node present");
+	
+	demolishTest();
+}
+
+void it_denies_connection_to_outgoing_node()
+{
+    // 6 -> 12
+	//                 0             6              12              18 
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                               ^ node         ^ node          ^ link
+	prepareTest(places);
+	
+	size_t place = 18;
+	Link_read(link, place);
+	
+	size_t destination = 36;
+	outgoing->result = 0;
+	size_t result = Link_isOutgoingToNode(link, destination);
+	
+	assert(0 == strcmp(outgoing->method, "Direction_hasNode"));
+	assert(destination == outgoing->node && "Direction_hasNode node");
+	assert(result == outgoing->result && "node absent");
+	
+	demolishTest();
+}
+
+void it_confirms_connection_to_incoming_node()
+{
+    // 6 -> 12
+	//                 0             6              12              18 
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                               ^ node         ^ node          ^ link
+	prepareTest(places);
+	
+	size_t place = 18;
+	Link_read(link, place);
+	
+	size_t origin = 6;
+	incoming->result = 1;
+	size_t result = Link_isIncomingFromNode(link, origin);
+	
+	assert(0 == strcmp(incoming->method, "Direction_hasNode"));
+	assert(origin == incoming->node && "Direction_hasNode node");
+	assert(result == incoming->result && "node present");
+	
+	demolishTest();
+}
+
+void it_denies_connection_to_incoming_node()
+{
+    // 6 -> 12
+	//                 0             6              12              18 
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                               ^ node         ^ node          ^ link
+	prepareTest(places);
+	
+	size_t place = 18;
+	Link_read(link, place);
+	
+	size_t origin = 36;
+	incoming->result = 0;
+	size_t result = Link_isIncomingFromNode(link, origin);
+	
+	assert(0 == strcmp(incoming->method, "Direction_hasNode"));
+	assert(origin == incoming->node && "Direction_hasNode node");
+	assert(result == incoming->result && "node absent");
+	
+	demolishTest();
+}
+
+void it_supplies_next_outgoing_direction()
+{
+	//                 0             6              12              18               24 +             30
+	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0};
+	//                               ^ node         ^ node           ^ node          ^ 6 -> 12        ^ 6 -> 18
+	prepareTest(places);
+	
+	size_t place = 30;
+	Link_read(link, place);
+	
+	outgoing->result = 24;
+	size_t result = Link_getNextOutgoing(link);
+	
+	assert(0 == strcmp(outgoing->method, "Direction_getNext"));
+	assert(result == outgoing->result && "next outgoing entry");
+	
+	demolishTest();
+}
+
+void it_supplies_next_incoming_direction()
+{
+	//                 0             6              12              18               24       +      30
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,2,0,30,  18,0,0,1,0,30,   12,6,0,6,30,0,  12,18,0,18,12,24};
+	//                               ^ node         ^ node           ^ node          ^ 6 -> 12       ^ 18 -> 12
+	prepareTest(places);
+	
+	size_t place = 30;
+	Link_read(link, place);
+	
+	incoming->result = 24;
+	size_t result = Link_getNextIncoming(link);
+	
+	assert(0 == strcmp(incoming->method, "Direction_getNext"));
+	assert(result == incoming->result && "next incoming entry");
+	
+	demolishTest();
+}
+
+void it_deletes_link()
+{
+    // 6 -> 12
+	//                 0             6              12              18 
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                               ^ node         ^ node          ^ link
+	prepareTest(places);
+	
+	size_t place = 18;
+	Link_read(link, place);
+	
+	Link_delete(link);
+	
+	assert(0 == strcmp(outgoing->method, "Direction_delete"));
+	assert(0 == strcmp(incoming->method, "Direction_delete"));
+	
+	demolishTest();
+}
+
+void it_supplies_outgoing_node()
+{
+    // 6 -> 12
+	//                 0             6              12              18 
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                               ^ node         ^ node          ^ link
+	prepareTest(places);
+	
+	size_t place = 18;
+	Link_read(link, place);
+	
+	outgoing->result = 12;
+	size_t result = Link_getOutgoingNode(link);
+	
+	assert(0 == strcmp(outgoing->method, "Direction_getNode"));
+	assert(result == outgoing->result && "the node this link points to");
+	
+	demolishTest();
+}
+
+void it_supplies_incoming_node()
+{
+    // 6 -> 12
+	//                 0             6              12              18 
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                               ^ node         ^ node          ^ link
+	prepareTest(places);
+	
+	size_t place = 18;
+	Link_read(link, place);
+	
+	incoming->result = 6;
+	size_t result = Link_getIncomingNode(link);
+	
+	assert(0 == strcmp(incoming->method, "Direction_getNode"));
+	assert(result == incoming->result && "the node this link points from");
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
-	test_it_provides_its_place_in_store();
-	test_it_writes_new_link_to_store();
-	test_it_reads_link_fields_from_store();
-	test_it_joins_chain_of_outgoing_directions();
-	test_it_joins_chain_of_incoming_directions();
-	test_it_gets_shifted_back_in_outgoing_chain();
-	test_it_gets_shifted_back_in_incoming_chain();
+	it_provides_its_place_in_store();
+	it_writes_new_link_to_store();
+	it_reads_link_fields_from_store();
+	it_joins_chain_of_outgoing_directions();
+	it_joins_chain_of_incoming_directions();
+	it_gets_shifted_back_in_outgoing_chain();
+	it_gets_shifted_back_in_incoming_chain();
+	it_confirms_connection_to_outgoing_node();
+	it_denies_connection_to_outgoing_node();
+	it_confirms_connection_to_incoming_node();
+	it_denies_connection_to_incoming_node();
+	it_supplies_next_outgoing_direction();
+	it_supplies_next_incoming_direction();
+	it_deletes_link();
+	it_supplies_outgoing_node();
+	it_supplies_incoming_node();
 
 	return (EXIT_SUCCESS);
 }

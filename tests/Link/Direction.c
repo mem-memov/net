@@ -7,29 +7,30 @@ struct Direction {
 	size_t destination;
 	size_t previous;
 	size_t next;
+	size_t node;
+	size_t result;
 	char * method;
 };
 
-struct Direction * Direction_construct(size_t * places, char offset, struct DirectionError * error)
+struct Direction * Direction_mock()
 {
 	struct Direction * this = malloc(sizeof(struct Direction));
+	
+	this->place = 55555;
+	this->destination = 55555;
+	this->previous = 55555;
+	this->next = 55555;
+	this->node = 55555;
+	this->result = 55555;
+	this->method = "method not specified";
 
 	return this;
 }
 
-struct Direction * Direction_constructOutgoing(size_t * places, struct DirectionError * error)
-{
-	return Direction_construct(places, 0, error);
-}
-
-struct Direction * Direction_constructIncoming(size_t * places, struct DirectionError * error)
-{
-	return Direction_construct(places, 3, error);
-}
-
 void Direction_setPool(struct Direction * this, struct Direction * nextDirection)
 {
-
+	free(this);
+	this = NULL;
 }
 
 void Direction_destruct(struct Direction * this)
@@ -75,21 +76,25 @@ void Direction_append(struct Direction * this, size_t previous)
 
 char Direction_hasNode(struct Direction * this, size_t node)
 {
-	return 0;
+	this->node = node;
+	this->method = "Direction_hasNode";
+	return this->result;
 }
 
 size_t Direction_getNode(struct Direction * this)
 {
-	return 1;
+	this->method = "Direction_getNode";
+	return this->result;
 }
 
 size_t Direction_getNext(struct Direction * this)
 {
-	return 1;
+	this->method = "Direction_getNext";
+	return this->result;
 }
 
 void Direction_delete(struct Direction * this)
 {
-
+	this->method = "Direction_delete";
 }
 
