@@ -13,7 +13,7 @@ struct Direction * nextIncoming;
 
 void prepareTest(size_t * places)
 {
-	error = DirectionError_construct();
+	error = DirectionError_mock();
 	outgoing = Direction_constructOutgoing(places, error);
 	nextOutgoing = Direction_constructOutgoing(places, error);
 	incoming = Direction_constructIncoming(places, error);
@@ -29,7 +29,7 @@ void demolishTest()
 	DirectionError_destruct(error);
 }
 
-void test_it_contructs_an_outgoing_direction()
+void it_contructs_an_outgoing_direction()
 {
     // 6 -> 12
 	//                 0             6              12              18
@@ -44,7 +44,7 @@ void test_it_contructs_an_outgoing_direction()
 	demolishTest();
 }
 
-void test_it_contructs_an_incoming_direction()
+void it_contructs_an_incoming_direction()
 {
     // 6 -> 12
 	//                 0             6              12              18
@@ -59,7 +59,7 @@ void test_it_contructs_an_incoming_direction()
 	demolishTest();
 }
 
-void test_it_accepts_help_structures_to_avoid_eternal_cycle_when_constructing()
+void it_accepts_help_structures_to_avoid_eternal_cycle_when_constructing()
 {
     // 6 -> 12
 	//                 0             6              12              18
@@ -74,7 +74,7 @@ void test_it_accepts_help_structures_to_avoid_eternal_cycle_when_constructing()
 	demolishTest();
 }
 
-void test_it_supplies_its_place_inside_the_storage_array()
+void it_supplies_its_place_inside_the_storage_array()
 {
     // 6 -> 12
 	//                 0             6              12              18
@@ -92,7 +92,7 @@ void test_it_supplies_its_place_inside_the_storage_array()
 	demolishTest();
 }
 
-void test_it_writes_values_of_a_fresh_direction_to_the_store()
+void it_writes_values_of_a_fresh_direction_to_the_store()
 {
     // 6 -> 12
 	//                 0             6              12              18
@@ -111,7 +111,7 @@ void test_it_writes_values_of_a_fresh_direction_to_the_store()
 	demolishTest();
 }
 
-void test_it_reads_values_of_an_existing_direction_from_the_store()
+void it_reads_values_of_an_existing_direction_from_the_store()
 {
     // 6 -> 12
 	//                 0             6              12              18
@@ -131,7 +131,7 @@ void test_it_reads_values_of_an_existing_direction_from_the_store()
 	demolishTest();
 }
 
-void test_it_joins_chain_of_directions()
+void it_joins_chain_of_directions()
 {
     // 6 -> 12
     // 6 -> 18
@@ -156,7 +156,7 @@ void test_it_joins_chain_of_directions()
 	demolishTest();
 }
 
-void test_it_gets_appended_to_a_previous_direction()
+void it_gets_appended_to_a_previous_direction()
 {
 	//                 0             6              12              18
 	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  0,0,0,0,0,0};
@@ -175,7 +175,7 @@ void test_it_gets_appended_to_a_previous_direction()
 	demolishTest();
 }
 
-void test_it_confirms_directing_to_a_particular_node()
+void it_confirms_directing_to_a_particular_node()
 {
     // 6 -> 12
 	//                 0             6              12              18
@@ -195,7 +195,7 @@ void test_it_confirms_directing_to_a_particular_node()
 	demolishTest();
 }
 
-void test_it_denies_directing_to_a_particular_node()
+void it_denies_directing_to_a_particular_node()
 {
     // 6 -> 12
 	//                 0             6              12              18              24
@@ -215,7 +215,7 @@ void test_it_denies_directing_to_a_particular_node()
 	demolishTest();
 }
 
-void test_it_supplies_the_node_it_directs_to()
+void it_supplies_the_node_it_directs_to()
 {
     // 6 -> 12
 	//                 0             6              12              18
@@ -234,7 +234,7 @@ void test_it_supplies_the_node_it_directs_to()
 	demolishTest();
 }
 
-void test_it_supplies_the_place_of_the_next_direction()
+void it_supplies_the_place_of_the_next_direction()
 {
     // 6 -> 12
     // 6 -> 18
@@ -252,7 +252,7 @@ void test_it_supplies_the_place_of_the_next_direction()
 	demolishTest();
 }
 
-void test_it_gets_deleted_with_reconnection()
+void it_gets_deleted_with_reconnection()
 {
     // 6 -> 12
     // 6 -> 18 gets deleted
@@ -277,7 +277,7 @@ void test_it_gets_deleted_with_reconnection()
 	demolishTest();
 }
 
-void test_it_gets_deleted_without_reconnection()
+void it_gets_deleted_without_reconnection()
 {
     // 6 -> 12
 	//                 0             6              12              18
@@ -300,7 +300,7 @@ void test_it_gets_deleted_without_reconnection()
 	demolishTest();
 }
 
-void test_it_forbids_zero_when_getting_appended()
+void it_forbids_zero_when_getting_appended()
 {
     // 6 -> 12
 	//                 0             6              12              18
@@ -320,7 +320,7 @@ void test_it_forbids_zero_when_getting_appended()
 	demolishTest();
 }
 
-void test_it_forbids_zero_when_getting_deleted()
+void it_forbids_zero_when_getting_deleted()
 {
     // 6 -> 12
 	//                 0             6              12              18 +
@@ -340,7 +340,7 @@ void test_it_forbids_zero_when_getting_deleted()
 	demolishTest();
 }
 
-void test_it_validates_before_joining_chain()
+void it_validates_before_joining_chain()
 {
     // 6 -> 12
 	//                 0             6              12              18 
@@ -364,23 +364,23 @@ void test_it_validates_before_joining_chain()
 
 int main(int argc, char** argv)
 {
-	test_it_contructs_an_outgoing_direction();
-	test_it_contructs_an_incoming_direction();
-	test_it_accepts_help_structures_to_avoid_eternal_cycle_when_constructing();
-	test_it_supplies_its_place_inside_the_storage_array();
-	test_it_writes_values_of_a_fresh_direction_to_the_store();
-	test_it_reads_values_of_an_existing_direction_from_the_store();
-	test_it_joins_chain_of_directions();
-	test_it_gets_appended_to_a_previous_direction();
-	test_it_confirms_directing_to_a_particular_node();
-	test_it_denies_directing_to_a_particular_node();
-	test_it_supplies_the_node_it_directs_to();
-	test_it_supplies_the_place_of_the_next_direction();
-	test_it_gets_deleted_with_reconnection();
-	test_it_gets_deleted_without_reconnection();
-	test_it_forbids_zero_when_getting_appended();
-	test_it_forbids_zero_when_getting_deleted();
-	test_it_validates_before_joining_chain();
+	it_contructs_an_outgoing_direction();
+	it_contructs_an_incoming_direction();
+	it_accepts_help_structures_to_avoid_eternal_cycle_when_constructing();
+	it_supplies_its_place_inside_the_storage_array();
+	it_writes_values_of_a_fresh_direction_to_the_store();
+	it_reads_values_of_an_existing_direction_from_the_store();
+	it_joins_chain_of_directions();
+	it_gets_appended_to_a_previous_direction();
+	it_confirms_directing_to_a_particular_node();
+	it_denies_directing_to_a_particular_node();
+	it_supplies_the_node_it_directs_to();
+	it_supplies_the_place_of_the_next_direction();
+	it_gets_deleted_with_reconnection();
+	it_gets_deleted_without_reconnection();
+	it_forbids_zero_when_getting_appended();
+	it_forbids_zero_when_getting_deleted();
+	it_validates_before_joining_chain();
 
 	return (EXIT_SUCCESS);
 }

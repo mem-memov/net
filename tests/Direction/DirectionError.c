@@ -7,10 +7,14 @@ struct DirectionError {
 	char * method;
 };
 
-struct DirectionError * DirectionError_construct()
+struct DirectionError * DirectionError_mock()
 {
 	struct DirectionError * this = malloc(sizeof(struct DirectionError));
 
+	this->previous = 55555;
+	this->next = 55555;
+	this->method = "method not specified";
+	
 	return this;
 }
 

@@ -5,7 +5,7 @@
 #include "../../source/Gap.c"
 #include "GapError.c"
 
-void test_it_contructs_a_tail_gap()
+void it_contructs_a_tail_gap()
 {
 	struct GapError * error = GapError_construct();
 	
@@ -19,7 +19,7 @@ void test_it_contructs_a_tail_gap()
 	GapError_destruct(error);
 }
 
-void test_it_contructs_a_head_gap()
+void it_contructs_a_head_gap()
 {
 	struct GapError * error = GapError_construct();
 	size_t place = 6;
@@ -34,7 +34,7 @@ void test_it_contructs_a_head_gap()
 	GapError_destruct(error);
 }
 
-void test_it_supplies_entry_place()
+void it_supplies_entry_place()
 {
 	struct GapError * error = GapError_construct();
 	size_t place = 6;
@@ -49,7 +49,7 @@ void test_it_supplies_entry_place()
 	GapError_destruct(error);
 }
 
-void test_it_checks_entry_place_is_invalid()
+void it_checks_entry_place_is_invalid()
 {
 	struct GapError * error = GapError_construct();
 	error->method = "";
@@ -67,10 +67,10 @@ void test_it_checks_entry_place_is_invalid()
 
 int main(int argc, char** argv)
 {
-	test_it_contructs_a_tail_gap();
-	test_it_contructs_a_head_gap();
-	test_it_supplies_entry_place();
-	test_it_checks_entry_place_is_invalid();
+	it_contructs_a_tail_gap();
+	it_contructs_a_head_gap();
+	it_supplies_entry_place();
+	it_checks_entry_place_is_invalid();
 
 	return (EXIT_SUCCESS);
 }
