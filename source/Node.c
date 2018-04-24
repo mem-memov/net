@@ -86,15 +86,6 @@ char Node_isNode(struct Node * this)
 	return 0;
 }
 
-char Node_isSame(struct Node * this, struct Node * that)
-{
-	if ( (*this->place) == Node_getPlace(that) ) {
-		return 1;
-	}
-	
-	return 0;
-}
-
 char Node_hasIncomingLink(struct Node * this)
 {
 	if ( (*this->incomingLink) != 0 ) {
@@ -103,7 +94,6 @@ char Node_hasIncomingLink(struct Node * this)
 	
 	return 0;
 }
-
 
 char Node_hasOutgoingLink(struct Node * this)
 {
