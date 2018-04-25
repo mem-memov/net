@@ -254,6 +254,66 @@ void it_keeps_the_latest_incoming_connection()
 	demolishTest();
 }
 
+void it_keeps_the_first_outgoing_connection()
+{
+	//                 0             6   +   +     12              18
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                               ^ node         ^ node          ^ 6 -> 12
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	struct Link * outgoingLink = Link_mock();
+	outgoingLink->result[1] = 18;
+	Node_addOutgoingLink(node, outgoingLink);
+
+	assert(0 == strcmp(outgoingLink->method[0], "Link_shiftOutgoing"));
+	assert(place == outgoingLink->previous[0] && "Link_shiftOutgoing previous");
+	
+	assert(0 == strcmp(outgoingLink->method[1], "Link_getPlace"));
+	assert(1 == places[8] && "Outgoing link count gets incremented.");
+	assert(18 == places[10] && "A node keeps its first outgoing link.");
+	
+	demolishTest();
+}
+
+void it_keeps_the_latest_outgoing_connection()
+{
+	//                 0             6   +   +      12              18               24               30
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,24,0,18,6,0};
+	//                               ^ node         ^ node           ^ node          ^ 6 -> 12        ^ 6 -> 18
+	//                {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,24,0,18,6,0};
+
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	struct Link * outgoingLink = Link_mock();
+	outgoingLink->result[1] = 30;
+	outgoingLink->result[2] = 30;
+	Node_addOutgoingLink(node, outgoingLink);
+	
+	assert(0 == strcmp(outgoingLink->method[0], "Link_joinOutgoing"));
+	assert(6 == outgoingLink->previous[0] && "Link_joinOutgoing previous");
+	assert(24 == outgoingLink->next[0] && "Link_joinOutgoing next");
+	
+	assert(0 == strcmp(link->method[0], "Link_read"));
+	assert(24 == link->place[0] && "Link_read place");
+	
+	assert(0 == strcmp(outgoingLink->method[1], "Link_getPlace"));
+	
+	assert(0 == strcmp(link->method[1], "Link_shiftOutgoing"));
+	assert(30 == link->previous[1] && "Link_shiftOutgoing previous");
+	
+	assert(0 == strcmp(outgoingLink->method[2], "Link_getPlace"));
+	assert(2 == places[8] && "Outgoing link count gets incremented.");
+	assert(30 == places[10] && "A node keeps its latest outgoing link.");
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	it_writes_new_node_to_store();
@@ -268,6 +328,8 @@ int main(int argc, char** argv)
 	it_confirms_having_outgoing_links();
 	it_keeps_the_first_incoming_connection();
 	it_keeps_the_latest_incoming_connection();
+	it_keeps_the_first_outgoing_connection();
+	it_keeps_the_latest_outgoing_connection();
 
 	return (EXIT_SUCCESS);
 }

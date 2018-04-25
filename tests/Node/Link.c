@@ -68,7 +68,10 @@ void Link_read(struct Link * this, size_t place)
 
 void Link_joinOutgoing(struct Link * this, size_t previous, size_t next)
 {
-
+	this->previous[this->call] = previous;
+	this->next[this->call] = next;
+	this->method[this->call] = "Link_joinOutgoing";
+	this->call++;
 }
 
 void Link_joinIncoming(struct Link * this, size_t previous, size_t next)
@@ -81,7 +84,9 @@ void Link_joinIncoming(struct Link * this, size_t previous, size_t next)
 
 void Link_shiftOutgoing(struct Link * this, size_t previous)
 {
-
+	this->previous[this->call] = previous;
+	this->method[this->call] = "Link_shiftOutgoing";
+	this->call++;
 }
 
 void Link_shiftIncoming(struct Link * this, size_t previous)
