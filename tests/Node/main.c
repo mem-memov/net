@@ -232,6 +232,7 @@ void it_keeps_the_latest_incoming_connection()
 	
 	struct Link * incomingLink = Link_mock();
 	incomingLink->result[1] = 30;
+	incomingLink->result[2] = 30;
 	Node_addIncomingLink(node, incomingLink);
 	
 	assert(0 == strcmp(incomingLink->method[0], "Link_joinIncoming"));
@@ -239,13 +240,16 @@ void it_keeps_the_latest_incoming_connection()
 	assert(24 == incomingLink->next[0] && "Link_joinIncoming next");
 	
 	assert(0 == strcmp(link->method[0], "Link_read"));
+	assert(24 == link->place[0] && "Link_read place");
+	
+	assert(0 == strcmp(incomingLink->method[1], "Link_getPlace"));
 	
 	assert(0 == strcmp(link->method[1], "Link_shiftIncoming"));
 	assert(30 == link->previous[1] && "Link_shiftIncoming previous");
 	
-	//assert(30 == strcmp(incomingLink->method[1], "Link_getPlace"));
-	//assert(2 == places[15] && "Incoming link count gets incremented.");
-	//assert(30 == places[17] && "A node keeps its latest incoming link.");
+	assert(0 == strcmp(incomingLink->method[2], "Link_getPlace"));
+	assert(2 == places[15] && "Incoming link count gets incremented.");
+	assert(30 == places[17] && "A node keeps its latest incoming link.");
 	
 	demolishTest();
 }

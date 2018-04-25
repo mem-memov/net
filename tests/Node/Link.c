@@ -3,6 +3,7 @@
 
 struct Link {
 	char call;
+	size_t place[3];
 	size_t previous[3];
 	size_t next[3];
 	size_t result[3];
@@ -15,16 +16,19 @@ struct Link * Link_mock()
 	
 	this->call = 0;
 	
+	this->place[0] = 0;
 	this->previous[0] = 0;
 	this->next[0] = 0;
 	this->result[0] = 0;
 	this->method[0] = "method not specified";
 	
+	this->place[1] = 0;
 	this->previous[1] = 0;
 	this->next[1] = 0;
 	this->result[1] = 0;
 	this->method[1] = "method not specified";
 	
+	this->place[2] = 0;
 	this->previous[2] = 0;
 	this->next[2] = 0;
 	this->result[2] = 0;
@@ -43,7 +47,11 @@ size_t Link_getPlace(struct Link * this)
 {
 	this->method[this->call] = "Link_getPlace";
 	
-	return this->result[this->call++];
+	size_t place = this->result[this->call];
+		
+	this->call++;
+	
+	return place;
 }
 
 void Link_create(struct Link * this, size_t place, size_t origin, size_t destination)
@@ -53,6 +61,7 @@ void Link_create(struct Link * this, size_t place, size_t origin, size_t destina
 
 void Link_read(struct Link * this, size_t place)
 {
+	this->place[this->call] = place;
 	this->method[this->call] = "Link_read";
 	this->call++;
 }
