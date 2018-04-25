@@ -209,14 +209,43 @@ void it_keeps_the_first_incoming_connection()
 	struct Link * incomingLink = Link_mock();
 	incomingLink->result[1] = 18;
 	Node_addIncomingLink(node, incomingLink);
-	
-	printf("%s\n", incomingLink->method[0]);
+
 	assert(0 == strcmp(incomingLink->method[0], "Link_shiftIncoming"));
 	assert(place == incomingLink->previous[0] && "Link_shiftIncoming previous");
 	
 	assert(0 == strcmp(incomingLink->method[1], "Link_getPlace"));
 	assert(1 == places[15] && "Incoming link count gets incremented.");
 	assert(18 == places[17] && "A node keeps its first incoming link.");
+	
+	demolishTest();
+}
+
+void it_keeps_the_latest_incoming_connection()
+{
+	//                 0             6              12     +   +    18               24              30
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,6,0,6,30,0,  12,18,0,18,12,24};
+	//                               ^ node         ^ node           ^ node          ^ 6 -> 12       ^ 18 -> 12
+	prepareTest(places);
+	
+	size_t place = 12;
+	Node_read(node, place);
+	
+	struct Link * incomingLink = Link_mock();
+	incomingLink->result[1] = 30;
+	Node_addIncomingLink(node, incomingLink);
+	
+	assert(0 == strcmp(incomingLink->method[0], "Link_joinIncoming"));
+	assert(12 == incomingLink->previous[0] && "Link_joinIncoming previous");
+	assert(24 == incomingLink->next[0] && "Link_joinIncoming next");
+	
+	assert(0 == strcmp(link->method[0], "Link_read"));
+	
+	assert(0 == strcmp(link->method[1], "Link_shiftIncoming"));
+	assert(30 == link->previous[1] && "Link_shiftIncoming previous");
+	
+	//assert(30 == strcmp(incomingLink->method[1], "Link_getPlace"));
+	//assert(2 == places[15] && "Incoming link count gets incremented.");
+	//assert(30 == places[17] && "A node keeps its latest incoming link.");
 	
 	demolishTest();
 }
@@ -234,6 +263,7 @@ int main(int argc, char** argv)
 	it_denies_having_outgoing_links();
 	it_confirms_having_outgoing_links();
 	it_keeps_the_first_incoming_connection();
+	it_keeps_the_latest_incoming_connection();
 
 	return (EXIT_SUCCESS);
 }

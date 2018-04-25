@@ -1,13 +1,12 @@
 #include "../../source/Link.h"
 #include <stdlib.h>
 
-#include <stdio.h>
-
 struct Link {
 	char call;
-	size_t previous[2];
-	size_t result[2];
-	char * method[2];
+	size_t previous[3];
+	size_t next[3];
+	size_t result[3];
+	char * method[3];
 };
 
 struct Link * Link_mock()
@@ -17,12 +16,19 @@ struct Link * Link_mock()
 	this->call = 0;
 	
 	this->previous[0] = 0;
+	this->next[0] = 0;
 	this->result[0] = 0;
 	this->method[0] = "method not specified";
 	
 	this->previous[1] = 0;
+	this->next[1] = 0;
 	this->result[1] = 0;
 	this->method[1] = "method not specified";
+	
+	this->previous[2] = 0;
+	this->next[2] = 0;
+	this->result[2] = 0;
+	this->method[2] = "method not specified";
 	
 	return this;
 }
@@ -47,7 +53,8 @@ void Link_create(struct Link * this, size_t place, size_t origin, size_t destina
 
 void Link_read(struct Link * this, size_t place)
 {
-
+	this->method[this->call] = "Link_read";
+	this->call++;
 }
 
 void Link_joinOutgoing(struct Link * this, size_t previous, size_t next)
@@ -57,7 +64,10 @@ void Link_joinOutgoing(struct Link * this, size_t previous, size_t next)
 
 void Link_joinIncoming(struct Link * this, size_t previous, size_t next)
 {
-
+	this->previous[this->call] = previous;
+	this->next[this->call] = next;
+	this->method[this->call] = "Link_joinIncoming";
+	this->call++;
 }
 
 void Link_shiftOutgoing(struct Link * this, size_t previous)
