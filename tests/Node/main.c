@@ -256,9 +256,15 @@ void it_keeps_the_latest_incoming_connection()
 
 void it_keeps_the_first_outgoing_connection()
 {
-	//                 0             6   +   +     12              18
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                               ^ node         ^ node          ^ 6 -> 12
+	//                 0             6 node         12 node        18 6->12
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0,   12,0,0,0,0,0,  12,0,0,6,0,0};
+	//                 0,0,0,0,0,0,  6,0,0,0,0,0,   12,0,0,0,0,0,  12,6,0,0,0,0 1) The first link (18) in the outgoing chain gets origin node (6)  
+	//                                                                ^            as a predecessor in the outgoing chain.
+	//                 0,0,0,0,0,0,  6,0,0,0,18,0,  12,0,0,0,0,0,  12,6,0,0,0,0 2) The origin node (6) keeps the link (18) as the beginning of the chain 
+	//                                       ^                                     of outgoing connections to other nodes.
+	//                 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,0,0,0,  12,6,0,0,0,0 3) The origin node (6) increments the length of the chain of connections 
+	//                                   ^                                         going out to other nodes.
+	
 	prepareTest(places);
 	
 	size_t place = 6;
@@ -280,10 +286,16 @@ void it_keeps_the_first_outgoing_connection()
 
 void it_keeps_the_latest_outgoing_connection()
 {
-	//                 0             6   +   +      12              18               24               30
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,24,0,18,6,0};
-	//                               ^ node         ^ node           ^ node          ^ 6 -> 12        ^ 6 -> 18
-	//                {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,24,0,18,6,0};
+	//                 0             6 node         12 node         18 node          24 6->12         30 6->18
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,1,0,24,  18,0,0,0,0,0,    12,6,0,6,12,0,   18,0,0,6,0,0};
+	//                 0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,1,0,24,  18,0,0,0,0,0,    12,6,0,6,12,0,   18,6,24,6,0,0 1) The new link (30) comes after the origin node (6)
+	//                                                                                                   ^ ^           and before the old link (24).
+	//                 0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,1,0,24,  18,0,0,0,0,0,    12,30,0,6,12,0,  18,6,24,6,0,0 2) The old link (24) gets shifted after the new
+	//                                                                                  ^                              link (30).
+	//                 0,0,0,0,0,0,  6,0,1,0,30,0,  12,0,0,1,0,24,  18,0,0,0,0,0,    12,30,0,6,12,0,  18,6,24,6,0,0 3) The origin node (6) throws old link (24) away
+	//                                       ^                                                                         and keeps new link (30) instead.
+	//                 0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,0,0,0,    12,30,0,6,12,0,  18,6,24,6,0,0 4) The origin node (6) increments the length of the 
+	//                                   ^                                                                             chain of connections going out to other nodes.
 
 	prepareTest(places);
 	
