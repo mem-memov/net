@@ -646,6 +646,44 @@ void it_provides_its_incoming_link()
 	demolishTest();
 }
 
+void it_deletes_outgoing_link()
+{
+	//                 0             6 node         12 node         18 node           24 6->12         30 6->18
+	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,    12,30,0,6,12,0,  18,6,24,6,18,0};
+	//                                   ^   ^
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	Node_deleteOutgoingLink(node);
+	
+	assert(1 == places[8] && "The node count for outgoing connections is decremented.");
+	assert(30 == places[10] && "The node keeps the outgoing link.");
+	
+	demolishTest();
+}
+
+void it_deletes_last_outgoing_link()
+{
+	//                 0             6 node         12 node         18 6->12
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	//                                   ^   ^
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	Node_deleteOutgoingLink(node);
+	
+	assert(0 == places[8] && "The node count for outgoing connections is set to zero.");
+	assert(0 == places[10] && "The node has no outgoing link.");
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	it_writes_new_node_to_store();
@@ -674,6 +712,8 @@ int main(int argc, char** argv)
 	it_denies_having_more_outgoing_connections_than_incoming_ones();
 	it_provides_its_outgoing_link();
 	it_provides_its_incoming_link();
+	it_deletes_outgoing_link();
+	it_deletes_last_outgoing_link();
 
 	return (EXIT_SUCCESS);
 }
