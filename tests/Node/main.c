@@ -574,6 +574,40 @@ void it_refuses_to_find_outgoing_link_when_node_not_in_chain()
 	demolishTest();
 }
 
+void it_confirms_having_more_outgoing_connections_than_incoming_ones()
+{
+	//                 0             6 node         12 node         18 6->12
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	char result = Node_hasMoreOutgoingLinks(node);
+	
+	assert(1 == result && "The node confirms having more outgoing connections than incoming.");
+
+	demolishTest();
+}
+
+void it_denies_having_more_outgoing_connections_than_incoming_ones()
+{
+	//                 0             6 node         12 node         18 12->6
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0};
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	char result = Node_hasMoreOutgoingLinks(node);
+	
+	assert(0 == result && "The node denies having more outgoing connections than incoming.");
+
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	it_writes_new_node_to_store();
@@ -598,6 +632,8 @@ int main(int argc, char** argv)
 	it_finds_outgoing_link_by_destination_node_with_many_links_in_chain();
 	it_refuses_to_find_outgoing_link_when_chain_empty();
 	it_refuses_to_find_outgoing_link_when_node_not_in_chain();
+	it_confirms_having_more_outgoing_connections_than_incoming_ones();
+	it_denies_having_more_outgoing_connections_than_incoming_ones();
 
 	return (EXIT_SUCCESS);
 }
