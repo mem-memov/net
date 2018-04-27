@@ -34,6 +34,10 @@
           <in>Direction.c</in>
           <in>main.c</in>
         </df>
+        <df name="Node">
+          <in>Link.c</in>
+          <in>main.c</in>
+        </df>
       </df>
     </df>
   </logicalFolder>
