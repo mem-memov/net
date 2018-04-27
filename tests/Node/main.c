@@ -198,9 +198,14 @@ void it_confirms_having_outgoing_links()
 
 void it_keeps_the_first_incoming_connection()
 {
-	//                 0             6              12     +   +   18
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,0,0,0,  12,6,0,6,12,0};
-	//                               ^ node         ^ node          ^ 6 -> 12
+	//                 0             6 node         12 node       18 12->6
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0,   12,0,0,0,0,0,  6,0,0,12,0,0};
+	//                 0,0,0,0,0,0,  6,0,0,0,0,0,   12,0,0,0,0,0,  6,0,0,12,6,0 1) The first link (18) in the incoming chain gets destination node (6) 
+	//                                                                      ^   as a predecessor in the incoming chain.
+	//                 0,0,0,0,0,0,  6,0,0,0,0,18,  12,0,0,0,0,0,  6,0,0,12,6,0 2) The destination node (6) keeps the link (18) as the beginning of the chain 
+	//                                         ^                                of incoming connections from other nodes.
+	//                 0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,0,0,0,0,  6,0,0,12,6,0 3) The destination node (6) increments the length of the chain of connections 
+	//                                     ^                                    coming from other nodes.
 	prepareTest(places);
 	
 	size_t place = 12;
