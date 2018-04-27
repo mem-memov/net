@@ -181,11 +181,19 @@ char Node_hasMoreOutgoingLinks(struct Node * this)
 
 void Node_readOutgoingLink(struct Node * this, struct Link * link)
 {
+	if ( 0 == (*this->outgoingLinkCount) ) {
+		exit(1);
+	}
+	
 	Link_read(link, (*this->outgoingLink));
 }
 
 void Node_readIncomingLink(struct Node * this, struct Link * link)
 {
+	if ( 0 == (*this->incomingLinkCount) ) {
+		exit(1);
+	}
+	
 	Link_read(link, (*this->incomingLink));
 }
 

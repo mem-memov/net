@@ -608,6 +608,44 @@ void it_denies_having_more_outgoing_connections_than_incoming_ones()
 	demolishTest();
 }
 
+void it_provides_its_outgoing_link()
+{
+	//                 0             6 node         12 node         18 6->12
+	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	struct Link * outgoingLink = Link_mock();
+	Node_readOutgoingLink(node, outgoingLink);
+	
+	assert(0 == strcmp(outgoingLink->method[0], "Link_read"));
+	assert(18 == outgoingLink->place[0] && "Link_read place");
+	
+	demolishTest();
+}
+
+void it_provides_its_incoming_link()
+{
+	//                 0             6 node         12 node         18 12->6
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0};
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	struct Link * incomingLink = Link_mock();
+	Node_readIncomingLink(node, incomingLink);
+	
+	assert(0 == strcmp(incomingLink->method[0], "Link_read"));
+	assert(18 == incomingLink->place[0] && "Link_read place");
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	it_writes_new_node_to_store();
@@ -634,6 +672,8 @@ int main(int argc, char** argv)
 	it_refuses_to_find_outgoing_link_when_node_not_in_chain();
 	it_confirms_having_more_outgoing_connections_than_incoming_ones();
 	it_denies_having_more_outgoing_connections_than_incoming_ones();
+	it_provides_its_outgoing_link();
+	it_provides_its_incoming_link();
 
 	return (EXIT_SUCCESS);
 }
