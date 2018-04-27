@@ -339,6 +339,241 @@ void it_keeps_the_latest_outgoing_connection()
 	demolishTest();
 }
 
+void it_finds_incoming_link_by_origin_node_with_one_link_in_chain()
+{
+	//                 0             6 node         12 node         18 12->6
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0};
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	link->result[1] = 1;
+	size_t origin = 12;
+	size_t result = Node_findIncomingLink(node, origin);
+	
+	assert(0 == strcmp(link->method[0], "Link_read"));
+	assert(18 == link->place[0] && "Link_read place");
+	
+	assert(0 == strcmp(link->method[1], "Link_isIncomingFromNode"));
+	assert(origin == link->origin[1] && "Link_isIncomingFromNode origin");
+	
+	assert(18 == result && "The node supplies the incoming link place.");
+	
+	demolishTest();
+}
+
+void it_finds_incoming_link_by_origin_node_with_many_links_in_chain()
+{
+	//                 0             6 node         12 node         18 node           24 12->6        30 18->6
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,1,0,30,0,    6,12,0,12,30,0, 18,18,0,6,6,24};
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	link->result[1] = 0;
+	link->result[2] = 24;
+	link->result[4] = 1;
+	size_t origin = 12;
+	size_t result = Node_findIncomingLink(node, origin);
+	
+	assert(0 == strcmp(link->method[0], "Link_read"));
+	assert(30 == link->place[0] && "Link_read place");
+	
+	assert(0 == strcmp(link->method[1], "Link_isIncomingFromNode"));
+	assert(origin == link->origin[1] && "Link_isIncomingFromNode origin");
+	
+	assert(0 == strcmp(link->method[2], "Link_getNextIncoming"));
+
+	assert(0 == strcmp(link->method[3], "Link_read"));
+	assert(24 == link->place[3] && "Link_read place");
+	
+	assert(0 == strcmp(link->method[4], "Link_isIncomingFromNode"));
+	assert(origin == link->origin[4] && "Link_isIncomingFromNode origin");
+	
+	assert(24 == result && "The node supplies the incoming link place.");
+	
+	demolishTest();
+}
+
+void it_refuses_to_find_incoming_link_when_chain_empty()
+{
+	//                 0             6 node
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	size_t origin = 12;
+	size_t result = Node_findIncomingLink(node, origin);
+	
+	assert(0 == result && "The node notifies about failure with zero value.");
+	
+	demolishTest();
+}
+
+void it_refuses_to_find_incoming_link_when_node_not_in_chain()
+{
+	//                 0             6 node         12 node         18 node           24 12->6        30 18->6
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,1,0,30,0,    6,12,0,12,30,0, 18,18,0,6,6,24};
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	link->result[1] = 0;
+	link->result[2] = 24;
+	link->result[4] = 0;
+	link->result[5] = 0;
+	size_t origin = 777;
+	size_t result = Node_findIncomingLink(node, origin);
+	
+	assert(0 == strcmp(link->method[0], "Link_read"));
+	assert(30 == link->place[0] && "Link_read place");
+	
+	assert(0 == strcmp(link->method[1], "Link_isIncomingFromNode"));
+	assert(origin == link->origin[1] && "Link_isIncomingFromNode origin");
+	
+	assert(0 == strcmp(link->method[2], "Link_getNextIncoming"));
+
+	assert(0 == strcmp(link->method[3], "Link_read"));
+	assert(24 == link->place[3] && "Link_read place");
+	
+	assert(0 == strcmp(link->method[4], "Link_isIncomingFromNode"));
+	assert(origin == link->origin[4] && "Link_isIncomingFromNode origin");
+	
+	assert(0 == strcmp(link->method[5], "Link_getNextIncoming"));
+	
+	assert(0 == result && "The node notifies about failure with zero value.");
+	
+	demolishTest();
+}
+
+void it_finds_outgoing_link_by_destination_node_with_one_link_in_chain()
+{
+	//                 0             6 node         12 node         18 12->6
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0};
+	
+	prepareTest(places);
+	
+	size_t place = 12;
+	Node_read(node, place);
+	
+	link->result[1] = 1;
+	size_t destination = 6;
+	size_t result = Node_findOutgoingLink(node, destination);
+	
+	assert(0 == strcmp(link->method[0], "Link_read"));
+	assert(18 == link->place[0] && "Link_read place");
+	
+	assert(0 == strcmp(link->method[1], "Link_isOutgoingToNode"));
+	assert(destination == link->destination[1] && "Link_isOutgoingToNode destination");
+	
+	assert(18 == result && "The node supplies the outgoing link place.");
+	
+	demolishTest();
+}
+
+void it_finds_outgoing_link_by_destination_node_with_many_links_in_chain()
+{
+	//                 0             6 node         12 node         18 node           24 6->12        30 6->18
+	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,    12,30,0,6,12,0,  18,6,24,6,18,0};
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	link->result[1] = 0;
+	link->result[2] = 24;
+	link->result[4] = 1;
+	size_t destination = 12;
+	size_t result = Node_findOutgoingLink(node, destination);
+	
+	assert(0 == strcmp(link->method[0], "Link_read"));
+	assert(30 == link->place[0] && "Link_read place");
+	
+	assert(0 == strcmp(link->method[1], "Link_isOutgoingToNode"));
+	assert(destination == link->destination[1] && "Link_isOutgoingToNode destination");
+	
+	assert(0 == strcmp(link->method[2], "Link_getNextOutgoing"));
+
+	assert(0 == strcmp(link->method[3], "Link_read"));
+	assert(24 == link->place[3] && "Link_read place");
+	
+	assert(0 == strcmp(link->method[4], "Link_isOutgoingToNode"));
+	assert(destination == link->destination[4] && "Link_isOutgoingToNodee destination");
+	
+	assert(24 == result && "The node supplies the outgoing link place.");
+	
+	demolishTest();
+}
+
+void it_refuses_to_find_outgoing_link_when_chain_empty()
+{
+	//                 0             6 node
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	size_t destination = 12;
+	size_t result = Node_findOutgoingLink(node, destination);
+	
+	assert(0 == result && "The node notifies about failure with zero value.");
+	
+	demolishTest();
+}
+
+void it_refuses_to_find_outgoing_link_when_node_not_in_chain()
+{
+	//                 0             6 node         12 node         18 node           24 6->12        30 6->18
+	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,    12,30,0,6,12,0,  18,6,24,6,18,0};
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	link->result[1] = 0;
+	link->result[2] = 24;
+	link->result[4] = 0;
+	link->result[5] = 0;
+	size_t destination = 777;
+	size_t result = Node_findOutgoingLink(node, destination);
+	
+	assert(0 == strcmp(link->method[0], "Link_read"));
+	assert(30 == link->place[0] && "Link_read place");
+	
+	assert(0 == strcmp(link->method[1], "Link_isOutgoingToNode"));
+	assert(destination == link->destination[1] && "Link_isOutgoingToNode destination");
+	
+	assert(0 == strcmp(link->method[2], "Link_getNextOutgoing"));
+
+	assert(0 == strcmp(link->method[3], "Link_read"));
+	assert(24 == link->place[3] && "Link_read place");
+	
+	assert(0 == strcmp(link->method[4], "Link_isOutgoingToNode"));
+	assert(destination == link->destination[4] && "Link_isOutgoingToNodee destination");
+	
+	assert(0 == strcmp(link->method[4], "Link_isOutgoingToNode"));
+	assert(destination == link->destination[4] && "Link_isOutgoingToNode destination");
+	
+	assert(0 == strcmp(link->method[5], "Link_getNextOutgoing"));
+	
+	assert(0 == result && "The node notifies about failure with zero value.");
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	it_writes_new_node_to_store();
@@ -355,6 +590,14 @@ int main(int argc, char** argv)
 	it_keeps_the_latest_incoming_connection();
 	it_keeps_the_first_outgoing_connection();
 	it_keeps_the_latest_outgoing_connection();
+	it_finds_incoming_link_by_origin_node_with_one_link_in_chain();
+	it_finds_incoming_link_by_origin_node_with_many_links_in_chain();
+	it_refuses_to_find_incoming_link_when_chain_empty();
+	it_refuses_to_find_incoming_link_when_node_not_in_chain();
+	it_finds_outgoing_link_by_destination_node_with_one_link_in_chain();
+	it_finds_outgoing_link_by_destination_node_with_many_links_in_chain();
+	it_refuses_to_find_outgoing_link_when_chain_empty();
+	it_refuses_to_find_outgoing_link_when_node_not_in_chain();
 
 	return (EXIT_SUCCESS);
 }
