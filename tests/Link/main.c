@@ -4,8 +4,10 @@
 #include <assert.h>
 #include "../../source/Link.c"
 #include "Direction.c"
+#include "LinkError.c"
 
 struct Link * link;
+struct LinkError * error;
 struct Direction * outgoing;
 struct Direction * incoming;
 
@@ -13,12 +15,14 @@ void prepareTest(size_t * places)
 {
 	outgoing = Direction_mock();
 	incoming = Direction_mock();
-	link = Link_construct(places, outgoing, incoming);
+	error = LinkError_mock();
+	link = Link_construct(places, outgoing, incoming, error);
 }
 
 void demolishTest()
 {
 	Link_destruct(link);
+	LinkError_destruct(error);
 }
 
 void it_provides_its_place_in_store()
@@ -50,6 +54,10 @@ void it_writes_new_link_to_store()
 	size_t origin = 6;
 	size_t destination = 12;
 	Link_create(link, place, origin, destination);
+	
+	assert(0 == strcmp(error->method, "LinkError_forbidSelfPointingNodes"));
+	assert(origin == error->origin && "LinkError_forbidSelfPointingNodes origin");
+	assert(destination == error->destination && "LinkError_forbidSelfPointingNodes destination");
 	
 	assert(place == link->place && "A new link keeps its place in the store.");
 

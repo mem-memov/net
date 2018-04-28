@@ -36,6 +36,7 @@
         </df>
         <df name="Link">
           <in>Direction.c</in>
+          <in>LinkError.c</in>
           <in>main.c</in>
         </df>
         <df name="Node">

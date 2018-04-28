@@ -18,6 +18,8 @@ struct NodeError * NodeError_mock()
 	this->outgoingLinkCount = 55555;
 	this->incomingLinkCount = 55555;
 	
+	this->method = "method not specified";
+	
 	return this;
 }
 
