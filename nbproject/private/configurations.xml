@@ -13,6 +13,8 @@
         <in>GapError.h</in>
         <in>Link.c</in>
         <in>Link.h</in>
+        <in>LinkError.c</in>
+        <in>LinkError.h</in>
         <in>Net.c</in>
         <in>Net.h</in>
         <in>Node.c</in>

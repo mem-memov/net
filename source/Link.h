@@ -3,10 +3,11 @@
 
 #include <stdlib.h>
 #include "Direction.h"
+#include "LinkError.h"
 
 struct Link;
 
-struct Link * Link_construct(size_t * places, struct Direction * outgoing, struct Direction * incoming);
+struct Link * Link_construct(size_t * places, struct Direction * outgoing, struct Direction * incoming, struct LinkError * error);
 
 void Link_destruct(struct Link * this);
 

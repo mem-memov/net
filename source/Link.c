@@ -1,22 +1,27 @@
 #include "Link.h"
 #include <stdlib.h>
 #include "Direction.h"
+#include "LinkError.h"
 
 struct Link {
 	size_t * places;
         
 	size_t place;
 	
+	struct LinkError * error;
+	
 	// pool
 	struct Direction * outgoing;
 	struct Direction * incoming;	
 };
 
-struct Link * Link_construct(size_t * places, struct Direction * outgoing, struct Direction * incoming)
+struct Link * Link_construct(size_t * places, struct Direction * outgoing, struct Direction * incoming, struct LinkError * error)
 {
 	struct Link * this = malloc(sizeof(struct Link));
 	
 	this->places = places;
+	
+	this->error = error;
 
 	// pool
 	this->outgoing = outgoing;
@@ -41,9 +46,7 @@ size_t Link_getPlace(struct Link * this)
 
 void Link_create(struct Link * this, size_t place, size_t origin, size_t destination)
 {
-	if (origin == destination) {
-		exit(1);
-	}
+	LinkError_forbidSelfPointingNodes(this->error, origin, destination);
 	
 	this->place = place;
 	

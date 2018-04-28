@@ -13,6 +13,7 @@ struct Space {
 	struct Net * net;
 
 	struct DirectionError * directionError;
+	struct LinkError * linkError;
 	struct NodeError * nodeError;
 	
 	struct Node * node;
@@ -37,6 +38,7 @@ struct Space * Space_construct(size_t spaceSize)
 
 	// pool
 	this->directionError = DirectionError_construct();
+	this->linkError = LinkError_construct();
 	this->nodeError = NodeError_construct();
 	this->node = Node_construct(
 		this->places, 
@@ -49,7 +51,8 @@ struct Space * Space_construct(size_t spaceSize)
 			Direction_constructIncoming(
 				this->places,
 				this->directionError
-			)
+			),
+			this->linkError
 		),
 		this->nodeError
 	);
@@ -64,7 +67,8 @@ struct Space * Space_construct(size_t spaceSize)
 			Direction_constructIncoming(
 				this->places,
 				this->directionError
-			)
+			),
+			this->linkError
 		),
 		this->nodeError
 	);
@@ -79,7 +83,8 @@ struct Space * Space_construct(size_t spaceSize)
 			Direction_constructIncoming(
 				this->places,
 				this->directionError
-			)
+			),
+			this->linkError
 		),
 		this->nodeError
 	);
@@ -92,7 +97,8 @@ struct Space * Space_construct(size_t spaceSize)
 		Direction_constructIncoming(
 			this->places,
 			this->directionError
-		)
+		),
+		this->linkError
 	);
 	
 	Net_create(this->net, this->placeSize);
@@ -111,7 +117,9 @@ void Space_destruct(struct Space * this)
 	Node_destruct(this->originNode);
 	Node_destruct(this->destinationNode);
 	Link_destruct(this->link);
+	
 	NodeError_destruct(this->nodeError);
+	LinkError_destruct(this->linkError);
 	DirectionError_destruct(this->directionError);
 	
 	free(this);

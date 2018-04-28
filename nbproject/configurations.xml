@@ -8,6 +8,7 @@
         <in>Gap.c</in>
         <in>GapError.c</in>
         <in>Link.c</in>
+        <in>LinkError.c</in>
         <in>Net.c</in>
         <in>Node.c</in>
         <in>NodeError.c</in>
@@ -66,6 +67,8 @@
       <item path="source/GapError.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="source/Link.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="source/LinkError.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="source/Net.c" ex="false" tool="0" flavor2="0">
       </item>
