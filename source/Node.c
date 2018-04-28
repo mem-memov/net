@@ -184,27 +184,21 @@ char Node_hasMoreOutgoingLinks(struct Node * this)
 
 void Node_readOutgoingLink(struct Node * this, struct Link * link)
 {
-	if ( 0 == (*this->outgoingLinkCount) ) {
-		exit(1);
-	}
+	NodeError_forbidReadingOutgoingLinkWhenNonePresent(this->error, (*this->outgoingLink));
 	
 	Link_read(link, (*this->outgoingLink));
 }
 
 void Node_readIncomingLink(struct Node * this, struct Link * link)
 {
-	if ( 0 == (*this->incomingLinkCount) ) {
-		exit(1);
-	}
+	NodeError_forbidReadingIncomingLinkWhenNonePresent(this->error, (*this->incomingLink));
 	
 	Link_read(link, (*this->incomingLink));
 }
 
 void Node_deleteOutgoingLink(struct Node * this)
 {
-	if ( 0 == (*this->outgoingLinkCount) ) {
-		exit(1);
-	}
+	NodeError_forbidDeletingOutgoingLinkWhenNonePresent(this->error, (*this->outgoingLinkCount));
 	
 	(*this->outgoingLinkCount) = (*this->outgoingLinkCount) - 1;
 	
@@ -215,9 +209,7 @@ void Node_deleteOutgoingLink(struct Node * this)
 
 void Node_deleteIncomingLink(struct Node * this)
 {
-	if ( 0 == (*this->incomingLinkCount) ) {
-		exit(1);
-	}
+	NodeError_forbidDeletingIncomingLinkWhenNonePresent(this->error, (*this->incomingLinkCount));
 	
 	(*this->incomingLinkCount) = (*this->incomingLinkCount) - 1;
 	
