@@ -684,6 +684,44 @@ void it_deletes_last_outgoing_link()
 	demolishTest();
 }
 
+void it_deletes_incoming_link()
+{
+	//                 0             6 node         12 node         18 node           24 12->6        30 18->6
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,1,0,30,0,    6,12,0,12,30,0, 18,18,0,6,6,24};
+	//                                     ^   ^
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	Node_deleteIncomingLink(node);
+	
+	assert(1 == places[9] && "The node count for incoming connections is decremented.");
+	assert(30 == places[11] && "The node keeps the incoming link.");
+	
+	demolishTest();
+}
+
+void it_deletes_last_incoming_link()
+{
+	//                 0             6 node         12 node         18 12->6
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,0,18,  6,12,0,12,6,0};
+	//                                     ^   ^
+	
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	Node_deleteIncomingLink(node);
+	
+	assert(0 == places[9] && "The node count for incoming connections is set to zero.");
+	assert(0 == places[11] && "The node has no incoming link.");
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	it_writes_new_node_to_store();
@@ -714,6 +752,8 @@ int main(int argc, char** argv)
 	it_provides_its_incoming_link();
 	it_deletes_outgoing_link();
 	it_deletes_last_outgoing_link();
+	it_deletes_incoming_link();
+	it_deletes_last_incoming_link();
 
 	return (EXIT_SUCCESS);
 }
