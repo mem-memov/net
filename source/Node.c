@@ -1,6 +1,7 @@
 #include "Node.h"
 #include <stdlib.h>
 #include "Link.h"
+#include "NodeError.h"
 
 struct Node {
 	size_t * place;
@@ -12,14 +13,18 @@ struct Node {
         
 	size_t * places;
 	
+	struct NodeError * error;
+	
 	struct Link * link;
 };
 
-struct Node * Node_construct(size_t * places, struct Link * link)
+struct Node * Node_construct(size_t * places, struct Link * link, struct NodeError * error)
 {
 	struct Node * this = malloc(sizeof(struct Node));
 
 	this->places = places;
+	
+	this->error = error;
 	
 	// pool
 	this->link = link;
@@ -64,9 +69,7 @@ void Node_read(struct Node * this, size_t place)
 
 void Node_delete(struct Node * this)
 {
-	if ( 0 != (*this->outgoingLinkCount) || 0 != (*this->incomingLinkCount) || 0 != (*this->outgoingLink) || 0 != (*this->incomingLink) ) {
-		exit(1);
-	}
+	NodeError_forbidDeletingNodeWithConnections(this->error, (*this->outgoingLink), (*this->incomingLink));
 
 	(*this->place) = 0;
 	(*this->data) = 0;

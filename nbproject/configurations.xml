@@ -10,6 +10,7 @@
         <in>Link.c</in>
         <in>Net.c</in>
         <in>Node.c</in>
+        <in>NodeError.c</in>
         <in>Space.c</in>
         <in>main.c</in>
       </df>
@@ -69,6 +70,8 @@
       <item path="source/Net.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="source/Node.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="source/NodeError.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="source/Space.c" ex="false" tool="0" flavor2="0">
       </item>

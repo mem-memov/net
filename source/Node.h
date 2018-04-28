@@ -3,10 +3,11 @@
 
 #include <stdlib.h>
 #include "Link.h"
+#include "NodeError.h"
 
 struct Node;
 
-struct Node * Node_construct(size_t * places, struct Link * link);
+struct Node * Node_construct(size_t * places, struct Link * link, struct NodeError * error);
 
 void Node_destruct(struct Node * this);
 

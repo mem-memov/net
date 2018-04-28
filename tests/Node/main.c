@@ -4,19 +4,23 @@
 #include <assert.h>
 #include "../../source/Node.c"
 #include "Link.c"
+#include "NodeError.c"
 
 struct Node * node;
+struct NodeError * error;
 struct Link * link;
 
 void prepareTest(size_t * places)
 {
 	link = Link_mock();
-	node = Node_construct(places, link);
+	error = NodeError_mock();
+	node = Node_construct(places, link,error);
 }
 
 void demolishTest()
 {
 	Node_destruct(node);
+	NodeError_destruct(error);
 }
 
 void it_writes_new_node_to_store()
@@ -55,6 +59,25 @@ void it_reads_values_of_an_existing_node_from_the_store()
 	assert((*node->incomingLinkCount) == 1  && "A node keeps count of incoming connections.");
 	assert((*node->outgoingLink) == 24  && "A node can have the last outgoing connection.");
 	assert((*node->incomingLink) == 30  && "A node can have the last incoming connections.");
+	
+	demolishTest();
+}
+
+void it_deletes_node()
+{
+	//                 0             6
+	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
+	//                               ^ node
+	prepareTest(places);
+	
+	size_t place = 6;
+	Node_read(node, place);
+	
+	Node_delete(node);
+	
+	assert(0 == strcmp(error->method, "NodeError_forbidDeletingNodeWithConnections"));
+	
+	assert(0 == places[6] && "A node is identified by its place.");
 	
 	demolishTest();
 }
@@ -726,6 +749,7 @@ int main(int argc, char** argv)
 {
 	it_writes_new_node_to_store();
 	it_reads_values_of_an_existing_node_from_the_store();
+	it_deletes_node();
 	it_supplies_its_place();
 	it_denies_to_be_a_node_if_place_not_equal_value();
 	it_denies_to_be_a_node_if_zero();
