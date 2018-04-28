@@ -76,6 +76,8 @@ void it_deletes_node()
 	Node_delete(node);
 	
 	assert(0 == strcmp(error->method, "NodeError_forbidDeletingNodeWithConnections"));
+	assert(places[10] == error->outgoingLink && "NodeError_forbidDeletingNodeWithConnections outgoingLink");
+	assert(places[11] == error->incomingLink && "NodeError_forbidDeletingNodeWithConnections incomingLink");
 	
 	assert(0 == places[6] && "A node is identified by its place.");
 	
