@@ -3,11 +3,12 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "Entry.h"
 #include "Gap.h"
 
 struct Net;
 
-struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize);
+struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize, struct Entry * entry);
 
 void Net_destruct(struct Net * this);
 

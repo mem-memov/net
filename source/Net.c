@@ -1,6 +1,7 @@
 #include "Net.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "Entry.h"
 #include "Gap.h"
 #include "GapError.h"
 
@@ -16,9 +17,11 @@ struct Net {
 	size_t * nextPlace;
 	size_t * nodeCount;
 	size_t * linkCount;
+	
+	struct Entry * entry;
 };
 
-struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize)
+struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize, struct Entry * entry)
 {
 	struct Net * this = malloc(sizeof(struct Net));
 
@@ -26,6 +29,9 @@ struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize)
 	this->spaceSize = spaceSize;
 	this->entrySize = entrySize;
 	this->gap = NULL;
+	
+	// pool
+	this->entry = entry;
 
 	return this;
 }
@@ -165,25 +171,15 @@ void Net_import(struct Net * this, FILE * file)
 
 void Net_scanForGaps(struct Net * this)
 {
-	size_t entryPlace;
-	char entryPosition;
-	char isEmpty;
+	size_t place;
 	
-	for ( entryPlace = this->entrySize; entryPlace < (*this->nextPlace); entryPlace++ ) {
-
-		isEmpty = 1;
-		for (entryPosition = 0; entryPosition < this->entrySize; entryPosition++ ) {
-			if (this->places[entryPlace + entryPosition] != 0) {
-				isEmpty = 0;
-				break;
-			}
-		}
-
-		if (! isEmpty) {
-			break;
-		}
+	for ( place = this->entrySize; place < (*this->nextPlace); place++ ) {
 		
-		Net_addGap(this, entryPlace);
+		Entry_read(this->entry, place);
+		
+		if ( Entry_isEmpty(this->entry) ) {
+			Net_addGap(this, place);
+		}
 	}
 }
 

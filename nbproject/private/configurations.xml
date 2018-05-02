@@ -7,6 +7,8 @@
         <in>Direction.h</in>
         <in>DirectionError.c</in>
         <in>DirectionError.h</in>
+        <in>Entry.c</in>
+        <in>Entry.h</in>
         <in>Gap.c</in>
         <in>Gap.h</in>
         <in>GapError.c</in>
