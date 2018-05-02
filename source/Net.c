@@ -2,14 +2,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Entry.h"
-#include "Gap.h"
-#include "GapError.h"
+#include "Gaps.h"
 
 struct Net {
 	size_t * places;
 	size_t spaceSize;
 	size_t entrySize;
-	struct Gap * gap;
+	struct Gaps * gaps;
 	
 	size_t * one;
 	size_t * placeSize;
@@ -21,14 +20,14 @@ struct Net {
 	struct Entry * entry;
 };
 
-struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize, struct Entry * entry)
+struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize, struct Entry * entry, struct Gaps * gaps)
 {
 	struct Net * this = malloc(sizeof(struct Net));
 
 	this->places = places;
 	this->spaceSize = spaceSize;
 	this->entrySize = entrySize;
-	this->gap = NULL;
+	this->gaps = gaps;
 	
 	// pool
 	this->entry = entry;
@@ -38,9 +37,7 @@ struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize, 
 
 void Net_destruct(struct Net * this)
 {
-	if (NULL != this->gap) {
-		Gap_destruct(this->gap);
-	}
+	Gaps_destruct(this->gaps);
 	
 	free(this);
 	this = NULL;
@@ -102,7 +99,11 @@ char Net_isSpaceCut(struct Net * this)
 
 char Net_hasSpaceForEntry(struct Net * this)
 {
-	if ( (*this->nextPlace) < this->spaceSize && NULL == this->gap ) {
+	if ( (*this->nextPlace) < this->spaceSize ) {
+		return 1;
+	}
+	
+	if ( ! Gaps_areEmpty(this->gaps) ) {
 		return 1;
 	}
 	
@@ -117,15 +118,13 @@ size_t Net_createEntry(struct Net * this)
 	
 	size_t place;
 
-	if (NULL != this->gap) {
-		place = Gap_getPlace(this->gap);
-		this->gap = Gap_getNext(this->gap);
+	if ( ! Gaps_areEmpty(this->gaps) ) {
+		place = Gaps_givePlace(this->gaps);
 	} else {
 		place = (*this->nextPlace);
+		(*this->nextPlace) += this->entrySize;
 	}
 
-	(*this->nextPlace) += this->entrySize;
-	
 	return place;
 }
 
@@ -189,13 +188,6 @@ void Net_scanForGaps(struct Net * this)
 
 void Net_addGap(struct Net * this, size_t place)
 {
-	struct GapError * error = GapError_construct();
-	
-	if (NULL == this->gap) {
-		this->gap = Gap_construct(place, NULL, error);
-	} else {
-		this->gap = Gap_construct(place, this->gap, error);
-	}
-	
+	Gaps_addGap(this->gaps, place);
 	(*this->gapCount)++;
 }

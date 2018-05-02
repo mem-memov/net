@@ -12,6 +12,7 @@ struct Space {
 	size_t * places;
 	struct Net * net;
 
+	struct GapError * gapError;
 	struct DirectionError * directionError;
 	struct LinkError * linkError;
 	struct NodeError * nodeError;
@@ -34,7 +35,16 @@ struct Space * Space_construct(size_t spaceSize)
 	this->entrySize = 6;
 	this->placeSize = sizeof(size_t);
 	this->places = (size_t *)malloc(this->spaceSize * this->entrySize * this->placeSize);
-	this->net = Net_construct(this->places, this->spaceSize, this->entrySize, Entry_construct(this->places));
+	
+	
+	this->gapError = GapError_construct();
+	this->net = Net_construct(
+		this->places, 
+		this->spaceSize, 
+		this->entrySize, 
+		Entry_construct(this->places), 
+		Gaps_construct(this->gapError)
+	);
 
 	// pool
 	this->directionError = DirectionError_construct();
@@ -111,6 +121,7 @@ void Space_destruct(struct Space * this)
 	free(this->places);
 	this->places = NULL;
 	
+	GapError_destruct(this->gapError);
 	Net_destruct(this->net);
 	
 	Node_destruct(this->node);

@@ -1,5 +1,5 @@
-net: main.o Entry.o Gap.o GapError.o Direction.o DirectionError.o Link.o LinkError.o Net.o Node.o NodeError.o Space.o
-	gcc main.o Entry.o Gap.o GapError.o Direction.o DirectionError.o Link.o LinkError.o Net.o Node.o NodeError.o Space.o -o net
+net: main.o Entry.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Link.o LinkError.o Net.o Node.o NodeError.o Space.o
+	gcc main.o Entry.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Link.o LinkError.o Net.o Node.o NodeError.o Space.o -o net
 
 main.o: main.c
 	gcc -c main.c
@@ -12,6 +12,9 @@ Gap.o: Gap.c Gap.h GapError.h
 
 GapError.o: GapError.c GapError.h
 	gcc -c GapError.c
+
+Gaps.o: Gaps.c Gaps.h
+	gcc -c Gaps.c
 
 Direction.o: Direction.c Direction.h DirectionError.h
 	gcc -c Direction.c

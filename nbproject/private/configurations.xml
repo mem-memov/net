@@ -13,6 +13,8 @@
         <in>Gap.h</in>
         <in>GapError.c</in>
         <in>GapError.h</in>
+        <in>Gaps.c</in>
+        <in>Gaps.h</in>
         <in>Link.c</in>
         <in>Link.h</in>
         <in>LinkError.c</in>
