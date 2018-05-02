@@ -2,4 +2,4 @@
 source/net
 source/data
 **/test
-nbproject/private
+nbproject/private/*
