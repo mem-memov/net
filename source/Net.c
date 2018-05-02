@@ -120,6 +120,7 @@ size_t Net_createEntry(struct Net * this)
 
 	if ( ! Gaps_areEmpty(this->gaps) ) {
 		place = Gaps_givePlace(this->gaps);
+		(*this->gapCount)--;
 	} else {
 		place = (*this->nextPlace);
 		(*this->nextPlace) += this->entrySize;
