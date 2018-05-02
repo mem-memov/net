@@ -171,6 +171,10 @@ void Net_import(struct Net * this, FILE * file)
 
 void Net_scanForGaps(struct Net * this)
 {
+	if ( 0 == (*this->gapCount)) {
+		return;
+	}
+	
 	size_t place;
 	
 	for ( place = this->entrySize; place < (*this->nextPlace); place++ ) {
@@ -192,4 +196,6 @@ void Net_addGap(struct Net * this, size_t place)
 	} else {
 		this->gap = Gap_construct(place, this->gap, error);
 	}
+	
+	(*this->gapCount)++;
 }
