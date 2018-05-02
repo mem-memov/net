@@ -12,9 +12,9 @@ struct Net {
 	struct Gap * gap;
 	
 	size_t * one;
-	size_t * data;
 	size_t * placeSize;
 	size_t * nextPlace;
+	size_t * gapCount;
 	size_t * nodeCount;
 	size_t * linkCount;
 	
@@ -49,9 +49,9 @@ void Net_destruct(struct Net * this)
 void Net_bind(struct Net * this)
 {
 	this->one = this->places + 0;
-	this->data = this->places + 1;
-	this->placeSize = this->places + 2;
-	this->nextPlace = this->places + 3;
+	this->placeSize = this->places + 1;
+	this->nextPlace = this->places + 2;
+	this->gapCount = this->places + 3;
 	this->nodeCount = this->places + 4;
 	this->linkCount = this->places + 5;	
 }
@@ -61,9 +61,9 @@ void Net_create(struct Net * this, size_t placeSize)
 	Net_bind(this);
 	
 	(*this->one) = 1;
-	(*this->data) = 0;
 	(*this->placeSize) = placeSize;
 	(*this->nextPlace) = this->entrySize;
+	(*this->gapCount) = 0;
 	(*this->nodeCount) = 0;
 	(*this->linkCount) = 0;
 }
