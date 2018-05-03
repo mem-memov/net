@@ -175,6 +175,7 @@ void Net_scanForGaps(struct Net * this)
 		return;
 	}
 	
+	size_t count = 0;
 	size_t place;
 	
 	for ( place = this->entrySize; place < (*this->nextPlace); place++ ) {
@@ -182,7 +183,12 @@ void Net_scanForGaps(struct Net * this)
 		Entry_read(this->entry, place);
 		
 		if ( Entry_isEmpty(this->entry) ) {
-			Net_addGap(this, place);
+			Gaps_addGap(this->gaps, place);
+			count++;
+		}
+		
+		if ( count == (*this->gapCount) ) {
+			return;
 		}
 	}
 }
