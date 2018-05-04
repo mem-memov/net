@@ -4,9 +4,10 @@
 struct Place
 {
 	unsigned char length;
+	unsigned char * places;
 };
 
-struct Place * Place_construct(unsigned char length)
+struct Place * Place_construct(unsigned char length, unsigned char * places)
 {
 	struct Place * this = malloc(sizeof(struct Place));
 	
@@ -21,7 +22,19 @@ void Place_destruct(struct Place * this)
 	this = NULL;
 }
 
-size_t Place_getValue()
+size_t Place_getValue(struct Place * this, size_t position)
+{
+	size_t value = 0;
+	unsigned char index;
+	
+	for (index = 0; index < this->length; index++) {
+		value += this->places[position * this->length + index];
+	}
+	
+	return value;
+}
+
+void Place_setValue(struct Place * this, size_t position, size_t value)
 {
 	
 }
