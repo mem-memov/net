@@ -4,40 +4,61 @@
 #include <assert.h>
 #include "../../source/Direction.c"
 #include "DirectionError.c"
+#include "Place.c"
 
-struct DirectionError * error;
-struct Direction * outgoing;
+struct DirectionError * nextOutgoingError;
 struct Direction * nextOutgoing;
-struct Direction * incoming;
-struct Direction * nextIncoming;
+struct DirectionError * outgoingError;
+struct Place * outgoingNode;
+struct Place * outgoingPrevious;
+struct Place * outgoingNext;
+struct Direction * outgoing;
 
-void prepareTest(size_t * places)
+struct DirectionError * nextIncomingError;
+struct Direction * nextIncoming;
+struct DirectionError * incomingError;
+struct Place * incomingNode;
+struct Place * incomingPrevious;
+struct Place * incomingNext;
+struct Direction * incoming;
+
+
+void prepareTest()
 {
-	error = DirectionError_mock();
-	outgoing = Direction_constructOutgoing(places, error);
-	nextOutgoing = Direction_constructOutgoing(places, error);
-	incoming = Direction_constructIncoming(places, error);
-	nextIncoming = Direction_constructIncoming(places, error);
+	nextOutgoingError = DirectionError_mock();
+	nextOutgoing = Direction_constructOutgoing(nextOutgoingError, Place_mock(), Place_mock(), Place_mock());
+	outgoingError = DirectionError_mock();
+	outgoingNode = Place_mock();
+	outgoingPrevious = Place_mock();
+	outgoingNext = Place_mock();
+	outgoing = Direction_constructOutgoing(outgoingError, outgoingNode, outgoingPrevious, outgoingNext);
+	Direction_setPool(outgoing, nextOutgoing);
+
+	nextIncomingError = DirectionError_mock();
+	nextIncoming = Direction_constructIncoming(nextIncomingError, Place_mock(), Place_mock(), Place_mock());
+	incomingError = DirectionError_mock();
+	incomingNode = Place_mock();
+	incomingPrevious = Place_mock();
+	incomingNext = Place_mock();
+	incoming = Direction_constructIncoming(incomingError, incomingNode, incomingPrevious, incomingNext);
+	Direction_setPool(incoming, nextIncoming);
 }
 
 void demolishTest()
 {
 	Direction_destruct(outgoing);
-	Direction_destruct(nextOutgoing);
+	DirectionError_destruct(outgoingError);
+	DirectionError_destruct(nextOutgoingError);
+	
 	Direction_destruct(incoming);
-	Direction_destruct(nextIncoming);
-	DirectionError_destruct(error);
+	DirectionError_destruct(incomingError);
+	DirectionError_destruct(nextIncomingError);
 }
 
 void it_contructs_an_outgoing_direction()
 {
-    // 6 -> 12
-	//                 0             6              12              18
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                                                               ^ outgoing
-	prepareTest(places);
+	prepareTest();
 	
-	assert(outgoing->places == places && "A direction can access data in this store.");
 	assert(outgoing->offset == 0 && "An outgoing direction starts at the beginning of an entry.");
 	assert(outgoing->nextDirection == NULL && "A new direction is not connected to any other direction.");
 	
@@ -46,13 +67,8 @@ void it_contructs_an_outgoing_direction()
 
 void it_contructs_an_incoming_direction()
 {
-    // 6 -> 12
-	//                 0             6              12              18
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                                                                     ^ incoming
-	prepareTest(places);
-	
-	assert(incoming->places == places && "A direction can access data in this store.");
+	prepareTest();
+
 	assert(incoming->offset == 3 && "An incoming direction starts right after the outgoing direction.");
 	assert(incoming->nextDirection == NULL && "A new direction is not connected to any other direction.");
 	
@@ -61,11 +77,7 @@ void it_contructs_an_incoming_direction()
 
 void it_accepts_help_structures_to_avoid_eternal_cycle_when_constructing()
 {
-    // 6 -> 12
-	//                 0             6              12              18
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	                                                              
-	prepareTest(places);
+	prepareTest();
 
 	Direction_setPool(outgoing, nextOutgoing);
 	
@@ -76,11 +88,7 @@ void it_accepts_help_structures_to_avoid_eternal_cycle_when_constructing()
 
 void it_supplies_its_place_inside_the_storage_array()
 {
-    // 6 -> 12
-	//                 0             6              12              18
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                                                               ^ outgoing
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 18;
 	Direction_read(outgoing, place);
