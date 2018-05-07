@@ -70,6 +70,10 @@ void Direction_destruct(struct Direction * this)
 	Place_destruct(this->previous);
 	Place_destruct(this->next);
 	
+	if (NULL != this->nextDirection) {
+		Direction_destruct(this->nextDirection);
+	}
+	
 	free(this);
 	this = NULL;
 }

@@ -25,20 +25,42 @@ void Directions_destruct(struct Directions * this)
 
 struct Direction * Directions_makeOutgoing(struct Directions * this)
 {
-	return Direction_constructOutgoing(
+	struct Direction * direction = Direction_constructOutgoing(
 		this->directionError,
 		Places_make(this->places),
 		Places_make(this->places),
 		Places_make(this->places)
 	);
+	
+	struct Direction * nextDirection = Direction_constructOutgoing(
+		this->directionError,
+		Places_make(this->places),
+		Places_make(this->places),
+		Places_make(this->places)
+	);
+	
+	Direction_setPool(direction, nextDirection);
+	
+	return direction;
 }
 
 struct Direction * Directions_makeIncoming(struct Directions * this)
 {
-	return Direction_constructIncoming(
+	struct Direction * direction = Direction_constructIncoming(
 		this->directionError,
 		Places_make(this->places),
 		Places_make(this->places),
 		Places_make(this->places)
 	);
+	
+	struct Direction * nextDirection = Direction_constructOutgoing(
+		this->directionError,
+		Places_make(this->places),
+		Places_make(this->places),
+		Places_make(this->places)
+	);
+	
+	Direction_setPool(direction, nextDirection);
+	
+	return direction;
 }
