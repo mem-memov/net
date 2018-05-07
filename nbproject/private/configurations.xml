@@ -7,6 +7,8 @@
         <in>Direction.h</in>
         <in>DirectionError.c</in>
         <in>DirectionError.h</in>
+        <in>Dump.c</in>
+        <in>Dump.h</in>
         <in>Entry.c</in>
         <in>Entry.h</in>
         <in>Gap.c</in>
@@ -19,12 +21,16 @@
         <in>Link.h</in>
         <in>LinkError.c</in>
         <in>LinkError.h</in>
+        <in>Machine.c</in>
+        <in>Machine.h</in>
         <in>Net.c</in>
         <in>Net.h</in>
         <in>Node.c</in>
         <in>Node.h</in>
         <in>NodeError.c</in>
         <in>NodeError.h</in>
+        <in>Place.c</in>
+        <in>Place.h</in>
         <in>Space.c</in>
         <in>Space.h</in>
         <in>main.c</in>

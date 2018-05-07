@@ -13,6 +13,8 @@
         <in>Gaps.h</in>
         <in>Link.c</in>
         <in>LinkError.c</in>
+        <in>Machine.c</in>
+        <in>Machine.h</in>
         <in>Net.c</in>
         <in>Node.c</in>
         <in>NodeError.c</in>
@@ -81,6 +83,10 @@
       <item path="source/Link.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="source/LinkError.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="source/Machine.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="source/Machine.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="source/Net.c" ex="false" tool="0" flavor2="0">
       </item>

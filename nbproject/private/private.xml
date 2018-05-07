@@ -10,8 +10,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/novikov/repos/net/source/Node.c</file>
-            <file>file:/home/novikov/repos/net/tests/Node/main.c</file>
+            <file>file:/home/u/repos/net/source/Place.c</file>
+            <file>file:/home/u/repos/net/source/Place.h</file>
+            <file>file:/home/u/repos/net/source/Machine.h</file>
+            <file>file:/home/u/repos/net/source/Machine.c</file>
         </group>
     </open-files>
 </project-private>

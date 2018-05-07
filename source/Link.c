@@ -4,8 +4,6 @@
 #include "LinkError.h"
 
 struct Link {
-	size_t * places;
-        
 	size_t place;
 	
 	struct LinkError * error;
@@ -15,12 +13,10 @@ struct Link {
 	struct Direction * incoming;	
 };
 
-struct Link * Link_construct(size_t * places, struct Direction * outgoing, struct Direction * incoming, struct LinkError * error)
+struct Link * Link_construct(struct Direction * outgoing, struct Direction * incoming, struct LinkError * error)
 {
 	struct Link * this = malloc(sizeof(struct Link));
-	
-	this->places = places;
-	
+
 	this->error = error;
 
 	// pool

@@ -1,11 +1,9 @@
 #include "Direction.h"
 #include <stdlib.h>
 #include "DirectionError.h"
+#include "Place.h"
 
 struct Direction {
-	// store
-	size_t * places;
-	
 	// type
 	char offset;
 	
@@ -18,34 +16,49 @@ struct Direction {
 	size_t place;
 
 	// fields
-	size_t * node;
-	size_t * previous;
-	size_t * next;
+	struct Place * node;
+	struct Place * previous;
+	struct Place * next;
 };
 
-struct Direction * Direction_construct(size_t * places, char offset, struct DirectionError * error)
-{
+struct Direction * Direction_construct(
+	char offset, 
+	struct DirectionError * error,
+	struct Place * node,
+	struct Place * previous,
+	struct Place * next
+) {
 	struct Direction * this = malloc(sizeof(struct Direction));
-
-	this->places = places;
 	
 	this->offset = offset;
 	
 	this->error = error;
+	
+	this->node = node;
+	this->previous = previous;
+	this->next = next;
 
 	this->nextDirection = NULL;
 
 	return this;
 }
 
-struct Direction * Direction_constructOutgoing(size_t * places, struct DirectionError * error)
-{
-	return Direction_construct(places, 0, error);
+struct Direction * Direction_constructOutgoing(	
+	struct DirectionError * error,
+	struct Place * node,
+	struct Place * previous,
+	struct Place * next
+) {
+	return Direction_construct(0, error, node, previous, next);
 }
 
-struct Direction * Direction_constructIncoming(size_t * places, struct DirectionError * error)
-{
-	return Direction_construct(places, 3, error);
+struct Direction * Direction_constructIncoming(
+	struct DirectionError * error,
+	struct Place * node,
+	struct Place * previous,
+	struct Place * next
+) {
+	return Direction_construct(3, error, node, previous, next);
 }
 
 void Direction_setPool(struct Direction * this, struct Direction * nextDirection)
@@ -55,6 +68,10 @@ void Direction_setPool(struct Direction * this, struct Direction * nextDirection
 
 void Direction_destruct(struct Direction * this)
 {
+	Place_destruct(this->node);
+	Place_destruct(this->previous);
+	Place_destruct(this->next);
+	
 	free(this);
 	this = NULL;
 }
@@ -67,18 +84,19 @@ size_t Direction_getPlace(struct Direction * this)
 void Direction_bind(struct Direction * this, size_t place)
 {
 	this->place = place;
-    this->node = this->places + place + this->offset + 0;
-    this->previous = this->places + place + this->offset + 1;
-    this->next = this->places + place + this->offset + 2;
+	
+	Place_bind(this->node, place + this->offset + 0);
+	Place_bind(this->previous, place + this->offset + 1);
+	Place_bind(this->next, place + this->offset + 2);
 }
 
 void Direction_create(struct Direction * this, size_t place, size_t destination)
 {
 	Direction_bind(this, place);
 	
-	(*this->node) = destination;
-	(*this->previous) = 0;
-	(*this->next) = 0;
+	Place_set(this->node, destination);
+	Place_set(this->previous, 0);
+	Place_set(this->next, 0);
 }
 
 void Direction_read(struct Direction * this, size_t place)
@@ -90,20 +108,20 @@ void Direction_joinChain(struct Direction * this, size_t previous, size_t next)
 {
 	DirectionError_forbidZeroAndEqualtyForPreviousAndNext(this->error, & previous, & next);
 	
-	(*this->previous) = previous; // a node entry
-	(*this->next) = next; // direction that pointed to the node before
+	Place_set(this->previous, previous); // a node entry
+	Place_set(this->next, next); // direction that pointed to the node before
 }
 
 void Direction_append(struct Direction * this, size_t previous)
 {
 	DirectionError_forbidZeroPlaceForPrevious(this->error, & previous);
 	
-	(*this->previous) = previous;
+	Place_set(this->previous, previous);
 }
 
 char Direction_hasNode(struct Direction * this, size_t node)
 {
-	if ( (*this->node) == node) {
+	if ( Place_get(this->node) == node) {
 		return 1;
 	}
 	
@@ -112,25 +130,25 @@ char Direction_hasNode(struct Direction * this, size_t node)
 
 size_t Direction_getNode(struct Direction * this)
 {
-	return (*this->node);
+	return Place_get(this->node);
 }
 
 size_t Direction_getNext(struct Direction * this)
 {
-	return (*this->next);
+	return Place_get(this->next);
 }
 
 void Direction_delete(struct Direction * this)
 {
 	DirectionError_forbidZeroPlaceForPrevious(this->error, this->previous);
 	
-	if (0 != (*this->next)) {
-		Direction_read(this->nextDirection, (*this->next));
-		Direction_append(this->nextDirection, (*this->previous));
+	if ( ! Place_isZero(this->next) ) {
+		Direction_read(this->nextDirection, Place_get(this->next));
+		Direction_append(this->nextDirection, Place_get(this->previous));
 	}
 
-	(*this->node) = 0;
-	(*this->previous) = 0;
-	(*this->next) = 0;
+	Place_set(this->node, 0);
+	Place_set(this->previous, 0);
+	Place_set(this->next, 0);
 }
 

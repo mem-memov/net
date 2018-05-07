@@ -3,12 +3,23 @@
 
 #include <stdlib.h>
 #include "DirectionError.h"
+#include "Place.h"
 
 struct Direction;
 
-struct Direction * Direction_constructOutgoing(size_t * places, struct DirectionError * error);
+struct Direction * Direction_constructOutgoing(	
+	struct DirectionError * error,
+	struct Place * node,
+	struct Place * previous,
+	struct Place * next
+);
 
-struct Direction * Direction_constructIncoming(size_t * places, struct DirectionError * error);
+struct Direction * Direction_constructIncoming(
+	struct DirectionError * error,
+	struct Place * node,
+	struct Place * previous,
+	struct Place * next
+);
 
 void Direction_setPool(struct Direction * this, struct Direction * nextDirection);
 

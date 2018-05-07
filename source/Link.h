@@ -7,7 +7,7 @@
 
 struct Link;
 
-struct Link * Link_construct(size_t * places, struct Direction * outgoing, struct Direction * incoming, struct LinkError * error);
+struct Link * Link_construct(struct Direction * outgoing, struct Direction * incoming, struct LinkError * error);
 
 void Link_destruct(struct Link * this);
 

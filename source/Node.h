@@ -4,10 +4,20 @@
 #include <stdlib.h>
 #include "Link.h"
 #include "NodeError.h"
+#include "Place.h"
 
 struct Node;
 
-struct Node * Node_construct(size_t * places, struct Link * link, struct NodeError * error);
+struct Node * Node_construct(
+	struct Place * place,
+	struct Place * data,
+	struct Place * outgoingLinkCount,
+	struct Place * incomingLinkCount,
+	struct Place * outgoingLink,
+	struct Place * incomingLink,
+	struct Link * link,
+	struct NodeError * error
+);
 
 void Node_destruct(struct Node * this);
 

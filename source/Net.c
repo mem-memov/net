@@ -3,25 +3,34 @@
 #include <stdio.h>
 #include "Entry.h"
 #include "Gaps.h"
+#include "Place.h"
 
 struct Net {
-	size_t * places;
 	size_t spaceSize;
 	size_t entrySize;
 	struct Gaps * gaps;
 	
-	size_t * one;
-	size_t * placeSize;
-	size_t * nextPlace;
-	size_t * gapCount;
-	size_t * nodeCount;
-	size_t * linkCount;
+	struct Place * one;
+	struct Place * placeSize;
+	struct Place * nextPlace;
+	struct Place * gapCount;
+	struct Place * nodeCount;
+	struct Place * linkCount;
 	
 	struct Entry * entry;
 };
 
-struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize, struct Entry * entry, struct Gaps * gaps)
-{
+struct Net * Net_construct(
+	size_t spaceSize, 
+	size_t entrySize, 
+	struct Entry * entry, 
+	struct Gaps * gaps,
+	struct Place * one,
+	struct Place * placeSize,
+	struct Place * nextPlace,
+	struct Place * gapCount,
+	struct Place * nodeCount
+) {
 	struct Net * this = malloc(sizeof(struct Net));
 
 	this->places = places;
@@ -31,6 +40,9 @@ struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize, 
 	
 	// pool
 	this->entry = entry;
+	
+	// fields
+	this->one = one;
 
 	return this;
 }
