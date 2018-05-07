@@ -1,7 +1,5 @@
 #include "Link.h"
 #include <stdlib.h>
-#include "Direction.h"
-#include "LinkError.h"
 
 struct Link {
 	size_t place;

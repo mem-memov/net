@@ -1,8 +1,6 @@
 #include "Net.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "Gaps.h"
-#include "Place.h"
 
 struct Net {
 	size_t spaceSize;

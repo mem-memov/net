@@ -1,9 +1,9 @@
 #include "Space.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "Link.h"
-#include "Net.h"
-#include "Node.h"
+#include "Links.h"
+#include "Nets.h"
+#include "Nodes.h"
 #include "Places.h"
 
 struct Space {
@@ -11,14 +11,15 @@ struct Space {
 	size_t entrySize;
 	size_t placeSize;
 	unsigned char * bytes;
-	struct Places * places;
 	struct Net * net;
 
-	struct GapError * gapError;
-	struct DirectionError * directionError;
-	struct LinkError * linkError;
-	struct NodeError * nodeError;
+	// factories
+	struct Links * links;
+	struct Nets * nets;
+	struct Nodes * nodes;
+	struct Places * places;
 	
+	// pool
 	struct Node * node;
 	struct Node * originNode;
 	struct Node * destinationNode;
@@ -35,89 +36,25 @@ struct Space * Space_construct(size_t spaceSize)
 	
 	this->spaceSize = spaceSize;
 	this->entrySize = 6;
-	this->placeSize = sizeof(size_t);
-	this->bytes = (size_t *)malloc(this->spaceSize * this->entrySize * this->placeSize);
+	this->placeSize = 8;
+	this->bytes = malloc(this->spaceSize * this->entrySize * this->placeSize);
+	
+	// factories
 	this->places = Places_construct(this->entrySize, this->bytes);
-	
-	
-	this->gapError = GapError_construct();
-	this->net = Net_construct(
-		this->spaceSize, 
-		this->entrySize, 
-		Places_make(), 
-		Gaps_construct(this->gapError),
-		Places_make(),
-		Places_make(),
-		Places_make(),
-		Places_make(),
-		Places_make(),
-		Places_make()
+	this->nets = Nets_construct(this->places, Gaps_construct(GapError_construct()));
+	this->links = Links_construct(
+		LinkError_construct(), 
+		Directions_construct(this->places, DirectionError_construct())
 	);
+	this->nodes = Nodes_construct(this->places, this->links, NodeError_construct());
+	
+	this->net = Nets_make(this->nets, this->spaceSize, this->entrySize);
 
 	// pool
-	this->directionError = DirectionError_construct();
-	this->linkError = LinkError_construct();
-	this->nodeError = NodeError_construct();
-	this->node = Node_construct(
-		this->places, 
-		Link_construct(
-			this->places,
-			Direction_constructOutgoing(
-				this->places,
-				this->directionError
-			),
-			Direction_constructIncoming(
-				this->places,
-				this->directionError
-			),
-			this->linkError
-		),
-		this->nodeError
-	);
-	this->originNode = Node_construct(
-		this->places, 
-		Link_construct(
-			this->places,
-			Direction_constructOutgoing(
-				this->places,
-				this->directionError
-			),
-			Direction_constructIncoming(
-				this->places,
-				this->directionError
-			),
-			this->linkError
-		),
-		this->nodeError
-	);
-	this->destinationNode = Node_construct(
-		this->places, 
-		Link_construct(
-			this->places,
-			Direction_constructOutgoing(
-				this->places,
-				this->directionError
-			),
-			Direction_constructIncoming(
-				this->places,
-				this->directionError
-			),
-			this->linkError
-		),
-		this->nodeError
-	);
-	this->link = Link_construct(
-		this->places,
-		Direction_constructOutgoing(
-			this->places,
-			this->directionError
-		),
-		Direction_constructIncoming(
-			this->places,
-			this->directionError
-		),
-		this->linkError
-	);
+	this->node = Nodes_make(this->nodes);
+	this->originNode = Nodes_make(this->nodes);
+	this->destinationNode = Nodes_make(this->nodes);
+	this->link = Links_make(this->links);
 	
 	Net_create(this->net, this->placeSize);
 
@@ -129,17 +66,19 @@ void Space_destruct(struct Space * this)
 	free(this->places);
 	this->places = NULL;
 	
-	GapError_destruct(this->gapError);
+	// fields
 	Net_destruct(this->net);
 	
+	// pool
 	Node_destruct(this->node);
 	Node_destruct(this->originNode);
 	Node_destruct(this->destinationNode);
 	Link_destruct(this->link);
 	
-	NodeError_destruct(this->nodeError);
-	LinkError_destruct(this->linkError);
-	DirectionError_destruct(this->directionError);
+	// factories
+	Nets_destruct(this->nets);
+	Links_destruct(this->links);
+	Nodes_destruct(this->nodes);
 	
 	free(this);
 	this = NULL;

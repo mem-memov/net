@@ -1,6 +1,8 @@
 #ifndef PLACE_H
 #define PLACE_H
 
+#include <stdlib.h>
+
 struct Place;
 
 struct Place * Place_construct(unsigned char length, unsigned char * bytes);

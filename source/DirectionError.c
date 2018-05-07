@@ -19,9 +19,9 @@ void DirectionError_destruct(struct DirectionError * this)
 	this = NULL;
 }
 
-void DirectionError_forbidZeroPlaceForPrevious(struct DirectionError * this, size_t * previous)
+void DirectionError_forbidZeroPlaceForPrevious(struct DirectionError * this, size_t previous)
 {
-	assert( 0 != (*previous) );
+	assert( 0 != previous );
 }
 
 void DirectionError_forbidZeroAndEqualtyForPreviousAndNext(struct DirectionError * this, size_t * previous, size_t * next)

@@ -1,8 +1,5 @@
 #include "Node.h"
 #include <stdlib.h>
-#include "Link.h"
-#include "NodeError.h"
-#include "Place.h"
 
 struct Node {
 	struct Place * place;

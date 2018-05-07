@@ -3,15 +3,15 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "Entry.h"
 #include "Gaps.h"
+#include "Place.h"
 
 struct Net;
 
 struct Net * Net_construct(
 	size_t spaceSize, 
 	size_t entrySize, 
-	struct Entry * entry, 
+	struct Place * entry, 
 	struct Gaps * gaps,
 	struct Place * one,
 	struct Place * placeSize,

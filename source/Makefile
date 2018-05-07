@@ -1,13 +1,10 @@
-net: main.o Entry.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Link.o LinkError.o Net.o Node.o NodeError.o Space.o
-	gcc main.o Entry.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Link.o LinkError.o Net.o Node.o NodeError.o Space.o -o net
+net: main.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o
+	gcc main.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o -o net
 
 main.o: main.c
 	gcc -c main.c
 
-Entry.o: Entry.c Entry.h
-	gcc -c Entry.c
-
-Gap.o: Gap.c Gap.h GapError.h
+Gap.o: Gap.c Gap.h
 	gcc -c Gap.c
 
 GapError.o: GapError.c GapError.h
@@ -16,28 +13,46 @@ GapError.o: GapError.c GapError.h
 Gaps.o: Gaps.c Gaps.h
 	gcc -c Gaps.c
 
-Direction.o: Direction.c Direction.h DirectionError.h
+Direction.o: Direction.c Direction.h
 	gcc -c Direction.c
 
 DirectionError.o: Direction.c DirectionError.h
 	gcc -c DirectionError.c
 
-Link.o: Link.c Link.h Direction.h LinkError.h
+Directions.o: Directions.c Directions.h
+	gcc -c Directions.c
+
+Link.o: Link.c Link.h
 	gcc -c Link.c
 	
 LinkError.o: LinkError.c LinkError.h
 	gcc -c LinkError.c
+	
+Links.o: Links.c Links.h
+	gcc -c Links.c
 
-Net.o: Net.c Net.h Entry.h Gap.h GapError.h
+Net.o: Net.c Net.h
 	gcc -c Net.c
 
-Node.o: Node.c Node.h Link.h
+Nets.o: Nets.c Nets.h
+	gcc -c Nets.c
+
+Node.o: Node.c Node.h
 	gcc -c Node.c
 
 NodeError.o: NodeError.c NodeError.h
 	gcc -c NodeError.c
+	
+Nodes.o: Nodes.c Nodes.h
+	gcc -c Nodes.c
+	
+Place.o: Place.c Place.h
+	gcc -c Place.c
+	
+Places.o: Places.c Places.h
+	gcc -c Places.c
 
-Space.o: Space.c Space.h Link.h Net.h Node.h 
+Space.o: Space.c Space.h Links.h Nets.h Nodes.h Places.h
 	gcc -c Space.c
 	
 clean:

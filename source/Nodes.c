@@ -1,8 +1,5 @@
 #include "Nodes.h"
 #include <stdlib.h>
-#include "Links.h"
-#include "NodeError.h"
-#include "Places.h"
 
 struct Nodes
 {
@@ -11,7 +8,7 @@ struct Nodes
 	struct NodeError * nodeError;
 };
 
-struct Nodes * Nodes_construct(Places * places, struct Links * links, struct NodeError * nodeError)
+struct Nodes * Nodes_construct(struct Places * places, struct Links * links, struct NodeError * nodeError)
 {
 	struct Nodes * this = malloc(sizeof(struct Nodes));
 	
@@ -31,13 +28,13 @@ void Nodes_destruct(struct Nodes * this)
 struct Node * Nodes_make(struct Nodes * this)
 {
 	return Node_construct(
-		Places_make(),
-		Places_make(),
-		Places_make(),
-		Places_make(),
-		Places_make(),
-		Places_make(),
-		Links_make(),
+		Places_make(this->places),
+		Places_make(this->places),
+		Places_make(this->places),
+		Places_make(this->places),
+		Places_make(this->places),
+		Places_make(this->places),
+		Links_make(this->links),
 		this->nodeError
 	);
 }

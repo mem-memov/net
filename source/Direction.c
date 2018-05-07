@@ -1,7 +1,5 @@
 #include "Direction.h"
 #include <stdlib.h>
-#include "DirectionError.h"
-#include "Place.h"
 
 struct Direction {
 	// type
@@ -114,7 +112,7 @@ void Direction_joinChain(struct Direction * this, size_t previous, size_t next)
 
 void Direction_append(struct Direction * this, size_t previous)
 {
-	DirectionError_forbidZeroPlaceForPrevious(this->error, & previous);
+	DirectionError_forbidZeroPlaceForPrevious(this->error, previous);
 	
 	Place_set(this->previous, previous);
 }
@@ -140,7 +138,7 @@ size_t Direction_getNext(struct Direction * this)
 
 void Direction_delete(struct Direction * this)
 {
-	DirectionError_forbidZeroPlaceForPrevious(this->error, this->previous);
+	DirectionError_forbidZeroPlaceForPrevious(this->error, Place_get(this->previous));
 	
 	if ( ! Place_isZero(this->next) ) {
 		Direction_read(this->nextDirection, Place_get(this->next));

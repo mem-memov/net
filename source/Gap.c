@@ -1,6 +1,5 @@
 #include "Gap.h"
 #include <stdlib.h>
-#include "GapError.h"
 
 struct Gap {
 	size_t place;
