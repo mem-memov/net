@@ -6,7 +6,6 @@ struct Place
 	unsigned char length;
 	size_t position;
 	unsigned char * bytes;
-	
 };
 
 struct Place * Place_construct(unsigned char length, unsigned char * bytes)
@@ -63,7 +62,7 @@ char Place_isZero(struct Place * this)
 {
 	unsigned char i;
 	
-	for (i = 0; i < this->length; i++) {
+	for (i = this->length - 1; i > 0; i--) {
 		if (this->bytes[this->position + i] > 0) {
 			return 0;
 		}
