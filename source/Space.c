@@ -4,12 +4,14 @@
 #include "Link.h"
 #include "Net.h"
 #include "Node.h"
+#include "Places.h"
 
 struct Space {
 	size_t spaceSize;
 	size_t entrySize;
 	size_t placeSize;
-	size_t * places;
+	unsigned char * bytes;
+	struct Places * places;
 	struct Net * net;
 
 	struct GapError * gapError;
@@ -34,16 +36,22 @@ struct Space * Space_construct(size_t spaceSize)
 	this->spaceSize = spaceSize;
 	this->entrySize = 6;
 	this->placeSize = sizeof(size_t);
-	this->places = (size_t *)malloc(this->spaceSize * this->entrySize * this->placeSize);
+	this->bytes = (size_t *)malloc(this->spaceSize * this->entrySize * this->placeSize);
+	this->places = Places_construct(this->entrySize, this->bytes);
 	
 	
 	this->gapError = GapError_construct();
 	this->net = Net_construct(
-		this->places, 
 		this->spaceSize, 
 		this->entrySize, 
-		Entry_construct(this->places), 
-		Gaps_construct(this->gapError)
+		Places_make(), 
+		Gaps_construct(this->gapError),
+		Places_make(),
+		Places_make(),
+		Places_make(),
+		Places_make(),
+		Places_make(),
+		Places_make()
 	);
 
 	// pool

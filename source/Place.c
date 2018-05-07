@@ -6,6 +6,7 @@ struct Place
 	unsigned char length;
 	size_t position;
 	unsigned char * bytes;
+	size_t index;
 };
 
 struct Place * Place_construct(unsigned char length, unsigned char * bytes)
@@ -19,6 +20,7 @@ struct Place * Place_construct(unsigned char length, unsigned char * bytes)
 	this->length = length;
 	this->position = 0;
 	this->bytes = bytes;
+	this->index = 0;
 	
 	return this;
 }
@@ -32,6 +34,7 @@ void Place_destruct(struct Place * this)
 void Place_bind(struct Place * this, size_t position)
 {
 	this->position = position;
+	this->index = position * this->length;
 }
 
 size_t Place_get(struct Place * this)
@@ -41,7 +44,7 @@ size_t Place_get(struct Place * this)
 	
 	for (i = 0; i < this->length; i++) {
 		value = value << 8;
-		value += this->bytes[this->position + i];
+		value += this->bytes[this->index + i];
 	}
 	
 	return value;
@@ -54,7 +57,7 @@ void Place_set(struct Place * this, size_t value)
 	
 	for (i = 0; i < this->length; i++) {
 		shift = 8 * (this->length - i - 1);
-		this->bytes[this->position + i] = (value >> shift) & 0xFF;
+		this->bytes[this->index + i] = (value >> shift) & 0xFF;
 	}
 }
 
@@ -63,7 +66,7 @@ char Place_isZero(struct Place * this)
 	unsigned char i;
 	
 	for (i = this->length - 1; i > 0; i--) {
-		if (this->bytes[this->position + i] > 0) {
+		if (this->bytes[this->index + i] > 0) {
 			return 0;
 		}
 	}

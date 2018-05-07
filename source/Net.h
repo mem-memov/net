@@ -8,7 +8,18 @@
 
 struct Net;
 
-struct Net * Net_construct(size_t * places, size_t spaceSize, size_t entrySize, struct Entry * entry, struct Gaps * gaps);
+struct Net * Net_construct(
+	size_t spaceSize, 
+	size_t entrySize, 
+	struct Entry * entry, 
+	struct Gaps * gaps,
+	struct Place * one,
+	struct Place * placeSize,
+	struct Place * nextPlace,
+	struct Place * gapCount,
+	struct Place * nodeCount,
+	struct Place * linkCount
+);
 
 void Net_destruct(struct Net * this);
 
