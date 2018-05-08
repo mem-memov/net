@@ -4,9 +4,10 @@
 struct Place
 {
 	char call;
-	size_t value[3];
-	size_t position[3];
-	char * method[3];
+	size_t value[4];
+	size_t position[4];
+	char keepsPosition[4];
+	char * method[4];
 };
 
 struct Place * Place_mock()
@@ -17,15 +18,23 @@ struct Place * Place_mock()
 	
 	this->value[0] = 55555;
 	this->position[0] = 55555;
+	this->keepsPosition[0] = 28;
 	this->method[0] = "method not specified";
 	
 	this->value[1] = 55555;
 	this->position[1] = 55555;
+	this->keepsPosition[1] = 28;
 	this->method[1] = "method not specified";
 	
 	this->value[2] = 55555;
 	this->position[2] = 55555;
+	this->keepsPosition[2] = 28;
 	this->method[2] = "method not specified";
+	
+	this->value[3] = 55555;
+	this->position[3] = 55555;
+	this->keepsPosition[3] = 28;
+	this->method[3] = "method not specified";
 	
 	return this;
 }
@@ -70,12 +79,19 @@ char Place_isZero(struct Place * this)
 
 char Place_keepsPosition(struct Place * this)
 {
-
+	this->method[this->call] = "Place_keepsPosition";
+	char keepsPosition = this->keepsPosition[this->call];
+	
+	this->call++;
+	
+	return keepsPosition;
 }
 
 void Place_increment(struct Place * this)
 {
-
+	this->method[this->call] = "Place_increment";
+	
+	this->call++;
 }
 
 void Place_decrement(struct Place * this)

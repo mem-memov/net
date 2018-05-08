@@ -161,37 +161,64 @@ void it_reads_values_of_an_existing_node_from_the_store()
 
 void it_deletes_node()
 {
-	//                 0             6
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
-	//                               ^ node
+	// 0             6 node
+	// 0,0,0,0,0,0,  6,0,0,0,0,0
+
 	prepareTest();
 	
 	size_t place = 6;
-	Node_read(node, place);
-	
+	size_t outgoingLink = 0;
+	size_t incomingLink = 0;
+	node->outgoingLink->value[0] = outgoingLink;
+	node->incomingLink->value[0] = incomingLink;
 	Node_delete(node);
 	
-	assert(0 == strcmp(error->method, "NodeError_forbidDeletingNodeWithConnections"));
-	assert(places[10] == error->outgoingLink && "NodeError_forbidDeletingNodeWithConnections outgoingLink");
-	assert(places[11] == error->incomingLink && "NodeError_forbidDeletingNodeWithConnections incomingLink");
+	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
+	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
+
+	assert(
+		0 == strcmp(error->method, "NodeError_forbidDeletingNodeWithConnections") 
+		&& outgoingLink == error->outgoingLink 
+		&& incomingLink == error->incomingLink
+	);
 	
-	assert(0 == places[6] && "A node is identified by its place.");
+	assert(
+		0 == strcmp(node->place->method[0], "Place_set") 
+		&& node->place->value[0] == 0
+		&& "All fields of a deleted node are set to zero."
+	);
+	assert(
+		0 == strcmp(node->data->method[0], "Place_set") 
+		&& node->data->value[0] == 0
+		&& "All fields of a deleted node are set to zero."
+	);
+	assert(
+		0 == strcmp(node->outgoingLinkCount->method[0], "Place_set") 
+		&& node->outgoingLinkCount->value[0] == 0
+		&& "All fields of a deleted node are set to zero."
+	);
+	assert(
+		0 == strcmp(node->incomingLinkCount->method[0], "Place_set") 
+		&& node->incomingLinkCount->value[0] == 0
+		&& "All fields of a deleted node are set to zero."
+	);
 	
 	demolishTest();
 }
 
 void it_supplies_its_place()
 {
-	//                 0             6
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
-	//                               ^ node
+	// 0             6 node
+	// 0,0,0,0,0,0,  6,0,0,0,0,0
+	
 	prepareTest();
 	
 	size_t place = 6;
-	Node_read(node, place);
+	node->place->value[0] = place;
 	
 	size_t result = Node_getPlace(node);
 	
+	assert(0 == strcmp(node->place->method[0], "Place_get"));
 	assert(result == place  && "A node supplies its place.");
 	
 	demolishTest();
@@ -199,15 +226,15 @@ void it_supplies_its_place()
 
 void it_denies_to_be_a_node_if_place_not_equal_value()
 {
-	//                 0             6
-	size_t places[] = {0,0,0,0,0,0,  555,0,0,0,0,0};
-	//                               ^ node
+	// 0             6 node
+	// 0,0,0,0,0,0,  555,0,0,0,0,0
+	
 	prepareTest();
-	
-	size_t place = 6;
-	Node_read(node, place);
-	
+
+	node->place->keepsPosition[0] = 0;
 	char result = Node_isNode(node);
+	
+	assert(0 == strcmp(node->place->method[0], "Place_keepsPosition"));
 	
 	assert(result == 0  && "A node is identified by its place.");
 	
@@ -216,16 +243,17 @@ void it_denies_to_be_a_node_if_place_not_equal_value()
 
 void it_denies_to_be_a_node_if_zero()
 {
-	//                 0
-	size_t places[] = {0,0,0,0,0,0};
-	//                 ^ node
+	// 0
+	// 0,0,0,0,0,0
+	
 	prepareTest();
 	
-	size_t place = 0;
-	Node_read(node, place);
-	
+	node->place->keepsPosition[0] = 1;
+	node->place->value[1] = 0;
 	char result = Node_isNode(node);
 	
+	assert(0 == strcmp(node->place->method[0], "Place_keepsPosition"));
+	assert(0 == strcmp(node->place->method[1], "Place_get"));
 	assert(result == 0  && "Zero has special meaning. A node can't be at place zero.");
 	
 	demolishTest();
@@ -233,16 +261,17 @@ void it_denies_to_be_a_node_if_zero()
 
 void it_confirms_to_be_an_entry_of_type_node()
 {
-	//                 0             6
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
-	//                               ^ node
+	// 0             6 node
+	// 0,0,0,0,0,0,  6,0,0,0,0,0
+	
 	prepareTest();
 	
-	size_t place = 6;
-	Node_read(node, place);
-	
+	node->place->keepsPosition[0] = 1;
+	node->place->value[1] = 6;
 	char result = Node_isNode(node);
 	
+	assert(0 == strcmp(node->place->method[0], "Place_keepsPosition"));
+	assert(0 == strcmp(node->place->method[1], "Place_get"));
 	assert(result == 1  && "A node is an entry with place written to that place.");
 	
 	demolishTest();
@@ -250,16 +279,15 @@ void it_confirms_to_be_an_entry_of_type_node()
 
 void it_denies_having_incoming_links()
 {
-	//                 0             6     +   +
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
-	//                               ^ node
+	// 0             6 node
+	// 0,0,0,0,0,0,  6,0,0,0,0,0
+	//                     ^   ^
 	prepareTest();
 	
-	size_t place = 6;
-	Node_read(node, place);
-	
+	node->incomingLink->value[0] = 0;
 	char result = Node_hasIncomingLink(node);
 	
+	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
 	assert(result == 0  && "A node may have no incoming connections.");
 	
 	demolishTest();
@@ -267,16 +295,15 @@ void it_denies_having_incoming_links()
 
 void it_confirms_having_incoming_links()
 {
-	//                 0             6              12     +   +    18               24              30
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,2,0,30,  18,0,0,1,0,30,   12,6,0,6,30,0,  12,18,0,18,12,24};
-	//                               ^ node         ^ node           ^ node          ^ 6 -> 12       ^ 18 -> 12
+	// 0             6 node         12 node         18 node          24 6->12        30 18->12
+	// 0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,2,0,30,  18,0,0,1,0,30,   12,6,0,6,30,0,  12,18,0,18,12,24
+	//                                     ^   ^
 	prepareTest();
-	
-	size_t place = 12;
-	Node_read(node, place);
-	
+
+	node->incomingLink->value[0] = 30;
 	char result = Node_hasIncomingLink(node);
 	
+	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
 	assert(result == 1  && "A node can have one incoming link, the most fresh in the chain of incoming connections.");
 	
 	demolishTest();
@@ -285,16 +312,15 @@ void it_confirms_having_incoming_links()
 
 void it_denies_having_outgoing_links()
 {
-	//                 0             6     +   +
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
-	//                               ^ node
+	// 0             6 node
+	// 0,0,0,0,0,0,  6,0,0,0,0,0
+	//                   ^   ^
 	prepareTest();
-	
-	size_t place = 6;
-	Node_read(node, place);
-	
+
+	node->outgoingLink->value[0] = 0;
 	char result = Node_hasOutgoingLink(node);
 	
+	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
 	assert(result == 0  && "A node may have no outgoing connections.");
 	
 	demolishTest();
@@ -302,16 +328,15 @@ void it_denies_having_outgoing_links()
 
 void it_confirms_having_outgoing_links()
 {
-	//                 0             6              12              18               24 +             30
-	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0};
-	//                               ^ node         ^ node           ^ node          ^ 6 -> 12        ^ 6 -> 18
+	// 0             6 node         12 node         18 node          24 6->12         30 6->18
+	// 0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0};
+	//                   ^   ^
 	prepareTest();
-	
-	size_t place = 6;
-	Node_read(node, place);
-	
+
+	node->outgoingLink->value[0] = 30;
 	char result = Node_hasOutgoingLink(node);
 	
+	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
 	assert(result == 1  && "A node can have one outgoing link, the most fresh in the chain of outgoing connections.");
 	
 	demolishTest();
@@ -319,29 +344,43 @@ void it_confirms_having_outgoing_links()
 
 void it_keeps_the_first_incoming_connection()
 {
-	//                 0             6 node         12 node       18 12->6
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0,   12,0,0,0,0,0,  6,0,0,12,0,0};
-	//                 0,0,0,0,0,0,  6,0,0,0,0,0,   12,0,0,0,0,0,  6,0,0,12,6,0 1) The first link (18) in the incoming chain gets destination node (6) 
-	//                                                                      ^   as a predecessor in the incoming chain.
-	//                 0,0,0,0,0,0,  6,0,0,0,0,18,  12,0,0,0,0,0,  6,0,0,12,6,0 2) The destination node (6) keeps the link (18) as the beginning of the chain 
-	//                                         ^                                of incoming connections from other nodes.
-	//                 0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,0,0,0,0,  6,0,0,12,6,0 3) The destination node (6) increments the length of the chain of connections 
-	//                                     ^                                    coming from other nodes.
+	// 0             6 node         12 node        18 12->6
+	// 0,0,0,0,0,0,  6,0,0,0,0,0,   12,0,0,0,0,0,  6,0,0,12,0,0
+	// 0,0,0,0,0,0,  6,0,0,0,0,0,   12,0,0,0,0,0,  6,0,0,12,6,0 1) The first link (18) in the incoming chain gets destination node (6) 
+	//                                                      ^   as a predecessor in the incoming chain.
+	// 0,0,0,0,0,0,  6,0,0,0,0,18,  12,0,0,0,0,0,  6,0,0,12,6,0 2) The destination node (6) keeps the link (18) as the beginning of the chain 
+	//                         ^                                of incoming connections from other nodes.
+	// 0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,0,0,0,0,  6,0,0,12,6,0 3) The destination node (6) increments the length of the chain of connections 
+	//                     ^                                    coming from other nodes.
 	prepareTest();
 	
-	size_t place = 12;
-	Node_read(node, place);
-	
-	struct Link * incomingLink = Link_mock();
-	incomingLink->result[1] = 18;
-	Node_addIncomingLink(node, incomingLink);
+	size_t place = 6;
+	size_t incomingLinkPlace = 18;
 
-	assert(0 == strcmp(incomingLink->method[0], "Link_shiftIncoming"));
-	assert(place == incomingLink->previous[0] && "Link_shiftIncoming previous");
+	struct Link * incomingLink = Link_mock();
+	incomingLink->result[1] = incomingLinkPlace;
+	
+	node->place->value[0] = place;
+	node->incomingLink->value[0] = 0;
+	Node_addIncomingLink(node, incomingLink);
+	
+	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
+	
+	assert(0 == strcmp(node->place->method[0], "Place_get"));
+
+	assert(
+		0 == strcmp(incomingLink->method[0], "Link_shiftIncoming")
+		&& incomingLink->previous[0] == place
+	);
 	
 	assert(0 == strcmp(incomingLink->method[1], "Link_getPlace"));
-	assert(1 == places[15] && "Incoming link count gets incremented.");
-	assert(18 == places[17] && "A node keeps its first incoming link.");
+	
+	assert(
+		0 == strcmp(node->incomingLink->method[1], "Place_set")
+		&& node->incomingLink->value[1] == incomingLinkPlace
+	);
+	
+	assert(0 == strcmp(node->incomingLinkCount->method[0], "Place_increment"));
 	
 	demolishTest();
 }
@@ -362,28 +401,51 @@ void it_keeps_the_latest_incoming_connection()
 	prepareTest();
 	
 	size_t place = 6;
-	Node_read(node, place);
+	size_t oldLinkPlace = 24;
+	size_t newLinkPlace = 30;
 	
 	struct Link * incomingLink = Link_mock();
-	incomingLink->result[1] = 30;
-	incomingLink->result[2] = 30;
+	incomingLink->result[1] = newLinkPlace;
+	incomingLink->result[2] = newLinkPlace;
+	
+	node->place->value[0] = place;
+	node->incomingLink->value[0] = oldLinkPlace;
+	node->incomingLink->value[1] = oldLinkPlace;
+	node->incomingLink->value[2] = oldLinkPlace;
 	Node_addIncomingLink(node, incomingLink);
 	
-	assert(0 == strcmp(incomingLink->method[0], "Link_joinIncoming"));
-	assert(6 == incomingLink->previous[0] && "Link_joinIncoming previous");
-	assert(24 == incomingLink->next[0] && "Link_joinIncoming next");
+	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
 	
-	assert(0 == strcmp(link->method[0], "Link_read"));
-	assert(24 == link->place[0] && "Link_read place");
+	assert(0 == strcmp(node->place->method[0], "Place_get"));
+	assert(0 == strcmp(node->incomingLink->method[1], "Place_get"));
+	assert(
+		0 == strcmp(incomingLink->method[0], "Link_joinIncoming")
+		&& incomingLink->previous[0] == place
+		&& incomingLink->next[0] == oldLinkPlace
+	);
+	
+	assert(0 == strcmp(node->incomingLink->method[2], "Place_get"));
+	
+	assert(
+		0 == strcmp(link->method[0], "Link_read")
+		&& link->place[0] == oldLinkPlace
+	);
 	
 	assert(0 == strcmp(incomingLink->method[1], "Link_getPlace"));
 	
-	assert(0 == strcmp(link->method[1], "Link_shiftIncoming"));
-	assert(30 == link->previous[1] && "Link_shiftIncoming previous");
+	assert(
+		0 == strcmp(link->method[1], "Link_shiftIncoming")
+		&& link->previous[1] == newLinkPlace
+	);
 	
 	assert(0 == strcmp(incomingLink->method[2], "Link_getPlace"));
-	assert(2 == places[9] && "Incoming link count gets incremented.");
-	assert(30 == places[11] && "A node keeps its latest incoming link.");
+	
+	assert(
+		0 == strcmp(node->incomingLink->method[3], "Place_set")
+		&& node->incomingLink->value[3] == newLinkPlace
+	);
+	
+	assert(0 == strcmp(node->incomingLinkCount->method[0], "Place_increment"));
 	
 	demolishTest();
 }
@@ -402,19 +464,33 @@ void it_keeps_the_first_outgoing_connection()
 	prepareTest();
 	
 	size_t place = 6;
-	Node_read(node, place);
+	size_t outgoingLinkPlace = 18;
 	
 	struct Link * outgoingLink = Link_mock();
-	outgoingLink->result[1] = 18;
+	outgoingLink->result[1] = outgoingLinkPlace;
+	
+	node->place->value[0] = place;
+	node->outgoingLink->value[0] = 0;
 	Node_addOutgoingLink(node, outgoingLink);
-
-	assert(0 == strcmp(outgoingLink->method[0], "Link_shiftOutgoing"));
-	assert(place == outgoingLink->previous[0] && "Link_shiftOutgoing previous");
+	
+	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
+	
+	assert(0 == strcmp(node->place->method[0], "Place_get"));
+	
+	assert(
+		0 == strcmp(outgoingLink->method[0], "Link_shiftOutgoing")
+		&& outgoingLink->previous[0] == place
+	);
 	
 	assert(0 == strcmp(outgoingLink->method[1], "Link_getPlace"));
-	assert(1 == places[8] && "Outgoing link count gets incremented.");
-	assert(18 == places[10] && "A node keeps its first outgoing link.");
 	
+	assert(
+		0 == strcmp(node->outgoingLink->method[1], "Place_set")
+		&& node->outgoingLink->value[1] == outgoingLinkPlace
+	);
+	
+	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Place_increment"));
+
 	demolishTest();
 }
 
@@ -434,45 +510,76 @@ void it_keeps_the_latest_outgoing_connection()
 	prepareTest();
 	
 	size_t place = 6;
-	Node_read(node, place);
+	size_t oldLinkPlace = 24;
+	size_t newLinkPlace = 30;
 	
 	struct Link * outgoingLink = Link_mock();
-	outgoingLink->result[1] = 30;
-	outgoingLink->result[2] = 30;
+	outgoingLink->result[1] = newLinkPlace;
+	outgoingLink->result[2] = newLinkPlace;
+	
+	node->place->value[0] = place;
+	node->outgoingLink->value[0] = oldLinkPlace;
+	node->outgoingLink->value[1] = oldLinkPlace;
+	node->outgoingLink->value[2] = oldLinkPlace;
 	Node_addOutgoingLink(node, outgoingLink);
 	
-	assert(0 == strcmp(outgoingLink->method[0], "Link_joinOutgoing"));
-	assert(6 == outgoingLink->previous[0] && "Link_joinOutgoing previous");
-	assert(24 == outgoingLink->next[0] && "Link_joinOutgoing next");
+	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
 	
-	assert(0 == strcmp(link->method[0], "Link_read"));
-	assert(24 == link->place[0] && "Link_read place");
+	assert(0 == strcmp(node->place->method[0], "Place_get"));
+	assert(0 == strcmp(node->outgoingLink->method[1], "Place_get"));
+	assert(
+		0 == strcmp(outgoingLink->method[0], "Link_joinOutgoing")
+		&& outgoingLink->previous[0] == place
+		&& outgoingLink->next[0] == oldLinkPlace
+	);
+	
+	assert(0 == strcmp(node->outgoingLink->method[2], "Place_get"));
+	
+	assert(
+		0 == strcmp(link->method[0], "Link_read")
+		&& link->place[0] == oldLinkPlace
+	);
 	
 	assert(0 == strcmp(outgoingLink->method[1], "Link_getPlace"));
 	
-	assert(0 == strcmp(link->method[1], "Link_shiftOutgoing"));
-	assert(30 == link->previous[1] && "Link_shiftOutgoing previous");
+	assert(
+		0 == strcmp(link->method[1], "Link_shiftOutgoing")
+		&& link->previous[1] == newLinkPlace
+	);
 	
 	assert(0 == strcmp(outgoingLink->method[2], "Link_getPlace"));
-	assert(2 == places[8] && "Outgoing link count gets incremented.");
-	assert(30 == places[10] && "A node keeps its latest outgoing link.");
 	
+	assert(
+		0 == strcmp(node->outgoingLink->method[3], "Place_set")
+		&& node->outgoingLink->value[3] == newLinkPlace
+	);
+	
+	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Place_increment"));
+
 	demolishTest();
 }
 
 void it_finds_incoming_link_by_origin_node_with_one_link_in_chain()
 {
-	//                 0             6 node         12 node         18 12->6
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0};
+	// 0             6 node         12 node         18 12->6
+	// 0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0
+	//                                                     ^
 	
 	prepareTest();
 	
 	size_t place = 6;
-	Node_read(node, place);
-	
-	link->result[1] = 1;
 	size_t origin = 12;
+	
+	link->result[1] = 1;	
+	
+	node->incomingLink->value[0] = 18;
 	size_t result = Node_findIncomingLink(node, origin);
+	
+	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
+	
+	
+	
+	
 	
 	assert(0 == strcmp(link->method[0], "Link_read"));
 	assert(18 == link->place[0] && "Link_read place");

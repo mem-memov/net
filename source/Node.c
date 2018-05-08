@@ -93,6 +93,8 @@ void Node_delete(struct Node * this)
 
 	Place_set(this->place, 0);
 	Place_set(this->data, 0);
+	Place_set(this->outgoingLinkCount, 0);
+	Place_set(this->incomingLinkCount, 0);
 }
 
 size_t Node_getPlace(struct Node * this)
@@ -102,7 +104,7 @@ size_t Node_getPlace(struct Node * this)
 
 char Node_isNode(struct Node * this)
 {
-	if ( Place_keepsPosition(this->place) && ! Place_isZero(this->place) ) {
+	if ( Place_keepsPosition(this->place) && 0 != Place_get(this->place) ) {
 		return 1;
 	}
 	
@@ -111,7 +113,7 @@ char Node_isNode(struct Node * this)
 
 char Node_hasIncomingLink(struct Node * this)
 {
-	if ( ! Place_isZero(this->incomingLink) ) {
+	if ( 0 != Place_get(this->incomingLink) ) {
 		return 1;
 	}
 	
@@ -120,7 +122,7 @@ char Node_hasIncomingLink(struct Node * this)
 
 char Node_hasOutgoingLink(struct Node * this)
 {
-	if ( ! Place_isZero(this->outgoingLink) ) {
+	if ( 0 != Place_get(this->outgoingLink) ) {
 		return 1;
 	}
 	
@@ -130,28 +132,60 @@ char Node_hasOutgoingLink(struct Node * this)
 void Node_addIncomingLink(struct Node * this, struct Link * link)
 {
 	if ( ! Node_hasIncomingLink(this)) {
-		Link_shiftIncoming(link, Place_get(this->place));
+		Link_shiftIncoming(
+			link, 
+			Place_get(this->place)
+		);
 	} else {
-		Link_joinIncoming(link, Place_get(this->place), Place_get(this->incomingLink));
-		Link_read(this->link, Place_get(this->incomingLink));
-		Link_shiftIncoming(this->link, Link_getPlace(link));
+		Link_joinIncoming(
+			link, 
+			Place_get(this->place), 
+			Place_get(this->incomingLink)
+		);
+		Link_read(
+			this->link, 
+			Place_get(this->incomingLink)
+		);
+		Link_shiftIncoming(
+			this->link, 
+			Link_getPlace(link)
+		);
 	}
 	
-	Place_set(this->incomingLink, Link_getPlace(link));
+	Place_set(
+		this->incomingLink, 
+		Link_getPlace(link)
+	);
 	Place_increment(this->incomingLinkCount);
 }
 
 void Node_addOutgoingLink(struct Node * this, struct Link * link)
 {
 	if ( ! Node_hasOutgoingLink(this)) {
-		Link_shiftOutgoing(link, Place_get(this->place));
+		Link_shiftOutgoing(
+			link, 
+			Place_get(this->place)
+		);
 	} else {
-		Link_joinOutgoing(link, Place_get(this->place), Place_get(this->outgoingLink));
-		Link_read(this->link, Place_get(this->outgoingLink));
-		Link_shiftOutgoing(this->link, Link_getPlace(link));
+		Link_joinOutgoing(
+			link, 
+			Place_get(this->place), 
+			Place_get(this->outgoingLink)
+		);
+		Link_read(
+			this->link, 
+			Place_get(this->outgoingLink)
+		);
+		Link_shiftOutgoing(
+			this->link, 
+			Link_getPlace(link)
+		);
 	}
 	
-	Place_set(this->outgoingLink, Link_getPlace(link));
+	Place_set(
+		this->outgoingLink, 
+		Link_getPlace(link)
+	);
 	Place_increment(this->outgoingLinkCount);
 }
 
