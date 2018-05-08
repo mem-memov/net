@@ -387,7 +387,6 @@ void it_gets_deleted_without_reconnection()
 	assert(0 == strcmp(outgoing->next->method[0], "Place_get"));
 	
 	// next bind
-	printf("%s\n", nextOutgoing->node->method[0]);
 	assert(0 == strcmp(nextOutgoing->node->method[0], "method not specified"));
 	assert(0 == strcmp(nextOutgoing->previous->method[0], "method not specified"));
 	assert(0 == strcmp(nextOutgoing->next->method[0], "method not specified"));
