@@ -60,7 +60,6 @@ void it_contructs_an_outgoing_direction()
 	prepareTest();
 	
 	assert(outgoing->offset == 0 && "An outgoing direction starts at the beginning of an entry.");
-	assert(outgoing->nextDirection == NULL && "A new direction is not connected to any other direction.");
 	
 	demolishTest();
 }
@@ -70,7 +69,6 @@ void it_contructs_an_incoming_direction()
 	prepareTest();
 
 	assert(incoming->offset == 3 && "An incoming direction starts right after the outgoing direction.");
-	assert(incoming->nextDirection == NULL && "A new direction is not connected to any other direction.");
 	
 	demolishTest();
 }
@@ -101,19 +99,38 @@ void it_writes_values_of_a_fresh_direction_to_the_store()
 	size_t destination = 12;
 	Direction_create(outgoing, place, destination);
 	
+	// bind
+	assert(outgoing->place == place && "A direction keeps the place it is bound to inside the storage array.");
 	assert(
-		0 == strcmp(outgoing->node->method, "Place_set") 
-		&& outgoing->node->value == destination 
+		0 == strcmp(outgoing->node->method[0], "Place_bind") 
+		&& outgoing->node->position[0] == 18
 		&& "A direction keeps the node it points to."
 	);
 	assert(
-		0 == strcmp(outgoing->previous->method, "Place_set") 
-		&& outgoing->previous->value == 0 
+		0 == strcmp(outgoing->previous->method[0], "Place_bind") 
+		&& outgoing->previous->position[0] == 19
+		&& "A direction can be connected to a previous direction."
+	);
+	assert(
+		0 == strcmp(outgoing->next->method[0], "Place_bind") 
+		&& outgoing->next->position[0] == 20
+		&& "A new direction can be connected to a following direction."
+	);
+	
+	// create
+	assert(
+		0 == strcmp(outgoing->node->method[1], "Place_set") 
+		&& outgoing->node->value[1] == destination 
+		&& "A direction keeps the node it points to."
+	);
+	assert(
+		0 == strcmp(outgoing->previous->method[1], "Place_set") 
+		&& outgoing->previous->value[1] == 0 
 		&& "A new direction is not connected to any previous direction."
 	);
 	assert(
-		0 == strcmp(outgoing->next->method, "Place_set") 
-		&& outgoing->next->value == 0 
+		0 == strcmp(outgoing->next->method[1], "Place_set") 
+		&& outgoing->next->value[1] == 0 
 		&& "A new direction is not connected to any following direction."
 	);
 
@@ -125,25 +142,26 @@ void it_reads_values_of_an_existing_direction_from_the_store()
 	// 0             6 node         12 node         18 6->12
 	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
 	//                                              ^  ^ ^
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 18;
 	Direction_read(outgoing, place);
 	
+	// bind
 	assert(outgoing->place == place && "A direction keeps the place it is bound to inside the storage array.");
 	assert(
-		0 == strcmp(outgoing->node->method, "Place_bind") 
-		&& outgoing->node->position == 18
+		0 == strcmp(outgoing->node->method[0], "Place_bind") 
+		&& outgoing->node->position[0] == 18
 		&& "A direction keeps the node it points to."
 	);
 	assert(
-		0 == strcmp(outgoing->previous->method, "Place_bind") 
-		&& outgoing->previous->position == 19
+		0 == strcmp(outgoing->previous->method[0], "Place_bind") 
+		&& outgoing->previous->position[0] == 19
 		&& "A direction can be connected to a previous direction."
 	);
 	assert(
-		0 == strcmp(outgoing->next->method, "Place_bind") 
-		&& outgoing->next->position == 20
+		0 == strcmp(outgoing->next->method[0], "Place_bind") 
+		&& outgoing->next->position[0] == 20
 		&& "A new direction can be connected to a following direction."
 	);
 
@@ -169,13 +187,13 @@ void it_joins_chain_of_directions()
 		&& outgoingError->next == nextPlace
 	);
 	assert(
-		0 == strcmp(outgoing->previous->method, "Place_set") 
-		&& outgoing->previous->value == previousPlace
+		0 == strcmp(outgoing->previous->method[0], "Place_set") 
+		&& outgoing->previous->value[0] == previousPlace
 		&& "A direction gets connected to a previous entry (a node)."
 	);
 	assert(
-		0 == strcmp(outgoing->next->method, "Place_set") 
-		&& outgoing->next->value == nextPlace
+		0 == strcmp(outgoing->next->method[0], "Place_set") 
+		&& outgoing->next->value[0] == nextPlace
 		&& "A new direction gets connected to a following direction."
 	);
 
@@ -199,8 +217,8 @@ void it_gets_appended_to_a_previous_direction()
 	);
 	
 	assert(
-		0 == strcmp(outgoing->previous->method, "Place_set") 
-		&& outgoing->previous->value == previousPlace
+		0 == strcmp(outgoing->previous->method[0], "Place_set") 
+		&& outgoing->previous->value[0] == previousPlace
 		&& "A direction gets connected to a previous entry (a node)."
 	);
 
@@ -215,11 +233,11 @@ void it_confirms_directing_to_a_particular_node()
 	prepareTest();
 
 	size_t nodePlace = 12;
-	outgoing->value = nodePlace;
+	outgoing->node->value[0] = nodePlace;
 	size_t result = Direction_hasNode(outgoing, nodePlace);
 	
 	assert(
-		0 == strcmp(outgoing->node->method, "Place_get") 
+		0 == strcmp(outgoing->node->method[0], "Place_get") 
 		&& result == 1
 		&& "A direction confirms it points to a particular node."
 	);
@@ -235,11 +253,11 @@ void it_denies_directing_to_a_particular_node()
 	prepareTest();
 
 	size_t nodePlace = 24;
-	outgoing->node->value = 12;
+	outgoing->node->value[0] = 12;
 	size_t result = Direction_hasNode(outgoing, nodePlace);
 	
 	assert(
-		0 == strcmp(outgoing->node->method, "Place_get") 
+		0 == strcmp(outgoing->node->method[0], "Place_get") 
 		&& result == 0
 		&& "A direction denies it points to a particular node."
 	);
@@ -254,11 +272,11 @@ void it_supplies_the_node_it_directs_to()
 	//                                              ^
 	prepareTest();
 
-	outgoing->node->value = 12;
+	outgoing->node->value[0] = 12;
 	size_t result = Direction_getNode(outgoing);
 	
 	assert(
-		0 == strcmp(outgoing->node->method, "Place_get") 
+		0 == strcmp(outgoing->node->method[0], "Place_get") 
 		&& result == 12
 		&& "A direction supplies the place a node occupies that it points to."
 	);
@@ -273,11 +291,13 @@ void it_supplies_the_place_of_the_next_direction()
 	//                                                                                    ^
 	prepareTest();
 
+	size_t nextPlace = 24;
+	outgoing->next->value[0] = nextPlace;
 	size_t result = Direction_getNext(outgoing);
 	
 	assert(
-		0 == strcmp(outgoing->next->method, "Place_get") 
-		&& result == 24
+		0 == strcmp(outgoing->next->method[0], "Place_get") 
+		&& result == nextPlace
 		&& "A direction supplies the place of the next direction in the chain."
 	);
 
@@ -288,105 +308,108 @@ void it_gets_deleted_with_reconnection()
 {
 	// 0             6 node         12 node         18 node          24 6->12         30 6->18
 	// 0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0
-	//                                                                                ^
+	// 0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,6,0,6,12,0,   0,0,0,6,18,0
+	//                                                                  ^             ^ ^ ^
 	prepareTest();
-	
-	Direction_setPool(outgoing, nextOutgoing);
-	
-	size_t place = 30;
-	Direction_read(outgoing, place);
-	
+
+	size_t previousPlace = 6;
+	size_t nextPlace = 24;
+	outgoing->previous->value[0] = previousPlace;
+	outgoing->next->value[0] = nextPlace;
 	Direction_delete(outgoing);
 	
-	assert((*outgoing->node) == 0 && places[30] == 0 && "All fields of a deleted direction are set to zero.");
-	assert((*outgoing->previous) == 0 && places[31] == 0 && "All fields of a deleted direction are set to zero.");
-	assert((*outgoing->next) == 0 && places[32] == 0 && "All fields of a deleted direction are set to zero.");
-	assert((*nextOutgoing->previous) == 6 && places[25] == 6 && "The previous direction gets reconnected.");
+	assert(0 == strcmp(outgoing->previous->method[0], "Place_get"));
+	assert(0 == strcmp(outgoing->next->method[0], "Place_get"));
+
+	assert(
+		0 == strcmp(outgoingError->method, "DirectionError_forbidZeroPlaceForPrevious") 
+		&& outgoingError->previous == previousPlace
+	);
+
+	// next bind
+	assert(nextOutgoing->place == nextPlace && "The next direction keeps the place it is bound to inside the storage array.");
+	assert(
+		0 == strcmp(nextOutgoing->node->method[0], "Place_bind") 
+		&& nextOutgoing->node->position[0] == 24
+		&& "The next direction keeps the node it points to."
+	);
+	assert(
+		0 == strcmp(nextOutgoing->previous->method[0], "Place_bind") 
+		&& nextOutgoing->previous->position[0] == 25
+		&& "The next direction can be connected to a previous direction."
+	);
+	assert(
+		0 == strcmp(nextOutgoing->next->method[0], "Place_bind") 
+		&& nextOutgoing->next->position[0] == 26
+		&& "The next new direction can be connected to a following direction."
+	);
+	
+	// next append
+	assert(
+		0 == strcmp(nextOutgoing->previous->method[1], "Place_set") 
+		&& nextOutgoing->previous->value[1] == previousPlace
+		&& "Direction_append The previous direction gets reconnected."
+	);
+	
+	assert(
+		0 == strcmp(outgoing->node->method[0], "Place_set") 
+		&& outgoing->node->value[0] == 0
+		&& "All fields of a deleted direction are set to zero."
+	);
+	assert(
+		0 == strcmp(outgoing->previous->method[1], "Place_set") 
+		&& outgoing->previous->value[1] == 0
+		&& "All fields of a deleted direction are set to zero."
+	);
+	assert(
+		0 == strcmp(outgoing->next->method[1], "Place_set") 
+		&& outgoing->next->value[1] == 0
+		&& "All fields of a deleted direction are set to zero."
+	);
 	
 	demolishTest();
 }
 
 void it_gets_deleted_without_reconnection()
 {
-    // 6 -> 12
-	//                 0             6              12              18
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                                                               ^ outgoing
-	
-	prepareTest(places);
-	
-	Direction_setPool(outgoing, nextOutgoing);
-	
-	size_t place = 18;
-	Direction_read(outgoing, place);
-	
+	// 0             6 node         12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
+	//                                              
+	prepareTest();
+
+	size_t previousPlace = 6;
+	size_t nextPlace = 0;
+	outgoing->previous->value[0] = previousPlace;
+	outgoing->next->value[0] = nextPlace;
 	Direction_delete(outgoing);
 	
-	assert((*outgoing->node) == 0 && places[18] == 0 && "All fields of a deleted direction are set to zero.");
-	assert((*outgoing->previous) == 0 && places[19] == 0 && "All fields of a deleted direction are set to zero.");
-	assert((*outgoing->next) == 0 && places[20] == 0 && "All fields of a deleted direction are set to zero.");
+	assert(0 == strcmp(outgoing->previous->method[0], "Place_get"));
+	assert(0 == strcmp(outgoing->next->method[0], "Place_get"));
 	
-	demolishTest();
-}
-
-void it_forbids_zero_when_getting_appended()
-{
-    // 6 -> 12
-	//                 0             6              12              18
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                                                               ^ outgoing
-	prepareTest(places);
+	// next bind
+	printf("%s\n", nextOutgoing->node->method[0]);
+	assert(0 == strcmp(nextOutgoing->node->method[0], "method not specified"));
+	assert(0 == strcmp(nextOutgoing->previous->method[0], "method not specified"));
+	assert(0 == strcmp(nextOutgoing->next->method[0], "method not specified"));
 	
-	size_t place = 18;
-	Direction_read(outgoing, place);
+	// next append
+	assert(0 == strcmp(nextOutgoing->previous->method[1], "method not specified"));
 	
-	size_t previous = 0;
-	Direction_append(outgoing, previous);
-	
-	assert(0 == strcmp(error->method, "DirectionError_forbidZeroPlaceForPrevious"));
-	assert(previous == error->previous && "DirectionError_forbidZeroPlaceForPrevious previous");
-	
-	demolishTest();
-}
-
-void it_forbids_zero_when_getting_deleted()
-{
-    // 6 -> 12
-	//                 0             6              12              18 +
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,0,0,6,12,0};
-	//                                                               ^ outgoing
-	prepareTest(places);
-	
-	size_t place = 18;
-	Direction_read(outgoing, place);
-	
-	size_t previous = 0;
-	Direction_delete(outgoing);
-	
-	assert(0 == strcmp(error->method, "DirectionError_forbidZeroPlaceForPrevious"));
-	assert(previous == error->previous && "DirectionError_forbidZeroPlaceForPrevious previous");
-	
-	demolishTest();
-}
-
-void it_validates_before_joining_chain()
-{
-    // 6 -> 12
-	//                 0             6              12              18 
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,0,0,6,12,0};
-	//                                                               ^ outgoing
-	prepareTest(places);
-	
-	size_t place = 18;
-	Direction_read(outgoing, place);
-	
-	size_t previous = 0;
-	size_t next = 0;
-	Direction_joinChain(outgoing, previous, next);
-	
-	assert(0 == strcmp(error->method, "DirectionError_forbidZeroAndEqualtyForPreviousAndNext"));
-	assert(previous == error->previous && "DirectionError_forbidZeroAndEqualtyForPreviousAndNext previous");
-	assert(next == error->next && "DirectionError_forbidZeroAndEqualtyForPreviousAndNext next");
+	assert(
+		0 == strcmp(outgoing->node->method[0], "Place_set") 
+		&& outgoing->node->value[0] == 0
+		&& "All fields of a deleted direction are set to zero."
+	);
+	assert(
+		0 == strcmp(outgoing->previous->method[1], "Place_set") 
+		&& outgoing->previous->value[1] == 0
+		&& "All fields of a deleted direction are set to zero."
+	);
+	assert(
+		0 == strcmp(outgoing->next->method[1], "Place_set") 
+		&& outgoing->next->value[1] == 0
+		&& "All fields of a deleted direction are set to zero."
+	);
 	
 	demolishTest();
 }
@@ -406,9 +429,6 @@ int main(int argc, char** argv)
 	it_supplies_the_place_of_the_next_direction();
 	it_gets_deleted_with_reconnection();
 	it_gets_deleted_without_reconnection();
-	it_forbids_zero_when_getting_appended();
-	it_forbids_zero_when_getting_deleted();
-	it_validates_before_joining_chain();
 
 	return (EXIT_SUCCESS);
 }

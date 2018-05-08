@@ -142,11 +142,14 @@ size_t Direction_getNext(struct Direction * this)
 
 void Direction_delete(struct Direction * this)
 {
-	DirectionError_forbidZeroPlaceForPrevious(this->error, Place_get(this->previous));
+	size_t previous = Place_get(this->previous);
+	size_t next = Place_get(this->next);
 	
-	if ( ! Place_isZero(this->next) ) {
-		Direction_read(this->nextDirection, Place_get(this->next));
-		Direction_append(this->nextDirection, Place_get(this->previous));
+	DirectionError_forbidZeroPlaceForPrevious(this->error, previous);
+	
+	if ( 0 != next ) {
+		Direction_read(this->nextDirection, next);
+		Direction_append(this->nextDirection, previous);
 	}
 
 	Place_set(this->node, 0);
