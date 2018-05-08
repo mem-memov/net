@@ -11,12 +11,12 @@ struct LinkError * error;
 struct Direction * outgoing;
 struct Direction * incoming;
 
-void prepareTest(size_t * places)
+void prepareTest()
 {
 	outgoing = Direction_mock();
 	incoming = Direction_mock();
 	error = LinkError_mock();
-	link = Link_construct(places, outgoing, incoming, error);
+	link = Link_construct(outgoing, incoming, error);
 }
 
 void demolishTest()
@@ -27,11 +27,10 @@ void demolishTest()
 
 void it_provides_its_place_in_store()
 {
-    // 6 -> 12
-	//                 0             6              12              18 
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                               ^ node         ^ node          ^ link
-	prepareTest(places);
+	// 0             6  node        12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
+
+	prepareTest();
 
 	size_t place = 18;
 	link->place = place;
@@ -44,11 +43,11 @@ void it_provides_its_place_in_store()
 
 void it_writes_new_link_to_store()
 {
-    // 6 -> 12
-	//                 0             6              12              18 
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                               ^ node         ^ node          ^ link
-	prepareTest(places);
+	// 0             6  node        12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,0,0,0,0,   12,0,0,0,0,0,   0,0,0,0,0,0
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
+
+	prepareTest();
 	
 	size_t place = 18;
 	size_t origin = 6;
@@ -74,11 +73,11 @@ void it_writes_new_link_to_store()
 
 void it_reads_link_fields_from_store()
 {
-    // 6 -> 12
-	//                 0             6              12              18 
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                               ^ node         ^ node          ^ link
-	prepareTest(places);
+	// 0             6  node        12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,0,0,0,0,   12,0,0,0,0,0,   0,0,0,0,0,0
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
+
+	prepareTest();
 	
 	size_t place = 18;
 	Link_read(link, place);
@@ -96,16 +95,12 @@ void it_reads_link_fields_from_store()
 
 void it_joins_chain_of_outgoing_directions()
 {
-    // 6 -> 12
-    // 6 -> 18
-	//                 0             6              12              18               24               30
-	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,0,0,6,0,0};
-	//                               ^ node         ^ node           ^ node          ^ link            ^ new link
-	prepareTest(places);
-	
-	size_t place = 30;
-	Link_read(link, place);
-	
+	// 0             6 node         12 node         18 node          24 6->12         30 6->18
+	// 0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,1,0,24,  18,0,0,0,0,0,    12,6,0,6,12,0,   0,0,0,0,0,0
+	// 0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0
+	//                                                                                   ^ ^
+	prepareTest();
+
 	size_t previous = 6;
 	size_t next = 24;
 	Link_joinOutgoing(link, previous, next);
@@ -119,16 +114,12 @@ void it_joins_chain_of_outgoing_directions()
 
 void it_joins_chain_of_incoming_directions()
 {
-    // 6 -> 12
-    // 6 -> 18
-	//                 0             6              12              18               24               30
-	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,0,0,6,0,0};
-	//                               ^ node         ^ node           ^ node          ^ link            ^ new link
-	prepareTest(places);
-	
-	size_t place = 30;
-	Link_read(link, place);
-	
+	// 0             6 node         12 node         18 node          24 6->12         30 6->18
+	// 0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,1,0,24,  18,0,0,0,0,0,    12,6,0,6,12,0,   0,0,0,0,0,0
+	// 0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0
+	//                                                                                           ^ ^
+	prepareTest();
+
 	size_t previous = 18;
 	size_t next = 0;
 	Link_joinIncoming(link, previous, next);
@@ -142,14 +133,12 @@ void it_joins_chain_of_incoming_directions()
 
 void it_gets_shifted_back_in_outgoing_chain()
 {
-	//                 0             6              12              18               24 +             30
-	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0};
-	//                               ^ node         ^ node           ^ node          ^ 6 -> 12        ^ 6 -> 18
-	prepareTest(places);
-	
-	size_t place = 24;
-	Link_read(link, place);
-	
+	// 0             6 node         12 node         18 node          24 6->12         30 6->18
+	// 0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,1,0,24,  18,0,0,0,0,0,    12,6,0,6,12,0,   0,0,0,0,0,0
+	// 0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0
+	//                                                                  ^
+	prepareTest();
+
 	size_t previous = 30;
 	Link_shiftOutgoing(link, previous);
 	
@@ -161,14 +150,12 @@ void it_gets_shifted_back_in_outgoing_chain()
 
 void it_gets_shifted_back_in_incoming_chain()
 {
-	//                 0             6              12              18               24       +      30
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,2,0,30,  18,0,0,1,0,30,   12,6,0,6,30,0,  12,18,0,18,12,24};
-	//                               ^ node         ^ node           ^ node          ^ 6 -> 12       ^ 18 -> 12
-	prepareTest(places);
-	
-	size_t place = 24;
-	Link_read(link, place);
-	
+	// 0             6 node         12 node         18 node          24 6->12        30 18->12
+	// 0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,1,0,24,  18,0,0,0,0,0,    12,6,0,6,12,0,  0,0,0,0,0,0
+	// 0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,2,0,30,  18,0,0,1,0,30,   12,6,0,6,30,0,  12,18,0,18,12,24
+	//                                                                        ^
+	prepareTest();
+
 	size_t previous = 30;
 	Link_shiftIncoming(link, previous);
 	
@@ -180,15 +167,11 @@ void it_gets_shifted_back_in_incoming_chain()
 
 void it_confirms_connection_to_outgoing_node()
 {
-    // 6 -> 12
-	//                 0             6              12              18 
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                               ^ node         ^ node          ^ link
-	prepareTest(places);
+	// 0             6  node        12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
 	
-	size_t place = 18;
-	Link_read(link, place);
-	
+	prepareTest();
+
 	size_t destination = 12;
 	outgoing->result = 1;
 	size_t result = Link_isOutgoingToNode(link, destination);
@@ -202,15 +185,11 @@ void it_confirms_connection_to_outgoing_node()
 
 void it_denies_connection_to_outgoing_node()
 {
-    // 6 -> 12
-	//                 0             6              12              18 
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                               ^ node         ^ node          ^ link
-	prepareTest(places);
+	// 0             6  node        12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
 	
-	size_t place = 18;
-	Link_read(link, place);
-	
+	prepareTest();
+
 	size_t destination = 36;
 	outgoing->result = 0;
 	size_t result = Link_isOutgoingToNode(link, destination);
@@ -224,15 +203,11 @@ void it_denies_connection_to_outgoing_node()
 
 void it_confirms_connection_to_incoming_node()
 {
-    // 6 -> 12
-	//                 0             6              12              18 
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                               ^ node         ^ node          ^ link
-	prepareTest(places);
+	// 0             6  node        12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
 	
-	size_t place = 18;
-	Link_read(link, place);
-	
+	prepareTest();
+
 	size_t origin = 6;
 	incoming->result = 1;
 	size_t result = Link_isIncomingFromNode(link, origin);
@@ -246,15 +221,11 @@ void it_confirms_connection_to_incoming_node()
 
 void it_denies_connection_to_incoming_node()
 {
-    // 6 -> 12
-	//                 0             6              12              18 
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                               ^ node         ^ node          ^ link
-	prepareTest(places);
+	// 0             6  node        12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
 	
-	size_t place = 18;
-	Link_read(link, place);
-	
+	prepareTest();
+
 	size_t origin = 36;
 	incoming->result = 0;
 	size_t result = Link_isIncomingFromNode(link, origin);
@@ -268,14 +239,11 @@ void it_denies_connection_to_incoming_node()
 
 void it_supplies_next_outgoing_direction()
 {
-	//                 0             6              12              18               24 +             30
-	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0};
-	//                               ^ node         ^ node           ^ node          ^ 6 -> 12        ^ 6 -> 18
-	prepareTest(places);
-	
-	size_t place = 30;
-	Link_read(link, place);
-	
+	// 0             6              12              18               24 6->12         30 6->18
+	// 0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0
+	//                                                                                     ^
+	prepareTest();
+
 	outgoing->result = 24;
 	size_t result = Link_getNextOutgoing(link);
 	
@@ -287,14 +255,11 @@ void it_supplies_next_outgoing_direction()
 
 void it_supplies_next_incoming_direction()
 {
-	//                 0             6              12              18               24       +      30
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,2,0,30,  18,0,0,1,0,30,   12,6,0,6,30,0,  12,18,0,18,12,24};
-	//                               ^ node         ^ node           ^ node          ^ 6 -> 12       ^ 18 -> 12
-	prepareTest(places);
-	
-	size_t place = 30;
-	Link_read(link, place);
-	
+	// 0             6 node         12 node         18 node          24 6->12        30 18->12
+	// 0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,2,0,30,  18,0,0,1,0,30,   12,6,0,6,30,0,  12,18,0,18,12,24
+	//                                                                        ^
+	prepareTest();
+
 	incoming->result = 24;
 	size_t result = Link_getNextIncoming(link);
 	
@@ -306,15 +271,12 @@ void it_supplies_next_incoming_direction()
 
 void it_deletes_link()
 {
-    // 6 -> 12
-	//                 0             6              12              18 
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                               ^ node         ^ node          ^ link
-	prepareTest(places);
+	// 0             6  node        12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
+	// 0,0,0,0,0,0,  6,0,0,0,0,0,   12,0,0,0,0,0,   0,0,0,0,0,0
 	
-	size_t place = 18;
-	Link_read(link, place);
-	
+	prepareTest();
+
 	Link_delete(link);
 	
 	assert(0 == strcmp(outgoing->method, "Direction_delete"));
@@ -325,15 +287,11 @@ void it_deletes_link()
 
 void it_supplies_outgoing_node()
 {
-    // 6 -> 12
-	//                 0             6              12              18 
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                               ^ node         ^ node          ^ link
-	prepareTest(places);
-	
-	size_t place = 18;
-	Link_read(link, place);
-	
+	// 0             6  node        12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
+	//                                              ^
+	prepareTest();
+
 	outgoing->result = 12;
 	size_t result = Link_getOutgoingNode(link);
 	
@@ -345,15 +303,11 @@ void it_supplies_outgoing_node()
 
 void it_supplies_incoming_node()
 {
-    // 6 -> 12
-	//                 0             6              12              18 
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	//                               ^ node         ^ node          ^ link
-	prepareTest(places);
-	
-	size_t place = 18;
-	Link_read(link, place);
-	
+	// 0             6  node        12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
+	//                                                     ^
+	prepareTest();
+
 	incoming->result = 6;
 	size_t result = Link_getIncomingNode(link);
 	
