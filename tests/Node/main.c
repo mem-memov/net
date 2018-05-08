@@ -569,45 +569,58 @@ void it_finds_incoming_link_by_origin_node_with_one_link_in_chain()
 	
 	size_t place = 6;
 	size_t origin = 12;
+	size_t linkPlace = 18;
 	
 	link->result[1] = 1;	
 	
-	node->incomingLink->value[0] = 18;
+	node->incomingLink->value[0] = linkPlace;
+	node->incomingLink->value[1] = linkPlace;
 	size_t result = Node_findIncomingLink(node, origin);
 	
 	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
+	assert(0 == strcmp(node->incomingLink->method[1], "Place_get"));
+
+	assert(
+		0 == strcmp(link->method[0], "Link_read")
+		&& link->place[0] == linkPlace
+	);
 	
+	assert(
+		0 == strcmp(link->method[1], "Link_isIncomingFromNode")
+		&& link->origin[1] == origin
+	);
 	
-	
-	
-	
-	assert(0 == strcmp(link->method[0], "Link_read"));
-	assert(18 == link->place[0] && "Link_read place");
-	
-	assert(0 == strcmp(link->method[1], "Link_isIncomingFromNode"));
-	assert(origin == link->origin[1] && "Link_isIncomingFromNode origin");
-	
-	assert(18 == result && "The node supplies the incoming link place.");
+	assert(result == linkPlace && "The node supplies the incoming link place.");
 	
 	demolishTest();
 }
 
 void it_finds_incoming_link_by_origin_node_with_many_links_in_chain()
 {
-	//                 0             6 node         12 node         18 node           24 12->6        30 18->6
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,1,0,30,0,    6,12,0,12,30,0, 18,18,0,6,6,24};
+	// 0             6 node         12 node         18 node           24 12->6        30 18->6
+	// 0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,1,0,30,0,    6,12,0,12,30,0, 18,18,0,6,6,24
 	
 	prepareTest();
 	
 	size_t place = 6;
-	Node_read(node, place);
+	size_t origin = 12;
+	size_t linkPlace = 24;
 	
 	link->result[1] = 0;
-	link->result[2] = 24;
+	link->result[2] = linkPlace;
 	link->result[4] = 1;
-	size_t origin = 12;
+	
+	node->incomingLink->value[0] = linkPlace;
+	node->incomingLink->value[1] = linkPlace;
 	size_t result = Node_findIncomingLink(node, origin);
 	
+	
+	
+	
+	
+	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
+	assert(0 == strcmp(node->incomingLink->method[1], "Place_get"));
+
 	assert(0 == strcmp(link->method[0], "Link_read"));
 	assert(30 == link->place[0] && "Link_read place");
 	
@@ -617,12 +630,12 @@ void it_finds_incoming_link_by_origin_node_with_many_links_in_chain()
 	assert(0 == strcmp(link->method[2], "Link_getNextIncoming"));
 
 	assert(0 == strcmp(link->method[3], "Link_read"));
-	assert(24 == link->place[3] && "Link_read place");
+	assert(linkPlace == link->place[3] && "Link_read place");
 	
 	assert(0 == strcmp(link->method[4], "Link_isIncomingFromNode"));
 	assert(origin == link->origin[4] && "Link_isIncomingFromNode origin");
 	
-	assert(24 == result && "The node supplies the incoming link place.");
+	assert(linkPlace == result && "The node supplies the incoming link place.");
 	
 	demolishTest();
 }
