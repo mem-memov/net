@@ -268,7 +268,6 @@ void it_supplies_the_node_it_directs_to()
 
 void it_supplies_the_place_of_the_next_direction()
 {
-    // 6 -> 12
     // 0             6 node         12 node         18 node          24 6->12        30 6->18
 	// 0,0,0,0,0,0,  6,0,2,0,24,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,6,0,6,12,0,  18,6,24,6,18,0
 	//                                                                                    ^
