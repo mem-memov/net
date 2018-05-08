@@ -2,13 +2,18 @@
 #include <stdlib.h>
 
 struct Node {
+	// fields
 	struct Place * place;
 	struct Place * data;
 	struct Place * outgoingLinkCount;
 	struct Place * incomingLinkCount;
 	struct Place * outgoingLink;
 	struct Place * incomingLink;
+	
+	// pool
 	struct Link * link;
+	
+	// error
 	struct NodeError * error;
 };
 
@@ -24,15 +29,20 @@ struct Node * Node_construct(
 ) {
 	struct Node * this = malloc(sizeof(struct Node));
 
+	// fields
 	this->place = place;
 	this->data = data;
 	this->outgoingLinkCount = outgoingLinkCount;
 	this->incomingLinkCount = incomingLinkCount;
 	this->outgoingLink = outgoingLink;
 	this->incomingLink = incomingLink;
+	
 	this->link = link;
+	
+	// pool
 	this->error = error;
 
+	// error
 	return this;
 }
 
@@ -52,7 +62,6 @@ void Node_destruct(struct Node * this)
 
 void Node_bind(struct Node * this, size_t place)
 {
-	
 	Place_bind(this->place, place + 0);
 	Place_bind(this->data, place + 1);
 	Place_bind(this->outgoingLinkCount, place + 2);

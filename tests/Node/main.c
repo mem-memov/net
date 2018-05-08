@@ -5,16 +5,29 @@
 #include "../../source/Node.c"
 #include "Link.c"
 #include "NodeError.c"
+#include "Place.c"
 
 struct Node * node;
+struct Place * place;
+struct Place * data;
+struct Place * outgoingLinkCount;
+struct Place * incomingLinkCount;
+struct Place * outgoingLink;
+struct Place * incomingLink;
 struct NodeError * error;
 struct Link * link;
 
-void prepareTest(size_t * places)
+void prepareTest()
 {
+	place = Place_mock();
+	data = Place_mock();
+	outgoingLinkCount = Place_mock();
+	incomingLinkCount = Place_mock();
+	outgoingLink = Place_mock();
+	incomingLink = Place_mock();
 	link = Link_mock();
 	error = NodeError_mock();
-	node = Node_construct(places, link,error);
+	node = Node_construct(place, data, outgoingLinkCount, incomingLinkCount, outgoingLink, incomingLink, link, error);
 }
 
 void demolishTest()
@@ -25,40 +38,123 @@ void demolishTest()
 
 void it_writes_new_node_to_store()
 {
-	//                 0             6
-	size_t places[] = {0,0,0,0,0,0,  9,9,9,9,9,9};
-	//                               ^ node
-	prepareTest(places);
+	// 0             6 node
+	// 0,0,0,0,0,0,  9,9,9,9,9,9
+	// 0,0,0,0,0,0,  6,0,0,0,0,0
+
+	prepareTest();
 	
 	size_t place = 6;
 	Node_create(node, place);
 	
-	assert((*node->place) == place && places[6] == place  && "A node is identified by its place.");
-	assert((*node->data) == 0 && places[7] == 0  && "A new node has no data.");
-	assert((*node->outgoingLinkCount) == 0 && places[8] == 0  && "A new node has an empty counter of outgoing connections.");
-	assert((*node->incomingLinkCount) == 0 && places[9] == 0  && "A new node has an empty counter of incoming connections.");
-	assert((*node->outgoingLink) == 0 && places[10] == 0  && "A new node has no outgoing connections.");
-	assert((*node->incomingLink) == 0 && places[11] == 0  && "A new node has no incoming connections.");
+	// bind
+	assert(
+		0 == strcmp(node->place->method[0], "Place_bind") 
+		&& node->place->position[0] == 6
+		&& "A node is identified by its place."
+	);
+	assert(
+		0 == strcmp(node->data->method[0], "Place_bind") 
+		&& node->data->position[0] == 7
+		&& "A node may have some data."
+	);
+	assert(
+		0 == strcmp(node->outgoingLinkCount->method[0], "Place_bind") 
+		&& node->outgoingLinkCount->position[0] == 8
+		&& "A node keeps count of outgoing connections."
+	);
+	assert(
+		0 == strcmp(node->incomingLinkCount->method[0], "Place_bind") 
+		&& node->incomingLinkCount->position[0] == 9
+		&& "A node keeps count of incoming connections."
+	);
+	assert(
+		0 == strcmp(node->outgoingLink->method[0], "Place_bind") 
+		&& node->outgoingLink->position[0] == 10
+		&& "A node can have the last outgoing connection."
+	);
+	assert(
+		0 == strcmp(node->incomingLink->method[0], "Place_bind") 
+		&& node->incomingLink->position[0] == 11
+		&& "A node can have the last incoming connections."
+	);
 	
+	// set
+	assert(
+		0 == strcmp(node->place->method[1], "Place_set") 
+		&& node->place->value[1] == place
+		&& "A node is identified by its place."
+	);
+	assert(
+		0 == strcmp(node->data->method[1], "Place_set") 
+		&& node->data->value[1] == 0
+		&& "A new node has no data."
+	);
+	assert(
+		0 == strcmp(node->outgoingLinkCount->method[1], "Place_set") 
+		&& node->outgoingLinkCount->value[1] == 0
+		&& "A new node has an empty counter of outgoing connections."
+	);
+	assert(
+		0 == strcmp(node->incomingLinkCount->method[1], "Place_set") 
+		&& node->incomingLinkCount->value[1] == 0
+		&& "A new node has an empty counter of incoming connections."
+	);
+	assert(
+		0 == strcmp(node->outgoingLink->method[1], "Place_set") 
+		&& node->outgoingLink->value[1] == 0
+		&& "A new node has no outgoing connections."
+	);
+	assert(
+		0 == strcmp(node->incomingLink->method[1], "Place_set") 
+		&& node->incomingLink->value[1] == 0
+		&& "A new node has no incoming connections."
+	);
+
 	demolishTest();
 }
 
 void it_reads_values_of_an_existing_node_from_the_store()
 {
-	//                 0             6                 12              18               24              30
-	size_t places[] = {0,0,0,0,0,0,  6,555,1,1,24,30,  12,0,0,1,0,24,  18,0,1,0,0,30,   12,6,0,6,12,0,  6,18,0,18,6,0};
-	//                               ^ node            ^ node           ^ node          ^ 6 -> 12       ^ 18 -> 6
-	prepareTest(places);
+	// 0             6 node            12 node         18 node          24 6->12        30 18->6
+	// 0,0,0,0,0,0,  6,555,1,1,24,30,  12,0,0,1,0,24,  18,0,1,0,0,30,   12,6,0,6,12,0,  6,18,0,18,6,0
+	//               
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
 	
-	assert((*node->place) == 6  && "A node is identified by its place.");
-	assert((*node->data) == 555  && "A node may have some data.");
-	assert((*node->outgoingLinkCount) == 1  && "A node keeps count of outgoing connections.");
-	assert((*node->incomingLinkCount) == 1  && "A node keeps count of incoming connections.");
-	assert((*node->outgoingLink) == 24  && "A node can have the last outgoing connection.");
-	assert((*node->incomingLink) == 30  && "A node can have the last incoming connections.");
+	// bind
+	assert(
+		0 == strcmp(node->place->method[0], "Place_bind") 
+		&& node->place->position[0] == 6
+		&& "A node is identified by its place."
+	);
+	assert(
+		0 == strcmp(node->data->method[0], "Place_bind") 
+		&& node->data->position[0] == 7
+		&& "A node may have some data."
+	);
+	assert(
+		0 == strcmp(node->outgoingLinkCount->method[0], "Place_bind") 
+		&& node->outgoingLinkCount->position[0] == 8
+		&& "A node keeps count of outgoing connections."
+	);
+	assert(
+		0 == strcmp(node->incomingLinkCount->method[0], "Place_bind") 
+		&& node->incomingLinkCount->position[0] == 9
+		&& "A node keeps count of incoming connections."
+	);
+	assert(
+		0 == strcmp(node->outgoingLink->method[0], "Place_bind") 
+		&& node->outgoingLink->position[0] == 10
+		&& "A node can have the last outgoing connection."
+	);
+	assert(
+		0 == strcmp(node->incomingLink->method[0], "Place_bind") 
+		&& node->incomingLink->position[0] == 11
+		&& "A node can have the last incoming connections."
+	);
 	
 	demolishTest();
 }
@@ -68,7 +164,7 @@ void it_deletes_node()
 	//                 0             6
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
 	//                               ^ node
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -89,7 +185,7 @@ void it_supplies_its_place()
 	//                 0             6
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
 	//                               ^ node
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -106,7 +202,7 @@ void it_denies_to_be_a_node_if_place_not_equal_value()
 	//                 0             6
 	size_t places[] = {0,0,0,0,0,0,  555,0,0,0,0,0};
 	//                               ^ node
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -123,7 +219,7 @@ void it_denies_to_be_a_node_if_zero()
 	//                 0
 	size_t places[] = {0,0,0,0,0,0};
 	//                 ^ node
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 0;
 	Node_read(node, place);
@@ -140,7 +236,7 @@ void it_confirms_to_be_an_entry_of_type_node()
 	//                 0             6
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
 	//                               ^ node
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -157,7 +253,7 @@ void it_denies_having_incoming_links()
 	//                 0             6     +   +
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
 	//                               ^ node
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -174,7 +270,7 @@ void it_confirms_having_incoming_links()
 	//                 0             6              12     +   +    18               24              30
 	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,2,0,30,  18,0,0,1,0,30,   12,6,0,6,30,0,  12,18,0,18,12,24};
 	//                               ^ node         ^ node           ^ node          ^ 6 -> 12       ^ 18 -> 12
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 12;
 	Node_read(node, place);
@@ -192,7 +288,7 @@ void it_denies_having_outgoing_links()
 	//                 0             6     +   +
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
 	//                               ^ node
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -209,7 +305,7 @@ void it_confirms_having_outgoing_links()
 	//                 0             6              12              18               24 +             30
 	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0};
 	//                               ^ node         ^ node           ^ node          ^ 6 -> 12        ^ 6 -> 18
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -231,7 +327,7 @@ void it_keeps_the_first_incoming_connection()
 	//                                         ^                                of incoming connections from other nodes.
 	//                 0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,0,0,0,0,  6,0,0,12,6,0 3) The destination node (6) increments the length of the chain of connections 
 	//                                     ^                                    coming from other nodes.
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 12;
 	Node_read(node, place);
@@ -263,7 +359,7 @@ void it_keeps_the_latest_incoming_connection()
 	//                 0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,0,0,0,0,    6,12,0,12,30,0, 18,0,0,6,6,24 4) The destination node (6) increments the length of the 
 	//                                     ^                                                                       chain of connections going out to other nodes.
 
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -303,7 +399,7 @@ void it_keeps_the_first_outgoing_connection()
 	//                 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,0,0,0,  12,6,0,0,0,0 3) The origin node (6) increments the length of the chain of connections 
 	//                                   ^                                      going out to other nodes.
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -335,7 +431,7 @@ void it_keeps_the_latest_outgoing_connection()
 	//                 0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,0,0,0,    12,30,0,6,12,0,  18,6,24,6,0,0 4) The origin node (6) increments the length of the 
 	//                                   ^                                                                          chain of connections going out to other nodes.
 
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -369,7 +465,7 @@ void it_finds_incoming_link_by_origin_node_with_one_link_in_chain()
 	//                 0             6 node         12 node         18 12->6
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0};
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -394,7 +490,7 @@ void it_finds_incoming_link_by_origin_node_with_many_links_in_chain()
 	//                 0             6 node         12 node         18 node           24 12->6        30 18->6
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,1,0,30,0,    6,12,0,12,30,0, 18,18,0,6,6,24};
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -429,7 +525,7 @@ void it_refuses_to_find_incoming_link_when_chain_empty()
 	//                 0             6 node
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -447,7 +543,7 @@ void it_refuses_to_find_incoming_link_when_node_not_in_chain()
 	//                 0             6 node         12 node         18 node           24 12->6        30 18->6
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,1,0,30,0,    6,12,0,12,30,0, 18,18,0,6,6,24};
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -485,7 +581,7 @@ void it_finds_outgoing_link_by_destination_node_with_one_link_in_chain()
 	//                 0             6 node         12 node         18 12->6
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0};
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 12;
 	Node_read(node, place);
@@ -510,7 +606,7 @@ void it_finds_outgoing_link_by_destination_node_with_many_links_in_chain()
 	//                 0             6 node         12 node         18 node           24 6->12        30 6->18
 	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,    12,30,0,6,12,0,  18,6,24,6,18,0};
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -545,7 +641,7 @@ void it_refuses_to_find_outgoing_link_when_chain_empty()
 	//                 0             6 node
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -563,7 +659,7 @@ void it_refuses_to_find_outgoing_link_when_node_not_in_chain()
 	//                 0             6 node         12 node         18 node           24 6->12        30 6->18
 	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,    12,30,0,6,12,0,  18,6,24,6,18,0};
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -604,7 +700,7 @@ void it_confirms_having_more_outgoing_connections_than_incoming_ones()
 	//                 0             6 node         12 node         18 6->12
 	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -621,7 +717,7 @@ void it_denies_having_more_outgoing_connections_than_incoming_ones()
 	//                 0             6 node         12 node         18 12->6
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0};
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -638,7 +734,7 @@ void it_provides_its_outgoing_link()
 	//                 0             6 node         12 node         18 6->12
 	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -660,7 +756,7 @@ void it_provides_its_incoming_link()
 	//                 0             6 node         12 node         18 12->6
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0};
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -683,7 +779,7 @@ void it_deletes_outgoing_link()
 	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,    12,30,0,6,12,0,  18,6,24,6,18,0};
 	//                                   ^   ^
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -705,7 +801,7 @@ void it_deletes_last_outgoing_link()
 	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
 	//                                   ^   ^
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -727,7 +823,7 @@ void it_deletes_incoming_link()
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,1,0,30,0,    6,12,0,12,30,0, 18,18,0,6,6,24};
 	//                                     ^   ^
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
@@ -749,7 +845,7 @@ void it_deletes_last_incoming_link()
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,0,18,  6,12,0,12,6,0};
 	//                                     ^   ^
 	
-	prepareTest(places);
+	prepareTest();
 	
 	size_t place = 6;
 	Node_read(node, place);
