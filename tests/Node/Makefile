@@ -3,7 +3,7 @@ all: build run clean
 build: main.o
 	gcc main.o -o test
 
-main.o: main.c ../../source/Node.c Link.c NodeError.c Place.c
+main.o: main.c ../../source/Node.c Count.c Link.c NodeError.c Place.c
 	gcc -c main.c
 
 run: 

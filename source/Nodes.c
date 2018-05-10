@@ -27,6 +27,8 @@ struct Nodes * Nodes_construct(
 
 void Nodes_destruct(struct Nodes * this)
 {
+	NodeError_destruct(this->nodeError);
+	
 	free(this);
 	this = NULL;
 }

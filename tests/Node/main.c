@@ -3,6 +3,7 @@
 #include <string.h>
 #include <assert.h>
 #include "../../source/Node.c"
+#include "Count.c"
 #include "Link.c"
 #include "NodeError.c"
 #include "Place.c"
@@ -10,8 +11,8 @@
 struct Node * node;
 struct Place * place;
 struct Place * data;
-struct Place * outgoingLinkCount;
-struct Place * incomingLinkCount;
+struct Count * outgoingLinkCount;
+struct Count * incomingLinkCount;
 struct Place * outgoingLink;
 struct Place * incomingLink;
 struct NodeError * error;
@@ -21,8 +22,8 @@ void prepareTest()
 {
 	place = Place_mock();
 	data = Place_mock();
-	outgoingLinkCount = Place_mock();
-	incomingLinkCount = Place_mock();
+	outgoingLinkCount = Count_mock();
+	incomingLinkCount = Count_mock();
 	outgoingLink = Place_mock();
 	incomingLink = Place_mock();
 	link = Link_mock();
