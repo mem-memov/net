@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "Count.h"
 #include "Gaps.h"
 #include "Place.h"
 
@@ -16,9 +17,9 @@ struct Net * Net_construct(
 	struct Place * one,
 	struct Place * placeSize,
 	struct Place * nextPlace,
-	struct Place * gapCount,
-	struct Place * nodeCount,
-	struct Place * linkCount
+	struct Count * gapCount,
+	struct Count * nodeCount,
+	struct Count * linkCount
 );
 
 void Net_destruct(struct Net * this);

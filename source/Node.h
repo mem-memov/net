@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include <stdlib.h>
+#include "Count.h"
 #include "Link.h"
 #include "NodeError.h"
 #include "Place.h"
@@ -11,8 +12,8 @@ struct Node;
 struct Node * Node_construct(
 	struct Place * place,
 	struct Place * data,
-	struct Place * outgoingLinkCount,
-	struct Place * incomingLinkCount,
+	struct Count * outgoingLinkCount,
+	struct Count * incomingLinkCount,
 	struct Place * outgoingLink,
 	struct Place * incomingLink,
 	struct Link * link,

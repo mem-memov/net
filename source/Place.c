@@ -82,23 +82,3 @@ char Place_keepsPosition(struct Place * this)
 	
 	return 0;
 }
-
-void Place_increment(struct Place * this)
-{
-	size_t value = Place_get(this);
-	
-	// TODO: check overflow
-	
-	Place_set(this, value + 1);
-}
-
-void Place_decrement(struct Place * this)
-{
-	size_t value = Place_get(this);
-	
-	if ( 0 == value ) {
-		exit(1);
-	}
-	
-	Place_set(this, value - 1);
-}

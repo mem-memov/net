@@ -4,14 +4,16 @@
 struct Nets
 {
 	struct Places * places;
+	struct Counts * counts;
 	struct Gaps * gaps;
 };
 
-struct Nets * Nets_construct(struct Places * places, struct Gaps * gaps)
+struct Nets * Nets_construct(struct Places * places, struct Counts * counts, struct Gaps * gaps)
 {
 	struct Nets * this = malloc(sizeof(struct Nets));
 	
 	this->places = places;
+	this->counts = counts;
 	this->gaps = gaps;
 	
 	return this;
@@ -33,8 +35,8 @@ struct Net * Nets_make(struct Nets * this, size_t spaceSize, size_t entrySize)
 		Places_make(this->places),
 		Places_make(this->places),
 		Places_make(this->places),
-		Places_make(this->places),
-		Places_make(this->places),
-		Places_make(this->places)
+		Counts_make(this->counts),
+		Counts_make(this->counts),
+		Counts_make(this->counts)
 	);
 }

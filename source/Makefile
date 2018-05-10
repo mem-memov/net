@@ -1,8 +1,17 @@
-net: main.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o
-	gcc main.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o -o net
+net: main.o Count.o CountError.o Counts.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o
+	gcc main.o Count.o CountError.o Counts.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o -o net
 
 main.o: main.c
 	gcc -c main.c
+
+Count.o: Count.c Count.h
+	gcc -c Count.c
+
+CountError.o: CountError.c CountError.h
+	gcc -c CountError.c
+
+Counts.o: Counts.c Counts.h
+	gcc -c Counts.c
 
 Gap.o: Gap.c Gap.h
 	gcc -c Gap.c

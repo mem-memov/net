@@ -1,6 +1,7 @@
 #include "Space.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "Counts.h"
 #include "Links.h"
 #include "Nets.h"
 #include "Nodes.h"
@@ -14,6 +15,7 @@ struct Space {
 	struct Net * net;
 
 	// factories
+	struct Counts * counts;
 	struct Links * links;
 	struct Nets * nets;
 	struct Nodes * nodes;
@@ -41,12 +43,13 @@ struct Space * Space_construct(size_t spaceSize)
 	
 	// factories
 	this->places = Places_construct(this->entrySize, this->bytes);
-	this->nets = Nets_construct(this->places, Gaps_construct(GapError_construct()));
+	this->counts = Counts_construct(this->places, CountError_construct());
+	this->nets = Nets_construct(this->places, this->counts, Gaps_construct(GapError_construct()));
 	this->links = Links_construct(
 		LinkError_construct(), 
 		Directions_construct(this->places, DirectionError_construct())
 	);
-	this->nodes = Nodes_construct(this->places, this->links, NodeError_construct());
+	this->nodes = Nodes_construct(this->places, this->counts, this->links, NodeError_construct());
 	
 	this->net = Nets_make(this->nets, this->spaceSize, this->entrySize);
 
@@ -76,9 +79,11 @@ void Space_destruct(struct Space * this)
 	Link_destruct(this->link);
 	
 	// factories
+	Counts_destruct(this->counts);
 	Nets_destruct(this->nets);
 	Links_destruct(this->links);
 	Nodes_destruct(this->nodes);
+	Places_destruct(this->places);
 	
 	free(this);
 	this = NULL;

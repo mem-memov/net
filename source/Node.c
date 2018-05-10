@@ -5,8 +5,8 @@ struct Node {
 	// fields
 	struct Place * place;
 	struct Place * data;
-	struct Place * outgoingLinkCount;
-	struct Place * incomingLinkCount;
+	struct Count * outgoingLinkCount;
+	struct Count * incomingLinkCount;
 	struct Place * outgoingLink;
 	struct Place * incomingLink;
 	
@@ -20,8 +20,8 @@ struct Node {
 struct Node * Node_construct(
 	struct Place * place,
 	struct Place * data,
-	struct Place * outgoingLinkCount,
-	struct Place * incomingLinkCount,
+	struct Count * outgoingLinkCount,
+	struct Count * incomingLinkCount,
 	struct Place * outgoingLink,
 	struct Place * incomingLink,
 	struct Link * link,
@@ -50,8 +50,8 @@ void Node_destruct(struct Node * this)
 {
 	Place_destruct(this->place);
 	Place_destruct(this->data);
-	Place_destruct(this->outgoingLinkCount);
-	Place_destruct(this->incomingLinkCount);
+	Count_destruct(this->outgoingLinkCount);
+	Count_destruct(this->incomingLinkCount);
 	Place_destruct(this->outgoingLink);
 	Place_destruct(this->incomingLink);
 	Link_destruct(this->link);
@@ -64,8 +64,8 @@ void Node_bind(struct Node * this, size_t place)
 {
 	Place_bind(this->place, place + 0);
 	Place_bind(this->data, place + 1);
-	Place_bind(this->outgoingLinkCount, place + 2);
-	Place_bind(this->incomingLinkCount, place + 3);
+	Count_bind(this->outgoingLinkCount, place + 2);
+	Count_bind(this->incomingLinkCount, place + 3);
 	Place_bind(this->outgoingLink, place + 4);
 	Place_bind(this->incomingLink, place + 5);
 }
@@ -76,8 +76,8 @@ void Node_create(struct Node * this, size_t place)
 
 	Place_set(this->place, place);
 	Place_set(this->data, 0);
-	Place_set(this->outgoingLinkCount, 0);
-	Place_set(this->incomingLinkCount, 0);
+	Count_create(this->outgoingLinkCount);
+	Count_create(this->incomingLinkCount);
 	Place_set(this->outgoingLink, 0);
 	Place_set(this->incomingLink, 0);
 }
@@ -93,8 +93,8 @@ void Node_delete(struct Node * this)
 
 	Place_set(this->place, 0);
 	Place_set(this->data, 0);
-	Place_set(this->outgoingLinkCount, 0);
-	Place_set(this->incomingLinkCount, 0);
+	Count_delete(this->outgoingLinkCount);
+	Count_delete(this->incomingLinkCount);
 }
 
 size_t Node_getPlace(struct Node * this)
@@ -156,7 +156,7 @@ void Node_addIncomingLink(struct Node * this, struct Link * link)
 		this->incomingLink, 
 		Link_getPlace(link)
 	);
-	Place_increment(this->incomingLinkCount);
+	Count_increment(this->incomingLinkCount);
 }
 
 void Node_addOutgoingLink(struct Node * this, struct Link * link)
@@ -186,7 +186,7 @@ void Node_addOutgoingLink(struct Node * this, struct Link * link)
 		this->outgoingLink, 
 		Link_getPlace(link)
 	);
-	Place_increment(this->outgoingLinkCount);
+	Count_increment(this->outgoingLinkCount);
 }
 
 size_t Node_findIncomingLink(struct Node * this, size_t origin)
@@ -229,7 +229,7 @@ size_t Node_findOutgoingLink(struct Node * this, size_t destination)
 
 char Node_hasMoreOutgoingLinks(struct Node * this)
 {
-	if ( Place_get(this->outgoingLinkCount) > Place_get(this->incomingLinkCount)) {
+	if ( Count_get(this->outgoingLinkCount) > Count_get(this->incomingLinkCount)) {
 		return 1;
 	}
 	
@@ -252,22 +252,22 @@ void Node_readIncomingLink(struct Node * this, struct Link * link)
 
 void Node_deleteOutgoingLink(struct Node * this)
 {
-	NodeError_forbidDeletingOutgoingLinkWhenNonePresent(this->error, Place_get(this->outgoingLinkCount));
+	NodeError_forbidDeletingOutgoingLinkWhenNonePresent(this->error, Count_get(this->outgoingLinkCount));
 	
-	Place_decrement(this->outgoingLinkCount);
+	Count_decrement(this->outgoingLinkCount);
 	
-	if ( Place_isZero(this->outgoingLinkCount) ) {
+	if ( Count_isZero(this->outgoingLinkCount) ) {
 		Place_set(this->outgoingLink, 0);
 	}
 }
 
 void Node_deleteIncomingLink(struct Node * this)
 {
-	NodeError_forbidDeletingIncomingLinkWhenNonePresent(this->error, Place_get(this->incomingLinkCount));
+	NodeError_forbidDeletingIncomingLinkWhenNonePresent(this->error, Count_get(this->incomingLinkCount));
 	
-	Place_decrement(this->incomingLinkCount);
+	Count_decrement(this->incomingLinkCount);
 	
-	if ( Place_isZero(this->incomingLinkCount) ) {
+	if ( Count_isZero(this->incomingLinkCount) ) {
 		Place_set(this->incomingLink, 0);
 	}
 }

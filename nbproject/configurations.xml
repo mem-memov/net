@@ -5,19 +5,22 @@
       <df name="source">
         <in>Direction.c</in>
         <in>DirectionError.c</in>
+        <in>Directions.c</in>
         <in>Entry.c</in>
-        <in>Entry.h</in>
         <in>Gap.c</in>
         <in>GapError.c</in>
         <in>Gaps.c</in>
-        <in>Gaps.h</in>
         <in>Link.c</in>
         <in>LinkError.c</in>
+        <in>Links.c</in>
         <in>Machine.c</in>
-        <in>Machine.h</in>
         <in>Net.c</in>
+        <in>Nets.c</in>
         <in>Node.c</in>
         <in>NodeError.c</in>
+        <in>Nodes.c</in>
+        <in>Place.c</in>
+        <in>Places.c</in>
         <in>Space.c</in>
         <in>main.c</in>
       </df>
@@ -64,13 +67,21 @@
           <standard>10</standard>
         </cTool>
       </folder>
+      <item path="source/Count.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="source/CountError.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="source/Counts.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="source/Direction.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="source/DirectionError.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="source/Entry.c" ex="false" tool="0" flavor2="0">
+      <item path="source/Directions.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="source/Entry.h" ex="false" tool="3" flavor2="0">
+      <item path="source/Entry.c" ex="false" tool="0" flavor2="10">
+        <cTool flags="0">
+        </cTool>
       </item>
       <item path="source/Gap.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -78,27 +89,33 @@
       </item>
       <item path="source/Gaps.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="source/Gaps.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="source/Link.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="source/LinkError.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="source/Machine.c" ex="false" tool="0" flavor2="0">
+      <item path="source/Links.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="source/Machine.h" ex="false" tool="3" flavor2="0">
+      <item path="source/Machine.c" ex="false" tool="0" flavor2="10">
+        <cTool flags="0">
+        </cTool>
       </item>
       <item path="source/Net.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="source/Nets.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="source/Node.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="source/NodeError.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="source/Nodes.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="source/Place.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="source/Places.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="source/Space.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="source/main.c" ex="false" tool="0" flavor2="10">
-        <cTool flags="0">
-        </cTool>
       </item>
     </conf>
   </confs>

@@ -7,6 +7,8 @@
         <in>Direction.h</in>
         <in>DirectionError.c</in>
         <in>DirectionError.h</in>
+        <in>Directions.c</in>
+        <in>Directions.h</in>
         <in>Dump.c</in>
         <in>Dump.h</in>
         <in>Entry.c</in>
@@ -21,16 +23,24 @@
         <in>Link.h</in>
         <in>LinkError.c</in>
         <in>LinkError.h</in>
+        <in>Links.c</in>
+        <in>Links.h</in>
         <in>Machine.c</in>
         <in>Machine.h</in>
         <in>Net.c</in>
         <in>Net.h</in>
+        <in>Nets.c</in>
+        <in>Nets.h</in>
         <in>Node.c</in>
         <in>Node.h</in>
         <in>NodeError.c</in>
         <in>NodeError.h</in>
+        <in>Nodes.c</in>
+        <in>Nodes.h</in>
         <in>Place.c</in>
         <in>Place.h</in>
+        <in>Places.c</in>
+        <in>Places.h</in>
         <in>Space.c</in>
         <in>Space.h</in>
         <in>main.c</in>
@@ -38,6 +48,7 @@
       <df name="tests">
         <df name="Direction">
           <in>DirectionError.c</in>
+          <in>Place.c</in>
           <in>main.c</in>
         </df>
         <df name="Gap">
@@ -52,6 +63,7 @@
         <df name="Node">
           <in>Link.c</in>
           <in>NodeError.c</in>
+          <in>Place.c</in>
           <in>main.c</in>
         </df>
       </df>

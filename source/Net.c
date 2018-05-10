@@ -13,9 +13,9 @@ struct Net {
 	struct Place * one;
 	struct Place * placeSize;
 	struct Place * nextPlace;
-	struct Place * gapCount;
-	struct Place * nodeCount;
-	struct Place * linkCount;
+	struct Count * gapCount;
+	struct Count * nodeCount;
+	struct Count * linkCount;
 };
 
 struct Net * Net_construct(
@@ -26,9 +26,9 @@ struct Net * Net_construct(
 	struct Place * one,
 	struct Place * placeSize,
 	struct Place * nextPlace,
-	struct Place * gapCount,
-	struct Place * nodeCount,
-	struct Place * linkCount
+	struct Count * gapCount,
+	struct Count * nodeCount,
+	struct Count * linkCount
 ) {
 	struct Net * this = malloc(sizeof(struct Net));
 
@@ -58,9 +58,9 @@ void Net_destruct(struct Net * this)
 	Place_destruct(this->one);
 	Place_destruct(this->placeSize);
 	Place_destruct(this->nextPlace);
-	Place_destruct(this->gapCount);
-	Place_destruct(this->nodeCount);
-	Place_destruct(this->linkCount);
+	Count_destruct(this->gapCount);
+	Count_destruct(this->nodeCount);
+	Count_destruct(this->linkCount);
 	
 	free(this);
 	this = NULL;
@@ -71,9 +71,9 @@ void Net_bind(struct Net * this)
 	Place_bind(this->one, 0);
 	Place_bind(this->placeSize, 1);
 	Place_bind(this->nextPlace, 2);
-	Place_bind(this->gapCount, 3);
-	Place_bind(this->nodeCount, 4);
-	Place_bind(this->linkCount, 5);
+	Count_bind(this->gapCount, 3);
+	Count_bind(this->nodeCount, 4);
+	Count_bind(this->linkCount, 5);
 }
 
 void Net_create(struct Net * this, size_t placeSize)
@@ -83,9 +83,9 @@ void Net_create(struct Net * this, size_t placeSize)
 	Place_set(this->one, 1);
 	Place_set(this->placeSize, placeSize);
 	Place_set(this->nextPlace, this->entrySize);
-	Place_set(this->gapCount, 0);
-	Place_set(this->nodeCount, 0);
-	Place_set(this->linkCount, 0);
+	Count_create(this->gapCount);
+	Count_create(this->nodeCount);
+	Count_create(this->linkCount);
 }
 
 void Net_read(struct Net * this)
@@ -143,7 +143,7 @@ size_t Net_createEntry(struct Net * this)
 
 	if ( ! Gaps_areEmpty(this->gaps) ) {
 		place = Gaps_givePlace(this->gaps);
-		Place_decrement(this->gapCount);
+		Count_decrement(this->gapCount);
 	} else {
 		place = Place_get(this->nextPlace);
 		Place_set(this->nextPlace, Place_get(this->nextPlace) + this->entrySize);
@@ -154,22 +154,22 @@ size_t Net_createEntry(struct Net * this)
 
 void Net_incrementNodes(struct Net * this)
 {
-	Place_increment(this->nodeCount);
+	Count_increment(this->nodeCount);
 }
 
 void Net_decrementNodes(struct Net * this)
 {
-	Place_decrement(this->nodeCount);
+	Count_decrement(this->nodeCount);
 }
 
 void Net_incrementLinks(struct Net * this)
 {
-	Place_increment(this->linkCount);
+	Count_increment(this->linkCount);
 }
 
 void Net_decrementLinks(struct Net * this)
 {
-	Place_decrement(this->linkCount);
+	Count_decrement(this->linkCount);
 }
 
 void Net_export(struct Net * this, FILE * file)
@@ -219,5 +219,5 @@ void Net_scanForGaps(struct Net * this)
 void Net_addGap(struct Net * this, size_t place)
 {
 	Gaps_addGap(this->gaps, place);
-	Place_increment(this->gapCount);
+	Count_increment(this->gapCount);
 }

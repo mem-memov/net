@@ -4,15 +4,21 @@
 struct Nodes
 {
 	struct Places * places;
+	struct Counts * counts;
 	struct Links * links;
 	struct NodeError * nodeError;
 };
 
-struct Nodes * Nodes_construct(struct Places * places, struct Links * links, struct NodeError * nodeError)
-{
+struct Nodes * Nodes_construct(
+	struct Places * places, 
+	struct Counts * counts, 
+	struct Links * links, 
+	struct NodeError * nodeError
+) {
 	struct Nodes * this = malloc(sizeof(struct Nodes));
 	
 	this->places = places;
+	this->counts = counts;
 	this->links = links;
 	this->nodeError = nodeError;
 	
@@ -30,8 +36,8 @@ struct Node * Nodes_make(struct Nodes * this)
 	return Node_construct(
 		Places_make(this->places),
 		Places_make(this->places),
-		Places_make(this->places),
-		Places_make(this->places),
+		Counts_make(this->counts),
+		Counts_make(this->counts),
 		Places_make(this->places),
 		Places_make(this->places),
 		Links_make(this->links),

@@ -1,14 +1,20 @@
 #ifndef NODES_H
 #define NODES_H
 
-#include "Node.h"
+#include "Counts.h"
 #include "Links.h"
+#include "Node.h"
 #include "NodeError.h"
 #include "Places.h"
 
 struct Nodes;
 
-struct Nodes * Nodes_construct(struct Places * places, struct Links * links, struct NodeError * nodeError);
+struct Nodes * Nodes_construct(
+	struct Places * places, 
+	struct Counts * counts, 
+	struct Links * links, 
+	struct NodeError * nodeError
+);
 
 void Nodes_destruct(struct Nodes * this);
 

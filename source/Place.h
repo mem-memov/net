@@ -19,9 +19,5 @@ char Place_isZero(struct Place * this);
 
 char Place_keepsPosition(struct Place * this);
 
-void Place_increment(struct Place * this);
-
-void Place_decrement(struct Place * this);
-
 #endif
 

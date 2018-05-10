@@ -1,13 +1,14 @@
 #ifndef NETS_H
 #define NETS_H
 
+#include "Counts.h"
 #include "Gaps.h"
 #include "Net.h"
 #include "Places.h"
 
 struct Nets;
 
-struct Nets * Nets_construct(struct Places * places, struct Gaps * gaps);
+struct Nets * Nets_construct(struct Places * places, struct Counts * counts, struct Gaps * gaps);
 
 void Nets_destruct(struct Nets * this);
 
