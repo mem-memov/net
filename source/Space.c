@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Counts.h"
+#include "Errors.h"
 #include "Links.h"
 #include "Nets.h"
 #include "Nodes.h"
@@ -16,6 +17,7 @@ struct Space {
 
 	// factories
 	struct Counts * counts;
+	struct Errors * errors;
 	struct Links * links;
 	struct Nets * nets;
 	struct Nodes * nodes;
@@ -42,14 +44,36 @@ struct Space * Space_construct(size_t spaceSize)
 	this->bytes = malloc(this->spaceSize * this->entrySize * this->placeSize);
 	
 	// factories
+	this->errors = Errors_construct(Error_construct());
 	this->places = Places_construct(this->entrySize, this->bytes);
-	this->counts = Counts_construct(this->places, CountError_construct());
-	this->nets = Nets_construct(this->places, this->counts, Gaps_construct(GapError_construct()));
-	this->links = Links_construct(
-		LinkError_construct(), 
-		Directions_construct(this->places, DirectionError_construct())
+	
+	this->counts = Counts_construct(
+		this->places, 
+		Errors_makeCountError(this->errors)
 	);
-	this->nodes = Nodes_construct(this->places, this->counts, this->links, NodeError_construct());
+	
+	this->nets = Nets_construct(
+		this->places, 
+		this->counts, 
+		Gaps_construct(
+			Errors_makeGapError(this->errors)
+		)
+	);
+	
+	this->links = Links_construct(
+		Errors_makeLinkError(this->errors), 
+		Directions_construct(
+			this->places, 
+			Errors_makeDirectionError(this->errors)
+		)
+	);
+	
+	this->nodes = Nodes_construct(
+		this->places, 
+		this->counts, 
+		this->links, 
+		Errors_makeNodeError(this->errors)
+	);
 	
 	this->net = Nets_make(this->nets, this->spaceSize, this->entrySize);
 
@@ -84,6 +108,7 @@ void Space_destruct(struct Space * this)
 	Links_destruct(this->links);
 	Nodes_destruct(this->nodes);
 	Places_destruct(this->places);
+	Errors_destruct(this->errors);
 	
 	free(this);
 	this = NULL;

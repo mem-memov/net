@@ -1,13 +1,16 @@
 #include "LinkError.h"
 #include <stdlib.h>
+#include "Error.h"
 
 struct LinkError {
-
+	struct Error * error;
 };
 
-struct LinkError * LinkError_construct()
+struct LinkError * LinkError_construct(struct Error * error)
 {
 	struct LinkError * this = malloc(sizeof(struct LinkError));
+	
+	this->error = error;
 
 	return this;
 }
@@ -21,6 +24,6 @@ void LinkError_destruct(struct LinkError * this)
 void LinkError_forbidSelfPointingNodes(struct LinkError * this, size_t origin, size_t destination)
 {
 	if (origin == destination) {
-		exit(1);
+		Error_terminate(this->error);
 	}
 }

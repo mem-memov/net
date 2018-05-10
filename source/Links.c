@@ -19,8 +19,8 @@ struct Links * Links_construct(struct LinkError * linkError, struct Directions *
 
 void Links_destruct(struct Links * this)
 {
-	LinkError_destruct(this->linkError);
-	
+	Directions_destruct(this->directions);
+
 	free(this);
 	this = NULL;
 }

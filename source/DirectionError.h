@@ -2,10 +2,11 @@
 #define DIRECTIONERROR_H
 
 #include <stdlib.h>
+#include "Error.h"
 
 struct DirectionError;
 
-struct DirectionError * DirectionError_construct();
+struct DirectionError * DirectionError_construct(struct Error * error);
 
 void DirectionError_destruct(struct DirectionError * this);
 

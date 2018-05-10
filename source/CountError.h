@@ -2,10 +2,11 @@
 #define COUNTERROR_H
 
 #include <stdlib.h>
+#include "Error.h"
 
 struct CountError;
 
-struct CountError * CountError_construct();
+struct CountError * CountError_construct(struct Error * error);
 
 void CountError_destruct(struct CountError * this);
 

@@ -2,10 +2,11 @@
 #define NODEERROR_H
 
 #include <stdlib.h>
+#include "Error.h"
 
 struct NodeError;
 
-struct NodeError * NodeError_construct();
+struct NodeError * NodeError_construct(struct Error * error);
 
 void NodeError_destruct(struct NodeError * this);
 

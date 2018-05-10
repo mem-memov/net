@@ -1,13 +1,16 @@
 #include "NodeError.h"
 #include <stdlib.h>
+#include "Error.h"
 
 struct NodeError {
-
+	struct Error * error;
 };
 
-struct NodeError * NodeError_construct()
+struct NodeError * NodeError_construct(struct Error * error)
 {
 	struct NodeError * this = malloc(sizeof(struct NodeError));
+	
+	this->error = error;
 
 	return this;
 }
@@ -21,34 +24,34 @@ void NodeError_destruct(struct NodeError * this)
 void NodeError_forbidDeletingNodeWithConnections(struct NodeError * this, size_t outgoingLink, size_t incomingLink)
 {
 	if ( 0 != outgoingLink || 0 != incomingLink ) {
-		exit(1);
+		Error_terminate(this->error);
 	}
 }
 
 void NodeError_forbidReadingOutgoingLinkWhenNonePresent(struct NodeError * this, size_t outgoingLink)
 {
 	if (0 == outgoingLink) {
-		exit(1);
+		Error_terminate(this->error);
 	}
 }
 
 void NodeError_forbidReadingIncomingLinkWhenNonePresent(struct NodeError * this, size_t incomingLink)
 {
 	if (0 == incomingLink) {
-		exit(1);
+		Error_terminate(this->error);
 	}
 }
 
 void NodeError_forbidDeletingOutgoingLinkWhenNonePresent(struct NodeError * this, size_t outgoingLinkCount)
 {
 	if (0 == outgoingLinkCount) {
-		exit(1);
+		Error_terminate(this->error);
 	}
 }
 
 void NodeError_forbidDeletingIncomingLinkWhenNonePresent(struct NodeError * this, size_t incomingLinkCount)
 {
 	if (0 == incomingLinkCount) {
-		exit(1);
+		Error_terminate(this->error);
 	}
 }

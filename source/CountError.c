@@ -1,14 +1,17 @@
 #include "CountError.h"
 #include <stdlib.h>
+#include "Error.h"
 
 struct CountError
 {
-	//
+	struct Error * error;
 };
 
-struct CountError * CountError_construct()
+struct CountError * CountError_construct(struct Error * error)
 {
 	struct CountError * this = malloc(sizeof(struct CountError));
+	
+	this->error = error;
 
 	return this;
 }
@@ -22,7 +25,7 @@ void CountError_destruct(struct CountError * this)
 void CountError_forbidNegativeValueWhenDecrementing(struct CountError * this, size_t value)
 {
 	if ( 0 == value) {
-		exit(1);
+		Error_terminate(this->error);
 	}
 }
 

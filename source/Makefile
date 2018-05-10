@@ -1,5 +1,5 @@
-net: main.o Count.o CountError.o Counts.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o
-	gcc main.o Count.o CountError.o Counts.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o -o net
+net: main.o Count.o CountError.o Counts.o Error.o Errors.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o
+	gcc main.o Count.o CountError.o Counts.o Error.o Errors.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o -o net
 
 main.o: main.c
 	gcc -c main.c
@@ -12,6 +12,12 @@ CountError.o: CountError.c CountError.h
 
 Counts.o: Counts.c Counts.h
 	gcc -c Counts.c
+
+Error.o: Error.c Error.h
+	gcc -c Error.c
+
+Errors.o: Errors.c Errors.h
+	gcc -c Errors.c
 
 Gap.o: Gap.c Gap.h
 	gcc -c Gap.c
