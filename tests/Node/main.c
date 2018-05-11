@@ -4,9 +4,9 @@
 #include <assert.h>
 #include "../../source/Node.c"
 #include "Count.c"
-#include "Link.c"
 #include "NodeError.c"
 #include "Place.c"
+#include "Star.c"
 
 struct Node * node;
 struct Place * place;
@@ -16,7 +16,7 @@ struct Count * incomingLinkCount;
 struct Place * outgoingLink;
 struct Place * incomingLink;
 struct NodeError * error;
-struct Link * link;
+struct Star * star;
 
 void prepareTest()
 {
@@ -26,9 +26,9 @@ void prepareTest()
 	incomingLinkCount = Count_mock();
 	outgoingLink = Place_mock();
 	incomingLink = Place_mock();
-	link = Link_mock();
+	star = Star_mock();
 	error = NodeError_mock();
-	node = Node_construct(place, data, outgoingLinkCount, incomingLinkCount, outgoingLink, incomingLink, link, error);
+	node = Node_construct(place, data, outgoingLinkCount, incomingLinkCount, outgoingLink, incomingLink, star, error);
 }
 
 void demolishTest()
