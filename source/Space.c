@@ -7,6 +7,7 @@
 #include "Nets.h"
 #include "Nodes.h"
 #include "Places.h"
+#include "Stars.h"
 
 struct Space {
 	size_t spaceSize;
@@ -22,6 +23,7 @@ struct Space {
 	struct Nets * nets;
 	struct Nodes * nodes;
 	struct Places * places;
+	struct Stars * stars;
 	
 	// pool
 	struct Node * node;
@@ -68,10 +70,12 @@ struct Space * Space_construct(size_t spaceSize)
 		)
 	);
 	
+	this->stars = Stars_construct(this->links);
+	
 	this->nodes = Nodes_construct(
 		this->places, 
 		this->counts, 
-		this->links, 
+		this->stars, 
 		Errors_makeNodeError(this->errors)
 	);
 	
@@ -105,6 +109,7 @@ void Space_destruct(struct Space * this)
 	// factories
 	Counts_destruct(this->counts);
 	Nets_destruct(this->nets);
+	Stars_destruct(this->stars);
 	Links_destruct(this->links);
 	Nodes_destruct(this->nodes);
 	Places_destruct(this->places);

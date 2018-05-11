@@ -11,7 +11,7 @@ struct Node {
 	struct Place * incomingLink;
 	
 	// pool
-	struct Link * link;
+	struct Star * star;
 	
 	// error
 	struct NodeError * error;
@@ -24,7 +24,7 @@ struct Node * Node_construct(
 	struct Count * incomingLinkCount,
 	struct Place * outgoingLink,
 	struct Place * incomingLink,
-	struct Link * link,
+	struct Star * star,
 	struct NodeError * error
 ) {
 	struct Node * this = malloc(sizeof(struct Node));
@@ -37,7 +37,7 @@ struct Node * Node_construct(
 	this->outgoingLink = outgoingLink;
 	this->incomingLink = incomingLink;
 	
-	this->link = link;
+	this->star = star;
 	
 	// pool
 	this->error = error;
@@ -54,7 +54,7 @@ void Node_destruct(struct Node * this)
 	Count_destruct(this->incomingLinkCount);
 	Place_destruct(this->outgoingLink);
 	Place_destruct(this->incomingLink);
-	Link_destruct(this->link);
+	Star_destruct(this->star);
 	
 	free(this);
 	this = NULL;
@@ -131,61 +131,37 @@ char Node_hasOutgoingLink(struct Node * this)
 
 void Node_addIncomingLink(struct Node * this, struct Link * link)
 {
+	size_t node = Place_get(this->place);
+	size_t newIncomingLink = Link_getPlace(link);
+	size_t oldIncomingLink;
+	
 	if ( ! Node_hasIncomingLink(this)) {
-		Link_shiftIncoming(
-			link, 
-			Place_get(this->place)
-		);
+		Link_shiftIncoming(link, node);
 	} else {
-		Link_joinIncoming(
-			link, 
-			Place_get(this->place), 
-			Place_get(this->incomingLink)
-		);
-		Link_read(
-			this->link, 
-			Place_get(this->incomingLink)
-		);
-		Link_shiftIncoming(
-			this->link, 
-			Link_getPlace(link)
-		);
+		oldIncomingLink = Place_get(this->incomingLink);
+		Link_joinIncoming(link, node, oldIncomingLink);
+		Star_addIncomingLink(this->star, oldIncomingLink, newIncomingLink);
 	}
 	
-	Place_set(
-		this->incomingLink, 
-		Link_getPlace(link)
-	);
+	Place_set(this->incomingLink, newIncomingLink);
 	Count_increment(this->incomingLinkCount);
 }
 
 void Node_addOutgoingLink(struct Node * this, struct Link * link)
 {
+	size_t node = Place_get(this->place);
+	size_t newOutgoingLink = Link_getPlace(link);
+	size_t oldOutgoingLink;
+	
 	if ( ! Node_hasOutgoingLink(this)) {
-		Link_shiftOutgoing(
-			link, 
-			Place_get(this->place)
-		);
+		Link_shiftOutgoing(link, node);
 	} else {
-		Link_joinOutgoing(
-			link, 
-			Place_get(this->place), 
-			Place_get(this->outgoingLink)
-		);
-		Link_read(
-			this->link, 
-			Place_get(this->outgoingLink)
-		);
-		Link_shiftOutgoing(
-			this->link, 
-			Link_getPlace(link)
-		);
+		oldOutgoingLink = Place_get(this->outgoingLink);
+		Link_joinOutgoing(link, node, oldOutgoingLink);
+		Star_addOutgoingLink(this->star, oldOutgoingLink, newOutgoingLink);
 	}
 	
-	Place_set(
-		this->outgoingLink, 
-		Link_getPlace(link)
-	);
+	Place_set(this->outgoingLink, newOutgoingLink);
 	Count_increment(this->outgoingLinkCount);
 }
 
@@ -197,15 +173,7 @@ size_t Node_findIncomingLink(struct Node * this, size_t origin)
 
 	size_t incomingLink = Place_get(this->incomingLink);
 	
-	do {
-		Link_read(this->link, incomingLink);
-		if (Link_isIncomingFromNode(this->link, origin)) {
-			return incomingLink;
-		}
-		incomingLink = Link_getNextIncoming(this->link);
-	} while( 0 != incomingLink );
-	
-	return 0;
+	return Star_findIncomingLink(this->star, incomingLink, origin);
 }
 
 size_t Node_findOutgoingLink(struct Node * this, size_t destination)
@@ -216,15 +184,7 @@ size_t Node_findOutgoingLink(struct Node * this, size_t destination)
 
 	size_t outgoingLink = Place_get(this->outgoingLink);
 	
-	do {
-		Link_read(this->link, outgoingLink);
-		if (Link_isOutgoingToNode(this->link, destination)) {
-			return outgoingLink;
-		}
-		outgoingLink = Link_getNextOutgoing(this->link);
-	} while( 0 != outgoingLink );
-	
-	return 0;
+	return Star_findIncomingLink(this->star, outgoingLink, destination);
 }
 
 char Node_hasMoreOutgoingLinks(struct Node * this)

@@ -1,5 +1,5 @@
-net: main.o Count.o CountError.o Counts.o Error.o Errors.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o
-	gcc main.o Count.o CountError.o Counts.o Error.o Errors.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o -o net
+net: main.o Count.o CountError.o Counts.o Error.o Errors.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Star.o Stars.o
+	gcc main.o Count.o CountError.o Counts.o Error.o Errors.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Star.o Stars.o -o net
 
 main.o: main.c
 	gcc -c main.c
@@ -69,6 +69,12 @@ Places.o: Places.c Places.h
 
 Space.o: Space.c Space.h Links.h Nets.h Nodes.h Places.h
 	gcc -c Space.c
+	
+Star.o: Star.c Star.h
+	gcc -c Star.c
+
+Stars.o: Stars.c Stars.h
+	gcc -c Stars.c
 	
 clean:
 	rm --force *.o net

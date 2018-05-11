@@ -5,21 +5,21 @@ struct Nodes
 {
 	struct Places * places;
 	struct Counts * counts;
-	struct Links * links;
+	struct Stars * stars;
 	struct NodeError * nodeError;
 };
 
 struct Nodes * Nodes_construct(
 	struct Places * places, 
 	struct Counts * counts, 
-	struct Links * links, 
+	struct Stars * stars, 
 	struct NodeError * nodeError
 ) {
 	struct Nodes * this = malloc(sizeof(struct Nodes));
 	
 	this->places = places;
 	this->counts = counts;
-	this->links = links;
+	this->stars = stars;
 	this->nodeError = nodeError;
 	
 	return this;
@@ -42,7 +42,7 @@ struct Node * Nodes_make(struct Nodes * this)
 		Counts_make(this->counts),
 		Places_make(this->places),
 		Places_make(this->places),
-		Links_make(this->links),
+		Stars_make(this->stars),
 		this->nodeError
 	);
 }

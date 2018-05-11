@@ -6,13 +6,14 @@
 #include "Node.h"
 #include "NodeError.h"
 #include "Places.h"
+#include "Stars.h"
 
 struct Nodes;
 
 struct Nodes * Nodes_construct(
 	struct Places * places, 
 	struct Counts * counts, 
-	struct Links * links, 
+	struct Stars * stars, 
 	struct NodeError * nodeError
 );
 

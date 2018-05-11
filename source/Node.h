@@ -3,9 +3,9 @@
 
 #include <stdlib.h>
 #include "Count.h"
-#include "Link.h"
 #include "NodeError.h"
 #include "Place.h"
+#include "Star.h"
 
 struct Node;
 
@@ -16,7 +16,7 @@ struct Node * Node_construct(
 	struct Count * incomingLinkCount,
 	struct Place * outgoingLink,
 	struct Place * incomingLink,
-	struct Link * link,
+	struct Star * star,
 	struct NodeError * error
 );
 
