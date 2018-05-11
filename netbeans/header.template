@@ -1,0 +1,10 @@
+#ifndef ${GUARD_NAME}
+#define	${GUARD_NAME}
+
+struct ${name};
+
+struct ${name} * ${name}_construct();
+
+void ${name}_destruct(struct ${name} * this);
+
+#endif

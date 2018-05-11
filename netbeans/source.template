@@ -1,0 +1,19 @@
+#include "${name}.h"
+#include <stdlib.h>
+
+struct ${name} {
+	//
+};
+
+struct ${name} * ${name}_construct()
+{
+	struct ${name} * this = malloc(sizeof(struct ${name}));
+	
+	return this;
+}
+
+void ${name}_destruct(struct ${name} * this)
+{
+	free(this);
+	this = NULL;
+}
