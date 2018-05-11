@@ -6,7 +6,7 @@ struct GapError {
 	char * method;
 };
 
-struct GapError * GapError_construct()
+struct GapError * GapError_mock()
 {
 	struct GapError * this = malloc(sizeof(struct GapError));
 

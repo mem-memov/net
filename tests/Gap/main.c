@@ -7,7 +7,7 @@
 
 void it_contructs_a_tail_gap()
 {
-	struct GapError * error = GapError_construct();
+	struct GapError * error = GapError_mock();
 	
 	size_t place = 6;
 	struct Gap * gap = Gap_construct(place, NULL, error);
@@ -21,7 +21,7 @@ void it_contructs_a_tail_gap()
 
 void it_contructs_a_head_gap()
 {
-	struct GapError * error = GapError_construct();
+	struct GapError * error = GapError_mock();
 	size_t place = 6;
 	struct Gap * next = Gap_construct(place, NULL, error);
 	struct Gap * gap = Gap_construct(place, next, error);
@@ -36,7 +36,7 @@ void it_contructs_a_head_gap()
 
 void it_supplies_entry_place()
 {
-	struct GapError * error = GapError_construct();
+	struct GapError * error = GapError_mock();
 	size_t place = 6;
 	struct Gap * gap = Gap_construct(place, NULL, error);
 	
@@ -51,7 +51,7 @@ void it_supplies_entry_place()
 
 void it_checks_entry_place_is_invalid()
 {
-	struct GapError * error = GapError_construct();
+	struct GapError * error = GapError_mock();
 	error->method = "";
 	error->place = 0;
 
