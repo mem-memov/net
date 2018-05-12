@@ -1,5 +1,5 @@
 # net
-in-memory graph store
+in-memory graph store written in C
 
 Highlights:
 * no dependencies on external libraries
