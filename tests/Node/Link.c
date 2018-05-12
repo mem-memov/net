@@ -5,6 +5,7 @@
 
 struct Link {
 	char call;
+	char * method[LINK_MAX_CALLS];
 	size_t place[LINK_MAX_CALLS];
 	size_t previousIncomingLink[LINK_MAX_CALLS];
 	size_t previousOutgoingLink[LINK_MAX_CALLS];
@@ -14,7 +15,6 @@ struct Link {
 	size_t destinationNode[LINK_MAX_CALLS];
 	char isOutgoingToNode[LINK_MAX_CALLS];
 	char isIncomingFromNode[LINK_MAX_CALLS];
-	char * method[LINK_MAX_CALLS];
 };
 
 struct Link * Link_mock()
@@ -25,6 +25,7 @@ struct Link * Link_mock()
 	
 	char i;
 	for (i = 0; i < LINK_MAX_CALLS; i++) {
+		this->method[i] = "method not specified";
 		this->place[i] = 55555;
 		this->previousIncomingLink[i] = 55555;
 		this->previousOutgoingLink[i] = 55555;
@@ -34,7 +35,6 @@ struct Link * Link_mock()
 		this->destinationNode[i] = 55555;
 		this->isOutgoingToNode[i] = 31;
 		this->isIncomingFromNode[i] = 31;
-		this->method[i] = "method not specified";
 	}
 
 	return this;
@@ -104,6 +104,7 @@ void Link_shiftIncoming(struct Link * this, size_t previous)
 {
 	this->method[this->call] = "Link_shiftIncoming";
 	this->previousIncomingLink[this->call] = previous;
+	
 	this->call++;
 }
 
