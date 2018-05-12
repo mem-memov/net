@@ -198,16 +198,20 @@ char Node_hasMoreOutgoingLinks(struct Node * this)
 
 void Node_readOutgoingLink(struct Node * this, struct Link * link)
 {
-	NodeError_forbidReadingOutgoingLinkWhenNonePresent(this->error, Place_get(this->outgoingLink));
+	size_t outgoingLinkPlace = Place_get(this->outgoingLink);
 	
-	Link_read(link, Place_get(this->outgoingLink));
+	NodeError_forbidReadingOutgoingLinkWhenNonePresent(this->error, outgoingLinkPlace);
+	
+	Link_read(link, outgoingLinkPlace);
 }
 
 void Node_readIncomingLink(struct Node * this, struct Link * link)
 {
-	NodeError_forbidReadingIncomingLinkWhenNonePresent(this->error, Place_get(this->incomingLink));
+	size_t incomingLinkPlace = Place_get(this->incomingLink);
 	
-	Link_read(link, Place_get(this->incomingLink));
+	NodeError_forbidReadingIncomingLinkWhenNonePresent(this->error, incomingLinkPlace);
+	
+	Link_read(link, incomingLinkPlace);
 }
 
 void Node_deleteOutgoingLink(struct Node * this)

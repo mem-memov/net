@@ -607,21 +607,22 @@ void it_finds_outgoing_link_by_destination_node()
 	size_t destinationNodePlace = 6;
 	size_t outgoingLinkPlace = 18;
 	
-	node->incomingLink->value[0] = outgoingLinkPlace;
-	node->incomingLink->value[1] = outgoingLinkPlace;
+	node->outgoingLink->value[0] = outgoingLinkPlace;
+	node->outgoingLink->value[1] = outgoingLinkPlace;
+	
+	star->foundOutgoingLink[0] = outgoingLinkPlace;
 	
 	size_t result = Node_findOutgoingLink(node, destinationNodePlace);
 	
 	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
 	assert(0 == strcmp(node->outgoingLink->method[1], "Place_get"));
-	
-	printf("%zu %zu\n",star->outgoingLink[0], star->destinationNode[0]);
+
 	assert(
 		0 == strcmp(star->method[0], "Star_findOutgoingLink")
 		&& star->outgoingLink[0] == outgoingLinkPlace
 		&& star->destinationNode[0] == destinationNodePlace
 	);
-	
+
 	assert(result == outgoingLinkPlace && "An origin node returns the link that connects it to a destination node.");
 	
 	demolishTest();
@@ -649,15 +650,18 @@ void it_refuses_to_find_outgoing_link_when_chain_empty()
 
 void it_confirms_having_more_outgoing_connections_than_incoming_ones()
 {
-	//                 0             6 node         12 node         18 6->12
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	
+	// 0             6 node         12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
+	//                   ^ ^
 	prepareTest();
-	
-	size_t place = 6;
-	Node_read(node, place);
+
+	node->outgoingLinkCount->value[0] = 1;
+	node->incomingLinkCount->value[0] = 0;
 	
 	char result = Node_hasMoreOutgoingLinks(node);
+	
+	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_get"));
+	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_get"));
 	
 	assert(1 == result && "The node confirms having more outgoing connections than incoming.");
 
@@ -666,15 +670,18 @@ void it_confirms_having_more_outgoing_connections_than_incoming_ones()
 
 void it_denies_having_more_outgoing_connections_than_incoming_ones()
 {
-	//                 0             6 node         12 node         18 12->6
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0};
-	
+	// 0             6 node         12 node         18 12->6
+	// 0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0
+	//                   ^ ^
 	prepareTest();
 	
-	size_t place = 6;
-	Node_read(node, place);
+	node->outgoingLinkCount->value[0] = 0;
+	node->incomingLinkCount->value[0] = 1;
 	
 	char result = Node_hasMoreOutgoingLinks(node);
+	
+	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_get"));
+	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_get"));
 	
 	assert(0 == result && "The node denies having more outgoing connections than incoming.");
 
@@ -683,52 +690,66 @@ void it_denies_having_more_outgoing_connections_than_incoming_ones()
 
 void it_provides_its_outgoing_link()
 {
-	//                 0             6 node         12 node         18 6->12
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
-	
+	// 0             6 node         12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
+	//                       ^
 	prepareTest();
-	
-	size_t place = 6;
-	Node_read(node, place);
-	
+
 	struct Link * outgoingLink = Link_mock();
+	
+	size_t outgoingLinkPlace = 18;
+	node->outgoingLink->value[0] = outgoingLinkPlace;
+	
 	Node_readOutgoingLink(node, outgoingLink);
 	
-	assert(0 == strcmp(error->method, "NodeError_forbidReadingOutgoingLinkWhenNonePresent"));
-	assert(18 == error->outgoingLink && "NodeError_forbidReadingOutgoingLinkWhenNonePresent outgoingLink");
+	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
 	
-	assert(0 == strcmp(outgoingLink->method[0], "Link_read"));
-	assert(18 == outgoingLink->place[0] && "Link_read place");
+	assert(
+		0 == strcmp(error->method, "NodeError_forbidReadingOutgoingLinkWhenNonePresent")
+		&& error->outgoingLink == outgoingLinkPlace
+	);
 	
+	assert(
+		0 == strcmp(outgoingLink->method[0], "Link_read")
+		&& outgoingLink->place[0] == outgoingLinkPlace
+	);
+
 	demolishTest();
 }
 
 void it_provides_its_incoming_link()
 {
-	//                 0             6 node         12 node         18 12->6
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0};
-	
+	// 0             6 node         12 node         18 12->6
+	// 0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0
+	//                         ^
 	prepareTest();
-	
-	size_t place = 6;
-	Node_read(node, place);
-	
+
 	struct Link * incomingLink = Link_mock();
+	
+	size_t incomingLinkPlace = 18;
+	node->incomingLink->value[0] = incomingLinkPlace;
+	
 	Node_readIncomingLink(node, incomingLink);
 	
-	assert(0 == strcmp(error->method, "NodeError_forbidReadingIncomingLinkWhenNonePresent"));
-	assert(18 == error->incomingLink && "NodeError_forbidReadingIncomingLinkWhenNonePresent incomingLink");
+	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
 	
-	assert(0 == strcmp(incomingLink->method[0], "Link_read"));
-	assert(18 == incomingLink->place[0] && "Link_read place");
+	assert(
+		0 == strcmp(error->method, "NodeError_forbidReadingIncomingLinkWhenNonePresent")
+		&& error->incomingLink == incomingLinkPlace
+	);
 	
+	assert(
+		0 == strcmp(incomingLink->method[0], "Link_read")
+		&& incomingLink->place[0] == incomingLinkPlace
+	);
+
 	demolishTest();
 }
 
 void it_deletes_outgoing_link()
 {
-	//                 0             6 node         12 node         18 node           24 6->12         30 6->18
-	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,    12,30,0,6,12,0,  18,6,24,6,18,0};
+	// 0             6 node         12 node         18 node           24 6->12         30 6->18
+	// 0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,    12,30,0,6,12,0,  18,6,24,6,18,0
 	//                                   ^   ^
 	
 	prepareTest();
@@ -749,8 +770,8 @@ void it_deletes_outgoing_link()
 
 void it_deletes_last_outgoing_link()
 {
-	//                 0             6 node         12 node         18 6->12
-	size_t places[] = {0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0};
+	// 0             6 node         12 node         18 6->12
+	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
 	//                                   ^   ^
 	
 	prepareTest();
@@ -771,8 +792,8 @@ void it_deletes_last_outgoing_link()
 
 void it_deletes_incoming_link()
 {
-	//                 0             6 node         12 node         18 node           24 12->6        30 18->6
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,1,0,30,0,    6,12,0,12,30,0, 18,18,0,6,6,24};
+	// 0             6 node         12 node         18 node           24 12->6        30 18->6
+	// 0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,1,0,30,0,    6,12,0,12,30,0, 18,18,0,6,6,24
 	//                                     ^   ^
 	
 	prepareTest();
@@ -793,8 +814,8 @@ void it_deletes_incoming_link()
 
 void it_deletes_last_incoming_link()
 {
-	//                 0             6 node         12 node         18 12->6
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,0,18,  6,12,0,12,6,0};
+	// 0             6 node         12 node         18 12->6
+	// 0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,0,18,  6,12,0,12,6,0
 	//                                     ^   ^
 	
 	prepareTest();
