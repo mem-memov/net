@@ -777,21 +777,31 @@ void it_deletes_last_outgoing_link()
 {
 	// 0             6 node         12 node         18 6->12
 	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
-	//                                   ^   ^
+	//                   ^   ^
 	
 	prepareTest();
 	
-	size_t place = 6;
-	Node_read(node, place);
-	
+	node->outgoingLinkCount->value[0] = 1;
+	node->outgoingLinkCount->isZero[2] = 1;
+
 	Node_deleteOutgoingLink(node);
 	
-	assert(0 == strcmp(error->method, "NodeError_forbidDeletingOutgoingLinkWhenNonePresent"));
-	assert(1 == error->outgoingLinkCount && "NodeError_forbidDeletingOutgoingLinkWhenNonePresent outgoingLinkCount");
+	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_get"));
 	
-	assert(0 == places[8] && "The node count for outgoing connections is set to zero.");
-	assert(0 == places[10] && "The node has no outgoing link.");
+	assert(
+		0 == strcmp(error->method, "NodeError_forbidDeletingOutgoingLinkWhenNonePresent")
+		&&  error->outgoingLinkCount == 1
+	);
 	
+	assert(0 == strcmp(node->outgoingLinkCount->method[1], "Count_decrement"));
+	
+	assert(0 == strcmp(node->outgoingLinkCount->method[2], "Count_isZero"));
+	
+	assert(
+		0 == strcmp(node->outgoingLink->method[0], "Place_set")
+		&& node->outgoingLink->value[0] == 0
+	);
+
 	demolishTest();
 }
 
@@ -799,20 +809,25 @@ void it_deletes_incoming_link()
 {
 	// 0             6 node         12 node         18 node           24 12->6        30 18->6
 	// 0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,1,0,30,0,    6,12,0,12,30,0, 18,18,0,6,6,24
-	//                                     ^   ^
+	//                     ^   ^
 	
 	prepareTest();
-	
-	size_t place = 6;
-	Node_read(node, place);
+
+	node->incomingLinkCount->value[0] = 2;
+	node->incomingLinkCount->isZero[2] = 0;
 	
 	Node_deleteIncomingLink(node);
 	
-	assert(0 == strcmp(error->method, "NodeError_forbidDeletingIncomingLinkWhenNonePresent"));
-	assert(2 == error->incomingLinkCount && "NodeError_forbidDeletingIncomingLinkWhenNonePresent incomingLinkCount");
+	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_get"));
 	
-	assert(1 == places[9] && "The node count for incoming connections is decremented.");
-	assert(30 == places[11] && "The node keeps the incoming link.");
+	assert(
+		0 == strcmp(error->method, "NodeError_forbidDeletingIncomingLinkWhenNonePresent")
+		&&  error->incomingLinkCount == 2
+	);
+
+	assert(0 == strcmp(node->incomingLinkCount->method[1], "Count_decrement"));
+	
+	assert(0 == strcmp(node->incomingLinkCount->method[2], "Count_isZero"));
 	
 	demolishTest();
 }
@@ -821,20 +836,30 @@ void it_deletes_last_incoming_link()
 {
 	// 0             6 node         12 node         18 12->6
 	// 0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,0,18,  6,12,0,12,6,0
-	//                                     ^   ^
+	//                     ^   ^
 	
 	prepareTest();
 	
-	size_t place = 6;
-	Node_read(node, place);
+	node->incomingLinkCount->value[0] = 1;
+	node->incomingLinkCount->isZero[2] = 1;
 	
 	Node_deleteIncomingLink(node);
 	
-	assert(0 == strcmp(error->method, "NodeError_forbidDeletingIncomingLinkWhenNonePresent"));
-	assert(1 == error->incomingLinkCount && "NodeError_forbidDeletingIncomingLinkWhenNonePresent incomingLinkCount");
+	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_get"));
 	
-	assert(0 == places[9] && "The node count for incoming connections is set to zero.");
-	assert(0 == places[11] && "The node has no incoming link.");
+	assert(
+		0 == strcmp(error->method, "NodeError_forbidDeletingIncomingLinkWhenNonePresent")
+		&&  error->incomingLinkCount == 1
+	);
+
+	assert(0 == strcmp(node->incomingLinkCount->method[1], "Count_decrement"));
+	
+	assert(0 == strcmp(node->incomingLinkCount->method[2], "Count_isZero"));
+	
+	assert(
+		0 == strcmp(node->incomingLink->method[0], "Place_set")
+		&& node->incomingLink->value[0] == 0
+	);
 	
 	demolishTest();
 }
