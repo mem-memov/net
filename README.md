@@ -13,7 +13,7 @@ Operations:
 * remove node
 * connect nodes
 * disconnect nodes
-* show node connection
+* show connections of a node
 
 Build with:
 
