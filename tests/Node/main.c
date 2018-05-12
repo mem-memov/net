@@ -368,10 +368,10 @@ void it_keeps_the_first_incoming_connection()
 	assert(0 == strcmp(incomingLink->method[0], "Link_getPlace"));
 	
 	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
-	
+
 	assert(
-		0 == strcmp(incomingLink->method[0], "Link_shiftIncoming")
-		&& incomingLink->previousIncomingLink[0] == nodePlace
+		0 == strcmp(incomingLink->method[1], "Link_shiftIncoming")
+		&& incomingLink->previousIncomingLink[1] == nodePlace
 	);
 
 	assert(
@@ -414,7 +414,7 @@ void it_keeps_the_latest_incoming_connection()
 	
 	assert(0 == strcmp(node->place->method[0], "Place_get"));
 	
-	assert(0 == strcmp(incomingLink->method[0], "Place_get"));
+	assert(0 == strcmp(incomingLink->method[0], "Link_getPlace"));
 	
 	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
 	
@@ -468,13 +468,13 @@ void it_keeps_the_first_outgoing_connection()
 	
 	assert(0 == strcmp(node->place->method[0], "Place_get"));
 	
-	assert(0 == strcmp(outgoingLink->method[0], "Place_get"));
+	assert(0 == strcmp(outgoingLink->method[0], "Link_getPlace"));
 	
 	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
 	
 	assert(
-		0 == strcmp(outgoingLink->method[0], "Link_shiftOutgoing")
-		&& outgoingLink->previousOutgoingLink[0] == nodePlace
+		0 == strcmp(outgoingLink->method[1], "Link_shiftOutgoing")
+		&& outgoingLink->previousOutgoingLink[1] == nodePlace
 	);
 
 	assert(
@@ -517,7 +517,7 @@ void it_keeps_the_latest_outgoing_connection()
 	
 	assert(0 == strcmp(node->place->method[0], "Place_get"));
 	
-	assert(0 == strcmp(outgoingLink->method[0], "Place_get"));
+	assert(0 == strcmp(outgoingLink->method[0], "Link_getPlace"));
 	
 	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
 	
@@ -615,6 +615,7 @@ void it_finds_outgoing_link_by_destination_node()
 	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
 	assert(0 == strcmp(node->outgoingLink->method[1], "Place_get"));
 	
+	printf("%zu %zu\n",star->outgoingLink[0], star->destinationNode[0]);
 	assert(
 		0 == strcmp(star->method[0], "Star_findOutgoingLink")
 		&& star->outgoingLink[0] == outgoingLinkPlace
