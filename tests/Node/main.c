@@ -4,6 +4,7 @@
 #include <assert.h>
 #include "../../source/Node.c"
 #include "Count.c"
+#include "Link.c"
 #include "NodeError.c"
 #include "Place.c"
 #include "Star.c"
@@ -355,33 +356,34 @@ void it_keeps_the_first_incoming_connection()
 	//                     ^                                    coming from other nodes.
 	prepareTest();
 	
-	size_t place = 6;
+	size_t nodePlace = 6;
 	size_t incomingLinkPlace = 18;
 
 	struct Link * incomingLink = Link_mock();
-	incomingLink->result[1] = incomingLinkPlace;
-	
-	node->place->value[0] = place;
+	incomingLink->place[0] = incomingLinkPlace;
+
+	node->place->value[0] = nodePlace;
 	node->incomingLink->value[0] = 0;
+	
 	Node_addIncomingLink(node, incomingLink);
+	
+	assert(0 == strcmp(node->place->method[0], "Place_get"));
+	
+	assert(0 == strcmp(incomingLink->method[0], "Place_get"));
 	
 	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
 	
-	assert(0 == strcmp(node->place->method[0], "Place_get"));
-
 	assert(
 		0 == strcmp(incomingLink->method[0], "Link_shiftIncoming")
-		&& incomingLink->previous[0] == place
+		&& incomingLink->previousIncomingLink[0] == nodePlace
 	);
-	
-	assert(0 == strcmp(incomingLink->method[1], "Link_getPlace"));
-	
+
 	assert(
 		0 == strcmp(node->incomingLink->method[1], "Place_set")
 		&& node->incomingLink->value[1] == incomingLinkPlace
 	);
 	
-	assert(0 == strcmp(node->incomingLinkCount->method[0], "Place_increment"));
+	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_increment"));
 	
 	demolishTest();
 }

@@ -16,6 +16,8 @@ struct Count * Count_mock()
 {
 	struct Count * this = malloc(sizeof(struct Count));
 	
+	this->call = 0;
+	
 	char i;
 	for (i = 0; i < COUNT_MAX_CALLS; i++) {
 		this->method[i] = "method not specified";
@@ -37,30 +39,35 @@ void Count_bind(struct Count * this, size_t position)
 {
 	this->method[this->call] = "Count_bind";
 	this->position[this->call] = position;
+	
 	this->call++;
 }
 
 void Count_create(struct Count * this)
 {
 	this->method[this->call] = "Count_create";
+	
 	this->call++;
 }
 
 void Count_delete(struct Count * this)
 {
 	this->method[this->call] = "Count_delete";
+	
 	this->call++;
 }
 
 void Count_increment(struct Count * this)
 {
 	this->method[this->call] = "Count_increment";
+	
 	this->call++;
 }
 
 void Count_decrement(struct Count * this)
 {
 	this->method[this->call] = "Count_decrement";
+	
 	this->call++;
 }
 
@@ -68,7 +75,9 @@ char Count_isZero(struct Count * this)
 {
 	this->method[this->call] = "Count_isZero";
 	char isZero = this->isZero[this->call];
+	
 	this->call++;
+	
 	return isZero;
 }
 
@@ -76,5 +85,8 @@ size_t Count_get(struct Count * this)
 {
 	this->method[this->call] = "Count_get";
 	size_t value = this->value[this->call];
+	
+	this->call++;
+	
 	return value;
 }

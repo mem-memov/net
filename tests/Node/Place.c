@@ -1,13 +1,16 @@
 #include "../../source/Place.h"
 #include <stdlib.h>
 
+#define PLACE_MAX_CALLS 4
+
 struct Place
 {
 	char call;
-	size_t value[4];
-	size_t position[4];
-	char keepsPosition[4];
-	char * method[4];
+	size_t value[PLACE_MAX_CALLS];
+	size_t position[PLACE_MAX_CALLS];
+	char isZero[COUNT_MAX_CALLS];
+	char keepsPosition[PLACE_MAX_CALLS];
+	char * method[PLACE_MAX_CALLS];
 };
 
 struct Place * Place_mock()
@@ -16,26 +19,15 @@ struct Place * Place_mock()
 	
 	this->call = 0;
 	
-	this->value[0] = 55555;
-	this->position[0] = 55555;
-	this->keepsPosition[0] = 28;
-	this->method[0] = "method not specified";
-	
-	this->value[1] = 55555;
-	this->position[1] = 55555;
-	this->keepsPosition[1] = 28;
-	this->method[1] = "method not specified";
-	
-	this->value[2] = 55555;
-	this->position[2] = 55555;
-	this->keepsPosition[2] = 28;
-	this->method[2] = "method not specified";
-	
-	this->value[3] = 55555;
-	this->position[3] = 55555;
-	this->keepsPosition[3] = 28;
-	this->method[3] = "method not specified";
-	
+	char i;
+	for (i = 0; i < PLACE_MAX_CALLS; i++) {
+		this->value[i] = 55555;
+		this->position[i] = 55555;
+		this->isZero[i] = 27;
+		this->keepsPosition[i] = 28;
+		this->method[i] = "method not specified";
+	}
+
 	return this;
 }
 
@@ -74,7 +66,12 @@ void Place_set(struct Place * this, size_t value)
 
 char Place_isZero(struct Place * this)
 {
-
+	this->method[this->call] = "Count_isZero";
+	char isZero = this->isZero[this->call];
+	
+	this->call++;
+	
+	return isZero;
 }
 
 char Place_keepsPosition(struct Place * this)
@@ -85,16 +82,4 @@ char Place_keepsPosition(struct Place * this)
 	this->call++;
 	
 	return keepsPosition;
-}
-
-void Place_increment(struct Place * this)
-{
-	this->method[this->call] = "Place_increment";
-	
-	this->call++;
-}
-
-void Place_decrement(struct Place * this)
-{
-
 }
