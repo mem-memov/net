@@ -750,21 +750,26 @@ void it_deletes_outgoing_link()
 {
 	// 0             6 node         12 node         18 node           24 6->12         30 6->18
 	// 0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,    12,30,0,6,12,0,  18,6,24,6,18,0
-	//                                   ^   ^
+	//                   ^   ^
 	
 	prepareTest();
-	
-	size_t place = 6;
-	Node_read(node, place);
+
+	node->outgoingLinkCount->value[0] = 2;
+	node->outgoingLinkCount->isZero[2] = 0;
 	
 	Node_deleteOutgoingLink(node);
 	
-	assert(0 == strcmp(error->method, "NodeError_forbidDeletingOutgoingLinkWhenNonePresent"));
-	assert(2 == error->outgoingLinkCount && "NodeError_forbidDeletingOutgoingLinkWhenNonePresent outgoingLinkCount");
+	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_get"));
 	
-	assert(1 == places[8] && "The node count for outgoing connections is decremented.");
-	assert(30 == places[10] && "The node keeps the outgoing link.");
+	assert(
+		0 == strcmp(error->method, "NodeError_forbidDeletingOutgoingLinkWhenNonePresent")
+		&&  error->outgoingLinkCount == 2
+	);
 	
+	assert(0 == strcmp(node->outgoingLinkCount->method[1], "Count_decrement"));
+	
+	assert(0 == strcmp(node->outgoingLinkCount->method[2], "Count_isZero"));
+
 	demolishTest();
 }
 
