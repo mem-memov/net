@@ -61,12 +61,12 @@ void it_writes_new_node_to_store()
 		&& "A node may have some data."
 	);
 	assert(
-		0 == strcmp(node->outgoingLinkCount->method[0], "Place_bind") 
+		0 == strcmp(node->outgoingLinkCount->method[0], "Count_bind") 
 		&& node->outgoingLinkCount->position[0] == 8
 		&& "A node keeps count of outgoing connections."
 	);
 	assert(
-		0 == strcmp(node->incomingLinkCount->method[0], "Place_bind") 
+		0 == strcmp(node->incomingLinkCount->method[0], "Count_bind") 
 		&& node->incomingLinkCount->position[0] == 9
 		&& "A node keeps count of incoming connections."
 	);
@@ -93,13 +93,11 @@ void it_writes_new_node_to_store()
 		&& "A new node has no data."
 	);
 	assert(
-		0 == strcmp(node->outgoingLinkCount->method[1], "Place_set") 
-		&& node->outgoingLinkCount->value[1] == 0
+		0 == strcmp(node->outgoingLinkCount->method[1], "Count_create") 
 		&& "A new node has an empty counter of outgoing connections."
 	);
 	assert(
-		0 == strcmp(node->incomingLinkCount->method[1], "Place_set") 
-		&& node->incomingLinkCount->value[1] == 0
+		0 == strcmp(node->incomingLinkCount->method[1], "Count_create") 
 		&& "A new node has an empty counter of incoming connections."
 	);
 	assert(
@@ -138,12 +136,12 @@ void it_reads_values_of_an_existing_node_from_the_store()
 		&& "A node may have some data."
 	);
 	assert(
-		0 == strcmp(node->outgoingLinkCount->method[0], "Place_bind") 
+		0 == strcmp(node->outgoingLinkCount->method[0], "Count_bind") 
 		&& node->outgoingLinkCount->position[0] == 8
 		&& "A node keeps count of outgoing connections."
 	);
 	assert(
-		0 == strcmp(node->incomingLinkCount->method[0], "Place_bind") 
+		0 == strcmp(node->incomingLinkCount->method[0], "Count_bind") 
 		&& node->incomingLinkCount->position[0] == 9
 		&& "A node keeps count of incoming connections."
 	);
@@ -195,13 +193,11 @@ void it_deletes_node()
 		&& "All fields of a deleted node are set to zero."
 	);
 	assert(
-		0 == strcmp(node->outgoingLinkCount->method[0], "Place_set") 
-		&& node->outgoingLinkCount->value[0] == 0
+		0 == strcmp(node->outgoingLinkCount->method[0], "Count_delete") 
 		&& "All fields of a deleted node are set to zero."
 	);
 	assert(
-		0 == strcmp(node->incomingLinkCount->method[0], "Place_set") 
-		&& node->incomingLinkCount->value[0] == 0
+		0 == strcmp(node->incomingLinkCount->method[0], "Count_delete") 
 		&& "All fields of a deleted node are set to zero."
 	);
 	
@@ -369,7 +365,7 @@ void it_keeps_the_first_incoming_connection()
 	
 	assert(0 == strcmp(node->place->method[0], "Place_get"));
 	
-	assert(0 == strcmp(incomingLink->method[0], "Place_get"));
+	assert(0 == strcmp(incomingLink->method[0], "Link_getPlace"));
 	
 	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
 	
@@ -549,84 +545,35 @@ void it_keeps_the_latest_outgoing_connection()
 	demolishTest();
 }
 
-void it_finds_incoming_link_by_origin_node_with_one_link_in_chain()
+void it_finds_incoming_link_by_origin_node()
 {
 	// 0             6 node         12 node         18 12->6
 	// 0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0
 	//                                                     ^
 	
 	prepareTest();
+
+	size_t originNodePlace = 12;
+	size_t incomingLinkPlace = 18;
 	
-	size_t place = 6;
-	size_t origin = 12;
-	size_t linkPlace = 18;
+	star->foundIncomingLink[0] = incomingLinkPlace;	
 	
-	link->result[1] = 1;	
-	
-	node->incomingLink->value[0] = linkPlace;
-	node->incomingLink->value[1] = linkPlace;
-	size_t result = Node_findIncomingLink(node, origin);
+	node->incomingLink->value[0] = incomingLinkPlace;
+	node->incomingLink->value[1] = incomingLinkPlace;
+
+	size_t result = Node_findIncomingLink(node, originNodePlace);
 	
 	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
 	assert(0 == strcmp(node->incomingLink->method[1], "Place_get"));
-
-	assert(
-		0 == strcmp(link->method[0], "Link_read")
-		&& link->place[0] == linkPlace
-	);
 	
 	assert(
-		0 == strcmp(link->method[1], "Link_isIncomingFromNode")
-		&& link->origin[1] == origin
+		0 == strcmp(star->method[0], "Star_findIncomingLink")
+		&& star->incomingLink[0] == incomingLinkPlace
+		&& star->originNode[0] == originNodePlace
 	);
 	
-	assert(result == linkPlace && "The node supplies the incoming link place.");
-	
-	demolishTest();
-}
+	assert(result == incomingLinkPlace && "A destination node returns the link that connects it to an origin node.");
 
-void it_finds_incoming_link_by_origin_node_with_many_links_in_chain()
-{
-	// 0             6 node         12 node         18 node           24 12->6        30 18->6
-	// 0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,1,0,30,0,    6,12,0,12,30,0, 18,18,0,6,6,24
-	
-	prepareTest();
-	
-	size_t place = 6;
-	size_t origin = 12;
-	size_t linkPlace = 24;
-	
-	link->result[1] = 0;
-	link->result[2] = linkPlace;
-	link->result[4] = 1;
-	
-	node->incomingLink->value[0] = linkPlace;
-	node->incomingLink->value[1] = linkPlace;
-	size_t result = Node_findIncomingLink(node, origin);
-	
-	
-	
-	
-	
-	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
-	assert(0 == strcmp(node->incomingLink->method[1], "Place_get"));
-
-	assert(0 == strcmp(link->method[0], "Link_read"));
-	assert(30 == link->place[0] && "Link_read place");
-	
-	assert(0 == strcmp(link->method[1], "Link_isIncomingFromNode"));
-	assert(origin == link->origin[1] && "Link_isIncomingFromNode origin");
-	
-	assert(0 == strcmp(link->method[2], "Link_getNextIncoming"));
-
-	assert(0 == strcmp(link->method[3], "Link_read"));
-	assert(linkPlace == link->place[3] && "Link_read place");
-	
-	assert(0 == strcmp(link->method[4], "Link_isIncomingFromNode"));
-	assert(origin == link->origin[4] && "Link_isIncomingFromNode origin");
-	
-	assert(linkPlace == result && "The node supplies the incoming link place.");
-	
 	demolishTest();
 }
 
@@ -637,111 +584,44 @@ void it_refuses_to_find_incoming_link_when_chain_empty()
 	
 	prepareTest();
 	
-	size_t place = 6;
-	Node_read(node, place);
+	size_t originNodePlace = 12;
 	
-	size_t origin = 12;
-	size_t result = Node_findIncomingLink(node, origin);
+	node->incomingLink->value[0] = 0;
 	
+	size_t result = Node_findIncomingLink(node, originNodePlace);
+	
+	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
+
 	assert(0 == result && "The node notifies about failure with zero value.");
 	
 	demolishTest();
 }
 
-void it_refuses_to_find_incoming_link_when_node_not_in_chain()
-{
-	//                 0             6 node         12 node         18 node           24 12->6        30 18->6
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,2,0,30,  12,0,1,0,24,0,  18,0,1,0,30,0,    6,12,0,12,30,0, 18,18,0,6,6,24};
-	
-	prepareTest();
-	
-	size_t place = 6;
-	Node_read(node, place);
-	
-	link->result[1] = 0;
-	link->result[2] = 24;
-	link->result[4] = 0;
-	link->result[5] = 0;
-	size_t origin = 777;
-	size_t result = Node_findIncomingLink(node, origin);
-	
-	assert(0 == strcmp(link->method[0], "Link_read"));
-	assert(30 == link->place[0] && "Link_read place");
-	
-	assert(0 == strcmp(link->method[1], "Link_isIncomingFromNode"));
-	assert(origin == link->origin[1] && "Link_isIncomingFromNode origin");
-	
-	assert(0 == strcmp(link->method[2], "Link_getNextIncoming"));
-
-	assert(0 == strcmp(link->method[3], "Link_read"));
-	assert(24 == link->place[3] && "Link_read place");
-	
-	assert(0 == strcmp(link->method[4], "Link_isIncomingFromNode"));
-	assert(origin == link->origin[4] && "Link_isIncomingFromNode origin");
-	
-	assert(0 == strcmp(link->method[5], "Link_getNextIncoming"));
-	
-	assert(0 == result && "The node notifies about failure with zero value.");
-	
-	demolishTest();
-}
-
-void it_finds_outgoing_link_by_destination_node_with_one_link_in_chain()
+void it_finds_outgoing_link_by_destination_node()
 {
 	//                 0             6 node         12 node         18 12->6
 	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0};
 	
 	prepareTest();
-	
-	size_t place = 12;
-	Node_read(node, place);
-	
-	link->result[1] = 1;
-	size_t destination = 6;
-	size_t result = Node_findOutgoingLink(node, destination);
-	
-	assert(0 == strcmp(link->method[0], "Link_read"));
-	assert(18 == link->place[0] && "Link_read place");
-	
-	assert(0 == strcmp(link->method[1], "Link_isOutgoingToNode"));
-	assert(destination == link->destination[1] && "Link_isOutgoingToNode destination");
-	
-	assert(18 == result && "The node supplies the outgoing link place.");
-	
-	demolishTest();
-}
 
-void it_finds_outgoing_link_by_destination_node_with_many_links_in_chain()
-{
-	//                 0             6 node         12 node         18 node           24 6->12        30 6->18
-	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,    12,30,0,6,12,0,  18,6,24,6,18,0};
+	size_t destinationNodePlace = 6;
+	size_t outgoingLinkPlace = 18;
 	
-	prepareTest();
+	node->incomingLink->value[0] = outgoingLinkPlace;
+	node->incomingLink->value[1] = outgoingLinkPlace;
 	
-	size_t place = 6;
-	Node_read(node, place);
+	size_t result = Node_findOutgoingLink(node, destinationNodePlace);
 	
-	link->result[1] = 0;
-	link->result[2] = 24;
-	link->result[4] = 1;
-	size_t destination = 12;
-	size_t result = Node_findOutgoingLink(node, destination);
+	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
+	assert(0 == strcmp(node->outgoingLink->method[1], "Place_get"));
 	
-	assert(0 == strcmp(link->method[0], "Link_read"));
-	assert(30 == link->place[0] && "Link_read place");
+	assert(
+		0 == strcmp(star->method[0], "Star_findOutgoingLink")
+		&& star->outgoingLink[0] == outgoingLinkPlace
+		&& star->destinationNode[0] == destinationNodePlace
+	);
 	
-	assert(0 == strcmp(link->method[1], "Link_isOutgoingToNode"));
-	assert(destination == link->destination[1] && "Link_isOutgoingToNode destination");
-	
-	assert(0 == strcmp(link->method[2], "Link_getNextOutgoing"));
-
-	assert(0 == strcmp(link->method[3], "Link_read"));
-	assert(24 == link->place[3] && "Link_read place");
-	
-	assert(0 == strcmp(link->method[4], "Link_isOutgoingToNode"));
-	assert(destination == link->destination[4] && "Link_isOutgoingToNodee destination");
-	
-	assert(24 == result && "The node supplies the outgoing link place.");
+	assert(result == outgoingLinkPlace && "An origin node returns the link that connects it to a destination node.");
 	
 	demolishTest();
 }
@@ -753,53 +633,14 @@ void it_refuses_to_find_outgoing_link_when_chain_empty()
 	
 	prepareTest();
 	
-	size_t place = 6;
-	Node_read(node, place);
+	size_t destinationNodePlace = 12;
 	
-	size_t destination = 12;
-	size_t result = Node_findOutgoingLink(node, destination);
+	node->outgoingLink->value[0] = 0;
 	
-	assert(0 == result && "The node notifies about failure with zero value.");
+	size_t result = Node_findOutgoingLink(node, destinationNodePlace);
 	
-	demolishTest();
-}
+	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
 
-void it_refuses_to_find_outgoing_link_when_node_not_in_chain()
-{
-	//                 0             6 node         12 node         18 node           24 6->12        30 6->18
-	size_t places[] = {0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,    12,30,0,6,12,0,  18,6,24,6,18,0};
-	
-	prepareTest();
-	
-	size_t place = 6;
-	Node_read(node, place);
-	
-	link->result[1] = 0;
-	link->result[2] = 24;
-	link->result[4] = 0;
-	link->result[5] = 0;
-	size_t destination = 777;
-	size_t result = Node_findOutgoingLink(node, destination);
-	
-	assert(0 == strcmp(link->method[0], "Link_read"));
-	assert(30 == link->place[0] && "Link_read place");
-	
-	assert(0 == strcmp(link->method[1], "Link_isOutgoingToNode"));
-	assert(destination == link->destination[1] && "Link_isOutgoingToNode destination");
-	
-	assert(0 == strcmp(link->method[2], "Link_getNextOutgoing"));
-
-	assert(0 == strcmp(link->method[3], "Link_read"));
-	assert(24 == link->place[3] && "Link_read place");
-	
-	assert(0 == strcmp(link->method[4], "Link_isOutgoingToNode"));
-	assert(destination == link->destination[4] && "Link_isOutgoingToNodee destination");
-	
-	assert(0 == strcmp(link->method[4], "Link_isOutgoingToNode"));
-	assert(destination == link->destination[4] && "Link_isOutgoingToNode destination");
-	
-	assert(0 == strcmp(link->method[5], "Link_getNextOutgoing"));
-	
 	assert(0 == result && "The node notifies about failure with zero value.");
 	
 	demolishTest();
@@ -988,14 +829,10 @@ int main(int argc, char** argv)
 	it_keeps_the_latest_incoming_connection();
 	it_keeps_the_first_outgoing_connection();
 	it_keeps_the_latest_outgoing_connection();
-	it_finds_incoming_link_by_origin_node_with_one_link_in_chain();
-	it_finds_incoming_link_by_origin_node_with_many_links_in_chain();
+	it_finds_incoming_link_by_origin_node();
 	it_refuses_to_find_incoming_link_when_chain_empty();
-	it_refuses_to_find_incoming_link_when_node_not_in_chain();
-	it_finds_outgoing_link_by_destination_node_with_one_link_in_chain();
-	it_finds_outgoing_link_by_destination_node_with_many_links_in_chain();
+	it_finds_outgoing_link_by_destination_node();
 	it_refuses_to_find_outgoing_link_when_chain_empty();
-	it_refuses_to_find_outgoing_link_when_node_not_in_chain();
 	it_confirms_having_more_outgoing_connections_than_incoming_ones();
 	it_denies_having_more_outgoing_connections_than_incoming_ones();
 	it_provides_its_outgoing_link();

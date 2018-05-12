@@ -1,7 +1,7 @@
 #include "../../source/Count.h"
 #include <stdlib.h>
 
-#define COUNT_MAX_CALLS 1
+#define COUNT_MAX_CALLS 2
 
 struct Count
 {

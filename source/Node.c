@@ -184,7 +184,7 @@ size_t Node_findOutgoingLink(struct Node * this, size_t destination)
 
 	size_t outgoingLink = Place_get(this->outgoingLink);
 	
-	return Star_findIncomingLink(this->star, outgoingLink, destination);
+	return Star_findOutgoingLink(this->star, outgoingLink, destination);
 }
 
 char Node_hasMoreOutgoingLinks(struct Node * this)
