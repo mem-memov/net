@@ -16,11 +16,12 @@ Operations:
 * show connections of a node
 
 Build with:
-
-    cd source
-    make --always-make
-
+```bash
+cd source
+make --always-make
+```
 Run tests with:
-
-    cd tests
-    make --always-make
+```bash
+cd tests
+make --always-make
+```

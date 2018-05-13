@@ -101,6 +101,8 @@ int main(int argc, char** argv)
 {
     struct A * a = A_construct(B_construct());
 
+    A_doSomthing(a);
+
     A_destruct(a);
 }
 ```
