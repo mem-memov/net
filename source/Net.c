@@ -12,6 +12,8 @@ struct Net {
 	
 	struct Exports * exports;
 	
+	struct Scan * scan;
+	
 	struct Place * one;
 	struct Place * placeSize;
 	struct Place * nextPlace;
@@ -26,6 +28,7 @@ struct Net * Net_construct(
 	struct Place * entry, 
 	struct Gaps * gaps,
 	struct Exports * exports,
+	struct Scan * scan,
 	struct Place * one,
 	struct Place * placeSize,
 	struct Place * nextPlace,
@@ -184,39 +187,20 @@ struct Export * Net_createExport(struct Net * this)
 	return Exports_make(this->exports, size);
 }
 
-void Net_import(struct Net * this, FILE * file)
+void Net_import(struct Net * this, unsigned char * bytes, FILE * file)
 {
-//	size_t placeCount = fread(this->places + this->entrySize, (*this->placeSize), (*this->nextPlace), file);
-//
-//	if ( placeCount != (*this->nextPlace) - this->entrySize ) {
-//		exit(1);
-//	}
-//	
-//	Net_scanForGaps(this);
-}
+	size_t placeSize = Place_get(this->placeSize);
+	size_t nextPlace = Place_get(this->nextPlace);
+	
+	size_t size = nextPlace * this->entrySize * placeSize;
+	
+	size_t byteCount = fread(bytes + this->entrySize, sizeof(unsigned char), size, file);
 
-void Net_scanForGaps(struct Net * this)
-{
-//	if ( 0 == (*this->gapCount)) {
-//		return;
-//	}
-//	
-//	size_t count = 0;
-//	size_t place;
-//	
-//	for ( place = this->entrySize; place < (*this->nextPlace); place++ ) {
-//		
-//		Entry_read(this->entry, place);
-//		
-//		if ( Entry_isEmpty(this->entry) ) {
-//			Gaps_addGap(this->gaps, place);
-//			count++;
-//		}
-//		
-//		if ( count == (*this->gapCount) ) {
-//			return;
-//		}
-//	}
+	if ( byteCount != nextPlace - this->entrySize) {
+		exit(1);
+	}
+	
+	size_t gapCount = Scan_findGaps(this->scan);
 }
 
 void Net_addGap(struct Net * this, size_t place)

@@ -8,6 +8,7 @@
 #include "Exports.h"
 #include "Gaps.h"
 #include "Place.h"
+#include "Scan.h"
 
 struct Net;
 
@@ -17,6 +18,7 @@ struct Net * Net_construct(
 	struct Place * entry, 
 	struct Gaps * gaps,
 	struct Exports * exports,
+	struct Scan * scan,
 	struct Place * one,
 	struct Place * placeSize,
 	struct Place * nextPlace,
@@ -51,7 +53,7 @@ void Net_decrementLinks(struct Net * this);
 
 struct Export * Net_createExport(struct Net * this);
 
-void Net_import(struct Net * this, FILE * file);
+void Net_import(struct Net * this, unsigned char * bytes, FILE * file);
 
 void Net_scanForGaps(struct Net * this);
 

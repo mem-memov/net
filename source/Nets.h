@@ -6,6 +6,7 @@
 #include "Gaps.h"
 #include "Net.h"
 #include "Places.h"
+#include "Scans.h"
 
 struct Nets;
 
@@ -13,7 +14,8 @@ struct Nets * Nets_construct(
 	struct Places * places, 
 	struct Counts * counts, 
 	struct Gaps * gaps, 
-	struct Exports * exports
+	struct Exports * exports,
+	struct Scans * scans
 );
 
 void Nets_destruct(struct Nets * this);

@@ -3,12 +3,14 @@
 
 struct Import
 {
-	//
+	unsigned char * bytes;
 };
 
-struct Import * Import_construct()
+struct Import * Import_construct(unsigned char * bytes)
 {
 	struct Import * this = malloc(sizeof(struct Import));
+	
+	this->bytes = bytes;
 
 	return this;
 }
@@ -21,17 +23,17 @@ void Import_destruct(struct Import * this)
 
 void Import_read(struct Import * this, FILE * file)
 {
-	size_t headPlaces = fread(this->places, this->placeSize, this->entrySize, file);
-	
-	if (headPlaces != this->entrySize) {
-		exit(1);
-	}
-	
-	Net_read(this->net);
-	
-	if (Net_isSpaceCut(this->net)) {
-		exit(1);
-	}
-	
-	Net_import(this->net, file);
+//	size_t headPlaces = fread(this->bytes, sizeof(unsigned char), this->entrySize, file);
+//	
+//	if (headPlaces != this->entrySize) {
+//		exit(1);
+//	}
+//	
+//	Net_read(this->net);
+//	
+//	if (Net_isSpaceCut(this->net)) {
+//		exit(1);
+//	}
+//	
+//	Net_import(this->net, file);
 }

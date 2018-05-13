@@ -7,13 +7,15 @@ struct Nets
 	struct Counts * counts;
 	struct Gaps * gaps;
 	struct Exports * exports;
+	struct Scans * scans;
 };
 
 struct Nets * Nets_construct(
 	struct Places * places, 
 	struct Counts * counts, 
 	struct Gaps * gaps, 
-	struct Exports * exports
+	struct Exports * exports,
+	struct Scans * scans
 ) {
 	struct Nets * this = malloc(sizeof(struct Nets));
 	
@@ -21,6 +23,7 @@ struct Nets * Nets_construct(
 	this->counts = counts;
 	this->gaps = gaps;
 	this->exports = exports;
+	this->scans = scans;
 	
 	return this;
 }
@@ -29,6 +32,7 @@ void Nets_destruct(struct Nets * this)
 {
 	Gaps_destruct(this->gaps);
 	Exports_destruct(this->exports);
+	Scans_destruct(this->scans);
 	
 	free(this);
 	this = NULL;
@@ -42,6 +46,7 @@ struct Net * Nets_make(struct Nets * this, size_t spaceSize, size_t entrySize)
 		Places_make(this->places), 
 		this->gaps,
 		this->exports,
+		Scans_make(this->scans),
 		Places_make(this->places),
 		Places_make(this->places),
 		Places_make(this->places),

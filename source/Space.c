@@ -4,6 +4,7 @@
 #include "Counts.h"
 #include "Errors.h"
 #include "Exports.h"
+#include "Imports.h"
 #include "Links.h"
 #include "Nets.h"
 #include "Nodes.h"
@@ -25,6 +26,7 @@ struct Space {
 	struct Nodes * nodes;
 	struct Places * places;
 	struct Stars * stars;
+	struct Imports * imports;
 	
 	// pool
 	struct Node * node;
@@ -61,7 +63,8 @@ struct Space * Space_construct(size_t spaceSize)
 		Gaps_construct(
 			Errors_makeGapError(this->errors)
 		),
-		Exports_construct(this->bytes)
+		Exports_construct(this->bytes),
+		Scans_construct()
 	);
 	
 	this->links = Links_construct(
@@ -80,6 +83,8 @@ struct Space * Space_construct(size_t spaceSize)
 		this->stars, 
 		Errors_makeNodeError(this->errors)
 	);
+	
+	this->imports = Imports_construct();
 	
 	this->net = Nets_make(this->nets, this->spaceSize, this->entrySize);
 
@@ -260,17 +265,7 @@ void Space_export(struct Space * this, FILE * file)
 
 void Space_import(struct Space * this, FILE * file)
 {
-	size_t headPlaces = fread(this->places, this->placeSize, this->entrySize, file);
+	struct Import * import = Imports_make(this->imports);
 	
-	if (headPlaces != this->entrySize) {
-		exit(1);
-	}
-	
-	Net_read(this->net);
-	
-	if (Net_isSpaceCut(this->net)) {
-		exit(1);
-	}
-	
-	Net_import(this->net, file);
+	Import_read(import, file);
 }
