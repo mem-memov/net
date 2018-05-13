@@ -1,5 +1,5 @@
-net: main.o Count.o CountError.o Counts.o Error.o Errors.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Star.o Stars.o
-	gcc main.o Count.o CountError.o Counts.o Error.o Errors.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Star.o Stars.o -o net
+net: main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Star.o Stars.o
+	gcc main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Star.o Stars.o -o net
 
 main.o: main.c
 	gcc -c main.c
@@ -18,6 +18,12 @@ Error.o: Error.c Error.h
 
 Errors.o: Errors.c Errors.h
 	gcc -c Errors.c
+
+Export.o: Export.c Export.h
+	gcc -c Export.c
+
+Exports.o: Exports.c Exports.h
+	gcc -c Exports.c
 
 Gap.o: Gap.c Gap.h
 	gcc -c Gap.c

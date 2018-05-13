@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Count.h"
+#include "Export.h"
+#include "Exports.h"
 #include "Gaps.h"
 #include "Place.h"
 
@@ -14,6 +16,7 @@ struct Net * Net_construct(
 	size_t entrySize, 
 	struct Place * entry, 
 	struct Gaps * gaps,
+	struct Exports * exports,
 	struct Place * one,
 	struct Place * placeSize,
 	struct Place * nextPlace,
@@ -46,7 +49,7 @@ void Net_incrementLinks(struct Net * this);
 
 void Net_decrementLinks(struct Net * this);
 
-void Net_export(struct Net * this, FILE * file);
+struct Export * Net_createExport(struct Net * this);
 
 void Net_import(struct Net * this, FILE * file);
 

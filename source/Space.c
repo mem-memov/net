@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "Counts.h"
 #include "Errors.h"
+#include "Exports.h"
 #include "Links.h"
 #include "Nets.h"
 #include "Nodes.h"
@@ -59,7 +60,8 @@ struct Space * Space_construct(size_t spaceSize)
 		this->counts, 
 		Gaps_construct(
 			Errors_makeGapError(this->errors)
-		)
+		),
+		Exports_construct(this->bytes)
 	);
 	
 	this->links = Links_construct(
@@ -251,7 +253,9 @@ char Space_isNode(struct Space * this, size_t place)
 
 void Space_export(struct Space * this, FILE * file)
 {
-	Net_export(this->net, file);
+	struct Export * export = Net_createExport(this->net);
+	
+	Export_write(export, file);
 }
 
 void Space_import(struct Space * this, FILE * file)

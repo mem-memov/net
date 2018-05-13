@@ -10,6 +10,8 @@ struct Net {
 	
 	struct Gaps * gaps;
 	
+	struct Exports * exports;
+	
 	struct Place * one;
 	struct Place * placeSize;
 	struct Place * nextPlace;
@@ -23,6 +25,7 @@ struct Net * Net_construct(
 	size_t entrySize, 
 	struct Place * entry, 
 	struct Gaps * gaps,
+	struct Exports * exports,
 	struct Place * one,
 	struct Place * placeSize,
 	struct Place * nextPlace,
@@ -39,6 +42,8 @@ struct Net * Net_construct(
 	this->entry = entry;
 	
 	this->gaps = gaps;
+	
+	this->exports = exports;
 	
 	// fields
 	this->one = one;
@@ -172,13 +177,11 @@ void Net_decrementLinks(struct Net * this)
 	Count_decrement(this->linkCount);
 }
 
-void Net_export(struct Net * this, FILE * file)
+struct Export * Net_createExport(struct Net * this)
 {
-//	size_t placeCount = fwrite(this->places, (*this->placeSize), (*this->nextPlace), file);
-//	
-//	if ( placeCount != (*this->nextPlace) ) {
-//		exit(1);
-//	}
+	size_t size = this->entrySize * Place_get(this->placeSize) * Place_get(this->nextPlace);
+	
+	return Exports_make(this->exports, size);
 }
 
 void Net_import(struct Net * this, FILE * file)
