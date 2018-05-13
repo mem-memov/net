@@ -105,7 +105,7 @@ int main(int argc, char** argv)
 }
 ```
 --------------------- source/Makefile --------------------------
-```
+```Makefile
 net: main.o A.o B.o
 	gcc main.o A.o B.o -o application
 
@@ -122,8 +122,11 @@ clean:
 	rm --force *.o application
 ```
 
-
-
+```bash
+cd source
+make --always-make
+./application
+```
 
 
 
@@ -219,4 +222,9 @@ run:
 	
 clean:
 	rm --force *.o test
+```
+
+```bash
+cd source
+make --always-make
 ```
