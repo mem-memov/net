@@ -174,6 +174,7 @@ void B_doSomthingElse(struct B * this)
 ```
 --------------------- tests/main.c --------------------------
 ```c
+#include <stdlib.h>
 #include "../source/A.h"
 
 struct A * a;
@@ -204,7 +205,7 @@ int main(int argc, char** argv)
 {
     it_uses_b();
 
-    A_destruct(a);
+    return (EXIT_SUCCESS);
 }
 ```
 --------------------- tests/Makefile --------------------------
