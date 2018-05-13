@@ -175,7 +175,7 @@ void B_doSomthingElse(struct B * this)
 --------------------- tests/main.c --------------------------
 ```c
 #include <stdlib.h>
-#include "../source/A.h"
+#include "../source/A.c"
 
 struct A * a;
 
