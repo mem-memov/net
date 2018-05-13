@@ -225,6 +225,6 @@ clean:
 ```
 
 ```bash
-cd source
+cd tests
 make --always-make
 ```
