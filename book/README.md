@@ -141,20 +141,20 @@ make --always-make
 
 struct B
 {
-	char call;
-	char * method[B_MAX_CALLS];
+    char call;
+    char * method[B_MAX_CALLS];
 }
 
 struct B * B_mock()
 {
     struct B * this = malloc(sizeof(struct B));
 
-	this->call = 0;
-	
-	char i;
-	for (i = 0; i < B_MAX_CALLS; i++) {
-		this->method[i] = "method not specified";
-	}
+    this->call = 0;
+
+    char i;
+    for (i = 0; i < B_MAX_CALLS; i++) {
+            this->method[i] = "method not specified";
+    }
 
     return this;
 }
