@@ -90,7 +90,7 @@ void A_destruct(struct A * this)
 
 void A_doSomthing(struct A * this)
 {
-    B_doSomthingElse();
+    B_doSomthingElse(this->b);
 }
 ```
 --------------------- source/main.c --------------------------
