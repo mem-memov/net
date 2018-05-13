@@ -202,8 +202,6 @@ void it_uses_b()
 
 int main(int argc, char** argv)
 {
-    struct A * a = A_construct(B_construct());
-
     it_uses_b();
 
     A_destruct(a);
