@@ -205,7 +205,7 @@ int main(int argc, char** argv)
 }
 ```
 --------------------- tests/Makefile --------------------------
-```
+```Makefile
 all: build run clean
 
 build: main.o
