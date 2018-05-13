@@ -4,7 +4,7 @@ Lifetime of A is equal to lifetime of B. B provides to A some helper functionali
 
 
 --------------------- source/B.h --------------------------
-```
+```c
 #ifndef B_H
 #define B_H
 
