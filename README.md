@@ -17,11 +17,11 @@ Operations:
 
 Build with:
 ```bash
-cd "source"
+cd ./source
 make --always-make
 ```
 Run tests with:
 ```bash
-cd "tests"
+cd ./tests
 make --always-make
 ```
