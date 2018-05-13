@@ -4,7 +4,7 @@ in-memory graph store written with C
 Highlights:
 * no dependencies on external libraries
 * code covered with unit tests
-* fastest possible clean node removal
+* fast and clean node removal
 * fast export to dump file
 * reusing identifies of removed nodes
 
