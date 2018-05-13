@@ -6,7 +6,7 @@ Highlights:
 * code covered with unit tests
 * fast and clean node removal
 * fast export to dump file
-* reusing identifies of removed nodes
+* reusing identifies
 
 Operations:
 * create node
