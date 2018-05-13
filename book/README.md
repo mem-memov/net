@@ -19,7 +19,7 @@ void B_doSomthingElse(struct B * this);
 #endif
 ```
 --------------------- source/B.c --------------------------
-```
+```c
 #include "B.h"
 
 struct B
@@ -46,7 +46,7 @@ void B_doSomthingElse(struct B * this)
 }
 ```
 --------------------- source/A.h --------------------------
-```
+```c
 #ifndef A_H
 #define A_H
 
@@ -63,7 +63,7 @@ void A_doSomthing(struct A * this);
 #endif
 ```
 --------------------- source/A.c --------------------------
-```
+```c
 #include "A.h"
 
 struct A
@@ -94,7 +94,7 @@ void A_doSomthing(struct A * this)
 }
 ```
 --------------------- source/main.c --------------------------
-```
+```c
 #include "A.h"
 
 int main(int argc, char** argv)
@@ -129,7 +129,7 @@ clean:
 
 
 --------------------- tests/B.c --------------------------
-```
+```c
 #include "../source/B.h"
 
 #define B_MAX_CALLS 1
@@ -168,7 +168,7 @@ void B_doSomthingElse(struct B * this)
 }
 ```
 --------------------- tests/main.c --------------------------
-```
+```c
 #include "../source/A.h"
 
 struct A * a;
