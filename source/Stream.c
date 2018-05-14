@@ -23,18 +23,20 @@ void Stream_destruct(struct Stream * this)
 	this = NULL;
 }
 
-size_t Stream_read(struct Stream * this, size_t offset, size_t length)
+void Stream_read(struct Stream * this, size_t offset, size_t length)
 {
-	return fread(this->bytes + offset, sizeof(unsigned char), length, this->file);
+	size_t byteCount = fread(this->bytes + offset, sizeof(unsigned char), length, this->file);
+	
+	if ( byteCount != length ) {
+		exit(1);
+	}
 }
 
-size_t Stream_write(struct Stream * this, size_t length)
+void Stream_write(struct Stream * this, size_t length)
 {
 	size_t byteCount = fwrite(this->bytes, sizeof(unsigned char), length, this->file);
 	
 	if ( byteCount != length ) {
 		exit(1);
 	}
-	
-	return byteCount;
 }
