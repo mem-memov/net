@@ -2,13 +2,13 @@
 #define NET_H
 
 #include <stdlib.h>
-#include <stdio.h>
 #include "Count.h"
 #include "Export.h"
 #include "Exports.h"
 #include "Gaps.h"
 #include "Place.h"
 #include "Scan.h"
+#include "Stream.h"
 
 struct Net;
 
@@ -53,7 +53,7 @@ void Net_decrementLinks(struct Net * this);
 
 struct Export * Net_createExport(struct Net * this);
 
-void Net_import(struct Net * this, unsigned char * bytes, FILE * file);
+void Net_import(struct Net * this, struct Stream * stream);
 
 void Net_scanForGaps(struct Net * this);
 

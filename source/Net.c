@@ -187,18 +187,19 @@ struct Export * Net_createExport(struct Net * this)
 	return Exports_make(this->exports, size);
 }
 
-void Net_import(struct Net * this, unsigned char * bytes, FILE * file)
+void Net_import(struct Net * this, struct Stream * stream)
 {
-	size_t placeSize = Place_get(this->placeSize);
-	size_t nextPlace = Place_get(this->nextPlace);
-	
-	size_t size = nextPlace * this->entrySize * placeSize;
-	
-	size_t byteCount = fread(bytes + this->entrySize, sizeof(unsigned char), size, file);
-
-	if ( byteCount != nextPlace - this->entrySize) {
+	if (Net_isSpaceCut(this)) { // TODO: move to error file
 		exit(1);
 	}
+	
+	size_t placeSize = Place_get(this->placeSize);
+	size_t nextPlace = Place_get(this->nextPlace);
+
+	size_t offset = this->entrySize * placeSize;
+	size_t size = nextPlace * placeSize - offset;
+	
+	Stream_read(stream, offset, size);
 	
 	size_t gapCount = Scan_findGaps(this->scan);
 }

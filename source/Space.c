@@ -47,7 +47,7 @@ struct Space * Space_construct(size_t spaceSize)
 	
 	this->spaceSize = spaceSize;
 	this->entrySize = 6;
-	this->placeSize = 8;
+	this->placeSize = 4;
 	this->bytes = malloc(this->spaceSize * this->entrySize * this->placeSize);
 	
 	// factories
@@ -88,9 +88,9 @@ struct Space * Space_construct(size_t spaceSize)
 		Errors_makeNodeError(this->errors)
 	);
 	
-	this->imports = Imports_construct(this->streams);
-	
 	this->net = Nets_make(this->nets, this->spaceSize, this->entrySize);
+	
+	this->imports = Imports_construct(this->streams, this->entrySize, this->placeSize, this->net);
 
 	// pool
 	this->node = Nodes_make(this->nodes);
