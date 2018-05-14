@@ -3,15 +3,15 @@
 
 struct Export
 {
-	unsigned char * bytes;
+	struct Streams * streams;
 	size_t size;
 };
 
-struct Export * Export_construct(unsigned char * bytes, size_t size)
+struct Export * Export_construct(struct Streams * streams, size_t size)
 {
 	struct Export * this = malloc(sizeof(struct Export));
 	
-	this->bytes = bytes;
+	this->streams = streams;
 	this->size = size;
 
 	return this;
@@ -25,9 +25,9 @@ void Export_destruct(struct Export * this)
 
 void Export_write(struct Export * this, FILE * file)
 {
-	size_t byteCount = fwrite(this->bytes, sizeof(unsigned char), this->size, file);
+	struct Stream * stream = Streams_make(this->streams, file);
 	
-	if ( byteCount != this->size ) {
-		exit(1);
-	}
+	Stream_write(stream, this->size);
+	
+	Stream_destruct(stream);
 }

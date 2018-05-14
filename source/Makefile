@@ -1,5 +1,5 @@
-net: main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Scan.o Scans.o Star.o Stars.o
-	gcc main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Scan.o Scans.o Star.o Stars.o -o net
+net: main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Scan.o Scans.o Star.o Stars.o Stream.o Streams.o
+	gcc main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Scan.o Scans.o Star.o Stars.o Stream.o Streams.o -o net
 
 main.o: main.c
 	gcc -c main.c
@@ -93,6 +93,12 @@ Star.o: Star.c Star.h
 
 Stars.o: Stars.c Stars.h
 	gcc -c Stars.c
+	
+Stream.o: Stream.c Stream.h
+	gcc -c Stream.c
+	
+Streams.o: Streams.c Streams.h
+	gcc -c Streams.c
 	
 clean:
 	rm --force *.o net

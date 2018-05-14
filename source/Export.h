@@ -2,10 +2,11 @@
 #define EXPORT_H
 
 #include <stdio.h>
+#include "Streams.h"
 
 struct Export;
 
-struct Export * Export_construct(unsigned char * bytes, size_t size);
+struct Export * Export_construct(struct Streams * streams, size_t size);
 
 void Export_destruct(struct Export * this);
 

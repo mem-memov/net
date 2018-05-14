@@ -10,6 +10,7 @@
 #include "Nodes.h"
 #include "Places.h"
 #include "Stars.h"
+#include "Streams.h"
 
 struct Space {
 	size_t spaceSize;
@@ -19,6 +20,7 @@ struct Space {
 	struct Net * net;
 
 	// factories
+	struct Streams * streams;
 	struct Counts * counts;
 	struct Errors * errors;
 	struct Links * links;
@@ -52,6 +54,8 @@ struct Space * Space_construct(size_t spaceSize)
 	this->errors = Errors_construct(Error_construct());
 	this->places = Places_construct(this->entrySize, this->bytes);
 	
+	this->streams = Streams_construct(this->bytes);
+	
 	this->counts = Counts_construct(
 		this->places, 
 		Errors_makeCountError(this->errors)
@@ -63,7 +67,7 @@ struct Space * Space_construct(size_t spaceSize)
 		Gaps_construct(
 			Errors_makeGapError(this->errors)
 		),
-		Exports_construct(this->bytes),
+		Exports_construct(this->streams),
 		Scans_construct()
 	);
 	
@@ -84,7 +88,7 @@ struct Space * Space_construct(size_t spaceSize)
 		Errors_makeNodeError(this->errors)
 	);
 	
-	this->imports = Imports_construct();
+	this->imports = Imports_construct(this->streams);
 	
 	this->net = Nets_make(this->nets, this->spaceSize, this->entrySize);
 
@@ -121,6 +125,9 @@ void Space_destruct(struct Space * this)
 	Nodes_destruct(this->nodes);
 	Places_destruct(this->places);
 	Errors_destruct(this->errors);
+	
+	Imports_destruct(this->imports);
+	Streams_destruct(this->streams);
 	
 	free(this);
 	this = NULL;

@@ -3,12 +3,14 @@
 
 struct Imports
 {
-	//
+	struct Streams * streams;
 };
 
-struct Imports * Imports_construct()
+struct Imports * Imports_construct(struct Streams * streams)
 {
 	struct Imports * this = malloc(sizeof(struct Imports));
+	
+	this->streams = streams;
 
 	return this;
 }
@@ -21,5 +23,5 @@ void Imports_destruct(struct Imports * this)
 
 struct Import * Imports_make(struct Imports * this)
 {
-	return Import_construct();
+	return Import_construct(this->streams);
 }

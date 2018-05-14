@@ -2,10 +2,11 @@
 #define IMPORT_H
 
 #include <stdio.h>
+#include "Streams.h"
 
 struct Import;
 
-struct Import * Import_construct();
+struct Import * Import_construct(struct Streams * streams);
 
 void Import_destruct(struct Import * this);
 

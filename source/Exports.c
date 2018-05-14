@@ -3,14 +3,14 @@
 
 struct Exports
 {
-	unsigned char * bytes;
+	struct Streams * streams;
 };
 
-struct Exports * Exports_construct(unsigned char * bytes)
+struct Exports * Exports_construct(struct Streams * streams)
 {
 	struct Exports * this = malloc(sizeof(struct Exports));
 	
-	this->bytes = bytes;
+	this->streams = streams;
 
 	return this;
 }
@@ -23,5 +23,5 @@ void Exports_destruct(struct Exports * this)
 
 struct Export * Exports_make(struct Exports * this, size_t size)
 {
-	return Export_construct(this->bytes, size);
+	return Export_construct(this->streams, size);
 }
