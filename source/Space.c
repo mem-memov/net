@@ -52,7 +52,7 @@ struct Space * Space_construct(size_t spaceSize)
 	
 	// factories
 	this->errors = Errors_construct(Error_construct());
-	this->places = Places_construct(this->entrySize, this->bytes);
+	this->places = Places_construct(this->placeSize, this->bytes);
 	
 	this->streams = Streams_construct(this->bytes);
 	
@@ -268,6 +268,8 @@ void Space_export(struct Space * this, FILE * file)
 	struct Export * export = Net_createExport(this->net);
 	
 	Export_write(export, file);
+	
+	Export_destruct(export);
 }
 
 void Space_import(struct Space * this, FILE * file)
@@ -275,4 +277,6 @@ void Space_import(struct Space * this, FILE * file)
 	struct Import * import = Imports_make(this->imports);
 	
 	Import_read(import, file);
+	
+	Import_destruct(import);
 }

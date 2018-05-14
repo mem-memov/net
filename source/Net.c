@@ -182,7 +182,7 @@ void Net_decrementLinks(struct Net * this)
 
 struct Export * Net_createExport(struct Net * this)
 {
-	size_t size = this->entrySize * Place_get(this->placeSize) * Place_get(this->nextPlace);
+	size_t size = Place_get(this->placeSize) * Place_get(this->nextPlace);
 	
 	return Exports_make(this->exports, size);
 }
