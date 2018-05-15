@@ -27,7 +27,7 @@ void Mesh_destruct(struct Mesh * this)
 
 void Mesh_addGap(struct Mesh * this, size_t place, size_t nextGapPlace)
 {
-	size_t count = 0;
+	size_t count = 1;
 	
 	if ( 0 != nextGapPlace ) {
 		Gap_read(this->nextGap, nextGapPlace);
