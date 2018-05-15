@@ -5,9 +5,8 @@
 #include "Count.h"
 #include "Export.h"
 #include "Exports.h"
-#include "Gaps.h"
+#include "Mesh.h"
 #include "Place.h"
-#include "Scan.h"
 #include "Stream.h"
 
 struct Net;
@@ -15,14 +14,12 @@ struct Net;
 struct Net * Net_construct(
 	size_t spaceSize, 
 	size_t entrySize, 
-	struct Place * entry, 
-	struct Gaps * gaps,
+	struct Mesh * mesh,
 	struct Exports * exports,
-	struct Scan * scan,
 	struct Place * one,
 	struct Place * placeSize,
 	struct Place * nextPlace,
-	struct Count * gapCount,
+	struct Place * gapPlace,
 	struct Count * nodeCount,
 	struct Count * linkCount
 );
@@ -54,8 +51,6 @@ void Net_decrementLinks(struct Net * this);
 struct Export * Net_createExport(struct Net * this);
 
 void Net_import(struct Net * this, struct Stream * stream);
-
-void Net_scanForGaps(struct Net * this);
 
 void Net_addGap(struct Net * this, size_t place);
 

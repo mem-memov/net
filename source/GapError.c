@@ -21,17 +21,3 @@ void GapError_destruct(struct GapError * this)
 	this = NULL;
 }
 
-void GapError_zeroPlaceIsReservedForInvalidGap(struct GapError * this, size_t place)
-{
-	if (0 == place) {
-		Error_terminate(this->error);
-	}
-}
-
-void GapError_placeCanBeReadOnlyOnce(struct GapError * this, size_t place)
-{
-	if (0 == place) {
-		Error_terminate(this->error);
-	}
-}
-

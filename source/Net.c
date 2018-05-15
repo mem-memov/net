@@ -1,23 +1,17 @@
 #include "Net.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 struct Net {
 	size_t spaceSize;
 	size_t entrySize;
 	
-	struct Place * entry;
-	
-	struct Gaps * gaps;
+	struct Mesh * mesh;
 	
 	struct Exports * exports;
-	
-	struct Scan * scan;
 	
 	struct Place * one;
 	struct Place * placeSize;
 	struct Place * nextPlace;
-	struct Count * gapCount;
+	struct Place * gapPlace;
 	struct Count * nodeCount;
 	struct Count * linkCount;
 };
@@ -25,14 +19,12 @@ struct Net {
 struct Net * Net_construct(
 	size_t spaceSize, 
 	size_t entrySize, 
-	struct Place * entry, 
-	struct Gaps * gaps,
+	struct Mesh * mesh,
 	struct Exports * exports,
-	struct Scan * scan,
 	struct Place * one,
 	struct Place * placeSize,
 	struct Place * nextPlace,
-	struct Count * gapCount,
+	struct Place * gapPlace,
 	struct Count * nodeCount,
 	struct Count * linkCount
 ) {
@@ -40,11 +32,8 @@ struct Net * Net_construct(
 
 	this->spaceSize = spaceSize;
 	this->entrySize = entrySize;
-	
-	// pool
-	this->entry = entry;
-	
-	this->gaps = gaps;
+
+	this->mesh = mesh;
 	
 	this->exports = exports;
 	
@@ -52,7 +41,7 @@ struct Net * Net_construct(
 	this->one = one;
 	this->placeSize = placeSize;
 	this->nextPlace = nextPlace;
-	this->gapCount = gapCount;
+	this->gapPlace = gapPlace;
 	this->nodeCount = nodeCount;
 	this->linkCount = linkCount;
 
@@ -61,12 +50,12 @@ struct Net * Net_construct(
 
 void Net_destruct(struct Net * this)
 {
-	Gaps_destruct(this->gaps);
+	Mesh_destruct(this->mesh);
 	
 	Place_destruct(this->one);
 	Place_destruct(this->placeSize);
 	Place_destruct(this->nextPlace);
-	Count_destruct(this->gapCount);
+	Place_destruct(this->gapPlace);
 	Count_destruct(this->nodeCount);
 	Count_destruct(this->linkCount);
 	
@@ -74,31 +63,26 @@ void Net_destruct(struct Net * this)
 	this = NULL;
 }
 
-void Net_bind(struct Net * this)
-{
-	Place_bind(this->one, 0);
-	Place_bind(this->placeSize, 1);
-	Place_bind(this->nextPlace, 2);
-	Count_bind(this->gapCount, 3);
-	Count_bind(this->nodeCount, 4);
-	Count_bind(this->linkCount, 5);
-}
-
 void Net_create(struct Net * this, size_t placeSize)
 {
-	Net_bind(this);
+	Net_read(this);
 	
 	Place_set(this->one, 1);
 	Place_set(this->placeSize, placeSize);
 	Place_set(this->nextPlace, this->entrySize);
-	Count_create(this->gapCount);
+	Place_set(this->gapPlace, 0);
 	Count_create(this->nodeCount);
 	Count_create(this->linkCount);
 }
 
 void Net_read(struct Net * this)
 {
-	Net_bind(this);
+	Place_bind(this->one, 0);
+	Place_bind(this->placeSize, 1);
+	Place_bind(this->nextPlace, 2);
+	Place_bind(this->gapPlace, 3);
+	Count_bind(this->nodeCount, 4);
+	Count_bind(this->linkCount, 5);
 }
 
 char Net_isHead(struct Net * this, size_t place)
@@ -134,7 +118,7 @@ char Net_hasSpaceForEntry(struct Net * this)
 		return 1;
 	}
 	
-	if ( ! Gaps_areEmpty(this->gaps) ) {
+	if ( 0 != Place_get(this->gapPlace) ) {
 		return 1;
 	}
 	
@@ -147,11 +131,13 @@ size_t Net_createEntry(struct Net * this)
 		exit(1);
 	}
 	
-	size_t place;
+	size_t place = Place_get(this->gapPlace);
+	
+	size_t nextGapPlace;
 
-	if ( ! Gaps_areEmpty(this->gaps) ) {
-		place = Gaps_givePlace(this->gaps);
-		Count_decrement(this->gapCount);
+	if ( 0 != place ) {
+		nextGapPlace = Mesh_removeGap(this->mesh, place);
+		Place_set(this->gapPlace, nextGapPlace);
 	} else {
 		place = Place_get(this->nextPlace);
 		Place_set(this->nextPlace, Place_get(this->nextPlace) + this->entrySize);
@@ -200,12 +186,13 @@ void Net_import(struct Net * this, struct Stream * stream)
 	size_t size = nextPlace * placeSize - offset;
 	
 	Stream_read(stream, offset, size);
-	
-	size_t gapCount = Scan_findGaps(this->scan);
 }
 
 void Net_addGap(struct Net * this, size_t place)
 {
-	Gaps_addGap(this->gaps, place);
-	Count_increment(this->gapCount);
+	size_t nextGapPlace = Place_get(this->gapPlace);
+	
+	Mesh_addGap(this->mesh, place, nextGapPlace);
+	
+	Place_set(this->gapPlace, place);
 }

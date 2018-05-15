@@ -64,11 +64,13 @@ struct Space * Space_construct(size_t spaceSize)
 	this->nets = Nets_construct(
 		this->places, 
 		this->counts, 
-		Gaps_construct(
-			Errors_makeGapError(this->errors)
+		Meshes_construct(
+			Gaps_construct(
+				this->places,
+				Errors_makeGapError(this->errors)
+			)
 		),
-		Exports_construct(this->streams),
-		Scans_construct()
+		Exports_construct(this->streams)
 	);
 	
 	this->links = Links_construct(

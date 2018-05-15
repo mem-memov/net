@@ -3,19 +3,17 @@
 
 #include "Counts.h"
 #include "Exports.h"
-#include "Gaps.h"
+#include "Meshes.h"
 #include "Net.h"
 #include "Places.h"
-#include "Scans.h"
 
 struct Nets;
 
 struct Nets * Nets_construct(
 	struct Places * places, 
 	struct Counts * counts, 
-	struct Gaps * gaps, 
-	struct Exports * exports,
-	struct Scans * scans
+	struct Meshes * meshes, 
+	struct Exports * exports
 );
 
 void Nets_destruct(struct Nets * this);

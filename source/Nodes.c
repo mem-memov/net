@@ -3,9 +3,11 @@
 
 struct Nodes
 {
+	// factories
 	struct Places * places;
 	struct Counts * counts;
 	struct Stars * stars;
+	
 	struct NodeError * nodeError;
 };
 
@@ -17,9 +19,11 @@ struct Nodes * Nodes_construct(
 ) {
 	struct Nodes * this = malloc(sizeof(struct Nodes));
 	
+	// factories
 	this->places = places;
 	this->counts = counts;
 	this->stars = stars;
+	
 	this->nodeError = nodeError;
 	
 	return this;
@@ -27,8 +31,6 @@ struct Nodes * Nodes_construct(
 
 void Nodes_destruct(struct Nodes * this)
 {
-	NodeError_destruct(this->nodeError);
-	
 	free(this);
 	this = NULL;
 }
