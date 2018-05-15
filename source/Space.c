@@ -65,10 +65,7 @@ struct Space * Space_construct(size_t spaceSize)
 		this->places, 
 		this->counts, 
 		Meshes_construct(
-			Gaps_construct(
-				this->places,
-				Errors_makeGapError(this->errors)
-			)
+			Gaps_construct(this->places)
 		),
 		Exports_construct(this->streams)
 	);

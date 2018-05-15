@@ -4,7 +4,6 @@
 #include "CountError.h"
 #include "DirectionError.h"
 #include "Error.h"
-#include "GapError.h"
 #include "LinkError.h"
 #include "NodeError.h"
 
@@ -17,8 +16,6 @@ void Errors_destruct(struct Errors * this);
 struct CountError * Errors_makeCountError(struct Errors * this);
 
 struct DirectionError * Errors_makeDirectionError(struct Errors * this);
-
-struct GapError * Errors_makeGapError(struct Errors * this);
 
 struct LinkError * Errors_makeLinkError(struct Errors * this);
 

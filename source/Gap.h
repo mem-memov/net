@@ -2,7 +2,6 @@
 #define GAP_H
 
 #include <stdlib.h>
-#include "GapError.h"
 #include "Place.h"
 
 struct Gap;
@@ -13,8 +12,7 @@ struct Gap * Gap_construct(
 	struct Place * next,
 	struct Place * three,
 	struct Place * four,
-	struct Place * five, 
-	struct GapError * error
+	struct Place * five
 );
 
 void Gap_destruct(struct Gap * this);

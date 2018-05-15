@@ -9,8 +9,6 @@ struct Gap {
 	struct Place * three;
 	struct Place * four;
 	struct Place * five;
-
-	struct GapError * error;
 };
 
 struct Gap * Gap_construct(
@@ -19,8 +17,7 @@ struct Gap * Gap_construct(
 	struct Place * next,
 	struct Place * three,
 	struct Place * four,
-	struct Place * five,
-	struct GapError * error
+	struct Place * five
 ) {
 	struct Gap * this = malloc(sizeof(struct Gap));
 	
@@ -31,8 +28,6 @@ struct Gap * Gap_construct(
 	this->three = three;
 	this->four = four;
 	this->five = five;
-	
-	this->error = error;
 
 	return this;
 }

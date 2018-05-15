@@ -1,18 +1,11 @@
 #include "Errors.h"
 #include <stdlib.h>
-#include "CountError.h"
-#include "DirectionError.h"
-#include "Error.h"
-#include "GapError.h"
-#include "LinkError.h"
-#include "NodeError.h"
 
 struct Errors
 {
 	struct Error * error;
 	struct CountError * countError;
 	struct DirectionError * directionError;
-	struct GapError * gapError;
 	struct LinkError * linkError;
 	struct NodeError * nodeError;
 };
@@ -25,7 +18,6 @@ struct Errors * Errors_construct(struct Error * error)
 	
 	this->countError = NULL;
 	this->directionError = NULL;
-	this->gapError = NULL;
 	this->linkError = NULL;
 	this->nodeError = NULL;
 	
@@ -39,9 +31,6 @@ void Errors_destruct(struct Errors * this)
 	}
 	if (NULL != this->directionError) {
 		DirectionError_destruct(this->directionError);
-	}
-	if (NULL != this->gapError) {
-		GapError_destruct(this->gapError);
 	}
 	if (NULL != this->linkError) {
 		LinkError_destruct(this->linkError);
@@ -71,15 +60,6 @@ struct DirectionError * Errors_makeDirectionError(struct Errors * this)
 	}
 	
 	return this->directionError;
-}
-
-struct GapError * Errors_makeGapError(struct Errors * this)
-{
-	if (NULL == this->gapError) {
-		this->gapError = GapError_construct(this->error);
-	}
-	
-	return this->gapError;
 }
 
 struct LinkError * Errors_makeLinkError(struct Errors * this)

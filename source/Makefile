@@ -1,5 +1,5 @@
-net: main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Star.o Stars.o Stream.o Streams.o
-	gcc main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o GapError.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Star.o Stars.o Stream.o Streams.o -o net
+net: main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Star.o Stars.o Stream.o Streams.o
+	gcc main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Star.o Stars.o Stream.o Streams.o -o net
 
 main.o: main.c
 	gcc -c main.c
@@ -33,9 +33,6 @@ Imports.o: Imports.c Imports.h
 
 Gap.o: Gap.c Gap.h
 	gcc -c Gap.c
-
-GapError.o: GapError.c GapError.h
-	gcc -c GapError.c
 
 Gaps.o: Gaps.c Gaps.h
 	gcc -c Gaps.c
