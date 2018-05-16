@@ -154,7 +154,7 @@ void Space_removeNode(struct Space * this, size_t place)
 	size_t length;
 	size_t i;
 	
-	Space_getNodeTargets(this, place, &nodes, &length);
+	Space_getNodeDestinations(this, place, &nodes, &length);
 	for (i = 0; i < length; i++) {
 		Space_disconnectNodes(this, place, nodes[i]);
 	}
@@ -217,17 +217,17 @@ void Space_disconnectNodes(struct Space * this, size_t origin, size_t destinatio
 	Net_decrementLinks(this->net);
 }
 
-void Space_getNodeTargets(struct Space * this, size_t origin, size_t ** targets, size_t * length)
+void Space_getNodeDestinations(struct Space * this, size_t origin, size_t ** destinations, size_t * length)
 {
 	Node_read(this->node, origin);
 	
-	Node_getNodeTargets(this->node, targets, length);
+	Node_getNodeDestinations(this->node, destinations, length);
 }
 
-void Space_getIncomingNodes(struct Space * this, const size_t * target, size_t * link, size_t * origin)
+void Space_getIncomingNodes(struct Space * this, const size_t * destination, size_t * link, size_t * origin)
 {
 	if ( 0 == (*link) && 0 == (*origin)) { // starting point
-		Node_read(this->node, (*target));
+		Node_read(this->node, (*destination));
 		if ( ! Node_hasIncomingLink(this->node) ) {
 			return;
 		}

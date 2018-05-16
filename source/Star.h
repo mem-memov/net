@@ -18,6 +18,6 @@ size_t Star_findIncomingLink(struct Star * this, size_t incomingLink, size_t ori
 
 size_t Star_findOutgoingLink(struct Star * this, size_t outgoingLink, size_t destinationNode);
 
-void Star_getNodeTargets(struct Star * this, size_t outgoingLink, size_t * targets, size_t length);
+void Star_getNodeDestinations(struct Star * this, size_t outgoingLink, size_t * destinations, size_t length);
 
 #endif

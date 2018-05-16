@@ -236,7 +236,7 @@ void Node_deleteIncomingLink(struct Node * this)
 	}
 }
 
-void Node_getNodeTargets(struct Node * this, size_t ** targets, size_t * length)
+void Node_getNodeDestinations(struct Node * this, size_t ** destinations, size_t * length)
 {
 	size_t outgoingLinkPlace = Place_get(this->outgoingLink);
 	
@@ -247,7 +247,7 @@ void Node_getNodeTargets(struct Node * this, size_t ** targets, size_t * length)
 	
 	(*length) = Count_get(this->outgoingLinkCount);
 	
-	(*targets) = malloc(sizeof(size_t) * (*length));
+	(*destinations) = malloc(sizeof(size_t) * (*length));
 	
-	Star_getNodeTargets(this->star, outgoingLinkPlace, (*targets), (*length));
+	Star_getNodeDestinations(this->star, outgoingLinkPlace, (*destinations), (*length));
 }

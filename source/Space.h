@@ -21,9 +21,9 @@ void Space_connectNodes(struct Space * this, size_t origin, size_t destination);
 
 void Space_disconnectNodes(struct Space * this, size_t origin, size_t destination);
 
-void Space_getNodeTargets(struct Space * this, size_t origin, size_t ** nodes, size_t * length);
+void Space_getNodeDestinations(struct Space * this, size_t origin, size_t ** nodes, size_t * length);
 
-void Space_getIncomingNodes(struct Space * this, const size_t * target, size_t * link, size_t * origin);
+void Space_getIncomingNodes(struct Space * this, const size_t * destination, size_t * link, size_t * origin);
 
 char Space_isNode(struct Space * this, size_t place);
 

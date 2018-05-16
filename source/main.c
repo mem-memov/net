@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
 				continue;
 			}
 			
-			Space_getNodeTargets(space, place, &nodes, &length);
+			Space_getNodeDestinations(space, place, &nodes, &length);
 			for (i = 0; i < length; i++) {
 				printf("%zu\n", nodes[i]);
 			}
@@ -136,7 +136,7 @@ int main(int argc, char** argv) {
 
 		if (strcmp("export", command) == 0 || strcmp(">", command) == 0) {
 
-			printf( "target file path:");
+			printf( "destination file path:");
 			scanf("%s", filePath);
 
 			file = fopen(filePath, "wb");
