@@ -117,3 +117,17 @@ void Star_getNodeOrigins(struct Star * this, size_t incomingLink, size_t * origi
 		exit(1);
 	}
 }
+
+size_t Star_deleteOutgoingLink(struct Star * this, size_t outgoingStartLink, size_t destinationNode)
+{
+	size_t outgoingLink = Star_findOutgoingLink(this, outgoingStartLink, destinationNode);
+	
+	if ( 0 == outgoingLink ) {
+		return 0;
+	}
+	
+	Link_read(this->outgoingLink, outgoingLink);
+	Link_delete(this->outgoingLink);
+	
+	return outgoingLink;
+}

@@ -50,9 +50,9 @@ void Node_readOutgoingLink(struct Node * this, struct Link * link);
 
 void Node_readIncomingLink(struct Node * this, struct Link * link);
 
-void Node_deleteOutgoingLink(struct Node * this);
+size_t Node_deleteDestination(struct Node * this, size_t destinationNode);
 
-void Node_deleteIncomingLink(struct Node * this);
+void Node_deleteIncomingLink(struct Node * this, size_t deletedIncomingLink);
 
 void Node_getNodeDestinations(struct Node * this, size_t ** destinations, size_t * length);
 

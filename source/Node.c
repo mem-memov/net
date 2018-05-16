@@ -214,18 +214,28 @@ void Node_readIncomingLink(struct Node * this, struct Link * link)
 	Link_read(link, incomingLinkPlace);
 }
 
-void Node_deleteOutgoingLink(struct Node * this)
+size_t Node_deleteDestination(struct Node * this, size_t destinationNode)
 {
 	NodeError_forbidDeletingOutgoingLinkWhenNonePresent(this->error, Count_get(this->outgoingLinkCount));
 	
-	Count_decrement(this->outgoingLinkCount);
+	size_t outgoingLink = Place_get(this->outgoingLink);
 	
+	size_t deletedOutgoingLink = Star_deleteOutgoingLink(this->star, outgoingLink, destinationNode);
+	
+	if ( 0 == deletedOutgoingLink ) {
+		return 0;
+	}
+	
+	Count_decrement(this->outgoingLinkCount);
+
 	if ( Count_isZero(this->outgoingLinkCount) ) {
 		Place_set(this->outgoingLink, 0);
 	}
+	
+	return deletedOutgoingLink;
 }
 
-void Node_deleteIncomingLink(struct Node * this)
+void Node_deleteIncomingLink(struct Node * this, size_t deletedIncomingLink)
 {
 	NodeError_forbidDeletingIncomingLinkWhenNonePresent(this->error, Count_get(this->incomingLinkCount));
 	

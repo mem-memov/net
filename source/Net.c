@@ -125,7 +125,7 @@ char Net_hasSpaceForEntry(struct Net * this)
 	return 0;
 }
 
-size_t Net_createEntry(struct Net * this)
+size_t Net_createEntry(struct Net * this, char nodeNotLink)
 {
 	if ( ! Net_hasSpaceForEntry(this)) {
 		exit(1);
@@ -142,28 +142,20 @@ size_t Net_createEntry(struct Net * this)
 		place = Place_get(this->nextPlace);
 		Place_set(this->nextPlace, Place_get(this->nextPlace) + this->entrySize);
 	}
+	
+	switch ( nodeNotLink ) {
+		case 0:
+			Count_increment(this->linkCount);
+			break;
+		case 1:
+			Count_increment(this->nodeCount);
+			break;
+		default:
+			exit(1);
+			break;
+	}
 
 	return place;
-}
-
-void Net_incrementNodes(struct Net * this)
-{
-	Count_increment(this->nodeCount);
-}
-
-void Net_decrementNodes(struct Net * this)
-{
-	Count_decrement(this->nodeCount);
-}
-
-void Net_incrementLinks(struct Net * this)
-{
-	Count_increment(this->linkCount);
-}
-
-void Net_decrementLinks(struct Net * this)
-{
-	Count_decrement(this->linkCount);
 }
 
 struct Export * Net_createExport(struct Net * this)
@@ -188,11 +180,23 @@ void Net_import(struct Net * this, struct Stream * stream)
 	Stream_read(stream, offset, size);
 }
 
-void Net_addGap(struct Net * this, size_t place)
+void Net_addGap(struct Net * this, size_t place, char nodeNotLink)
 {
 	size_t nextGapPlace = Place_get(this->gapPlace);
 	
 	Mesh_addGap(this->mesh, place, nextGapPlace);
 	
 	Place_set(this->gapPlace, place);
+	
+	switch ( nodeNotLink ) {
+		case 0:
+			Count_decrement(this->linkCount);
+			break;
+		case 1:
+			Count_decrement(this->nodeCount);
+			break;
+		default:
+			exit(1);
+			break;
+	}
 }

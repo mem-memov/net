@@ -139,11 +139,9 @@ char Space_hasFreePlace(struct Space * this)
 
 size_t Space_addNode(struct Space * this)
 {
-	size_t place = Net_createEntry(this->net);
+	size_t place = Net_createEntry(this->net, 1);
 	
 	Node_create(this->node, place);
-	
-	Net_incrementNodes(this->net);
 
 	return place;
 }
@@ -171,9 +169,7 @@ void Space_removeNode(struct Space * this, size_t place)
 	Node_read(this->node, place);
 	Node_delete(this->node);
 	
-	Net_decrementNodes(this->net);
-	
-	Net_addGap(this->net, place);
+	Net_addGap(this->net, place, 1);
 }
 
 void Space_connectNodes(struct Space * this, size_t origin, size_t destination)
@@ -181,35 +177,28 @@ void Space_connectNodes(struct Space * this, size_t origin, size_t destination)
 	Node_read(this->originNode, origin);
 	Node_read(this->destinationNode, destination);
 
-	size_t link = Net_createEntry(this->net);
+	size_t link = Net_createEntry(this->net, 0);
 	Link_create(this->link, link, origin, destination);
 
 	Node_addOutgoingLink(this->originNode, this->link);
 	Node_addIncomingLink(this->destinationNode, this->link);
-	
-	Net_incrementLinks(this->net);
 }
 
 void Space_disconnectNodes(struct Space * this, size_t origin, size_t destination)
 {
 	Node_read(this->originNode, origin);
-	Node_read(this->destinationNode, destination);
 	
-	size_t link = Node_findOutgoingLink(this->originNode, destination);
+	size_t deletedOutgoingLink = Node_deleteDestination(this->originNode, destination);
 	
-	if (0 == link) {
+	if ( 0 == deletedOutgoingLink ) {
 		return;
 	}
 	
-	Link_read(this->link, link);
-	Link_delete(this->link);
+	Node_read(this->destinationNode, destination);
 	
-	Net_addGap(this->net, link);
+	Node_deleteIncomingLink(this->destinationNode, deletedOutgoingLink);
 	
-	Node_deleteOutgoingLink(this->originNode);
-	Node_deleteIncomingLink(this->destinationNode);
-	
-	Net_decrementLinks(this->net);
+	Net_addGap(this->net, deletedOutgoingLink, 0);
 }
 
 void Space_getNodeDestinations(struct Space * this, size_t origin, size_t ** destinations, size_t * length)

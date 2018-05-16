@@ -22,4 +22,6 @@ void Star_getNodeDestinations(struct Star * this, size_t outgoingLink, size_t * 
 
 void Star_getNodeOrigins(struct Star * this, size_t incomingLink, size_t * origins, size_t length);
 
+size_t Star_deleteOutgoingLink(struct Star * this, size_t outgoingStartLink, size_t destinationNode);
+
 #endif
