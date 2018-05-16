@@ -150,20 +150,22 @@ size_t Space_addNode(struct Space * this)
 
 void Space_removeNode(struct Space * this, size_t place)
 {
-	size_t link;
-	size_t node;
+	size_t * nodes;
+	size_t length;
+	size_t i;
+	
+	Space_getNodeTargets(this, place, &nodes, &length);
+	for (i = 0; i < length; i++) {
+		Space_disconnectNodes(this, place, nodes[i]);
+	}
+	free(nodes);
+	nodes = NULL;
+	
+	
+	
+	size_t link = 0;
+	size_t node = 0;
 
-	link = 0;
-	node = 0;
-	do {
-		Space_getOutgoingNodes(this, &place, &link, &node);
-		if ( 0 != node) {
-			Space_disconnectNodes(this, place, node);
-		}
-	} while (0 != link);
-
-	link = 0;
-	node = 0;
 	do {
 		Space_getIncomingNodes(this, &place, &link, &node);
 		if ( 0 != node) {
@@ -215,20 +217,11 @@ void Space_disconnectNodes(struct Space * this, size_t origin, size_t destinatio
 	Net_decrementLinks(this->net);
 }
 
-void Space_getOutgoingNodes(struct Space * this, const size_t * origin, size_t * link, size_t * target)
+void Space_getNodeTargets(struct Space * this, size_t origin, size_t ** targets, size_t * length)
 {
-	if ( 0 == (*link) && 0 == (*target)) { // starting point
-		Node_read(this->node, (*origin));
-		if ( ! Node_hasOutgoingLink(this->node) ) {
-			return;
-		}
-		Node_readOutgoingLink(this->node, this->link);
-	} else {
-		Link_read(this->link, (*link));
-	}
+	Node_read(this->node, origin);
 	
-	(*link) = Link_getNextOutgoing(this->link);
-	(*target) = Link_getOutgoingNode(this->link);
+	Node_getNodeTargets(this->node, targets, length);
 }
 
 void Space_getIncomingNodes(struct Space * this, const size_t * target, size_t * link, size_t * origin)

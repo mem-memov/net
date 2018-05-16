@@ -235,3 +235,19 @@ void Node_deleteIncomingLink(struct Node * this)
 		Place_set(this->incomingLink, 0);
 	}
 }
+
+void Node_getNodeTargets(struct Node * this, size_t ** targets, size_t * length)
+{
+	size_t outgoingLinkPlace = Place_get(this->outgoingLink);
+	
+	if ( 0 == outgoingLinkPlace ) {
+		(*length) = 0;
+		return;
+	}
+	
+	(*length) = Count_get(this->outgoingLinkCount);
+	
+	(*targets) = malloc(sizeof(size_t) * (*length));
+	
+	Star_getNodeTargets(this->star, outgoingLinkPlace, (*targets), (*length));
+}

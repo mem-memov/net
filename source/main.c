@@ -15,6 +15,9 @@ int main(int argc, char** argv) {
 	size_t destination;
 	size_t link;
 	size_t node;
+	size_t * nodes;
+	size_t length;
+	size_t i;
 	char filePath[300];
 	FILE * file;
 
@@ -105,15 +108,13 @@ int main(int argc, char** argv) {
 				continue;
 			}
 			
-			link = 0;
-			node = 0;
-			do {
-				Space_getOutgoingNodes(space, &place, &link, &node);
-				if (0 != node) {
-					printf("%zu\n", node);
-				}
-			} while (0 != link);
-			
+			Space_getNodeTargets(space, place, &nodes, &length);
+			for (i = 0; i < length; i++) {
+				printf("%zu\n", nodes[i]);
+			}
+			free(nodes);
+			nodes = NULL;
+
 			continue;
 		}
 

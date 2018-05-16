@@ -77,3 +77,23 @@ size_t Star_findOutgoingLink(struct Star * this, size_t outgoingLink, size_t des
 	
 	return 0;
 }
+
+void Star_getNodeTargets(struct Star * this, size_t outgoingLink, size_t * targets, size_t length)
+{
+	size_t i;
+	
+	for (i = 0; i < length; i++) {
+		
+		Link_read(this->outgoingLink, outgoingLink);
+		targets[i] = Link_getOutgoingNode(this->outgoingLink);
+		outgoingLink = Link_getNextOutgoing(this->outgoingLink);
+		
+		if ( 0 == outgoingLink && i != length) {
+			exit(1);
+		}
+	}
+	
+	if ( 0 != outgoingLink ) {
+		exit(1);
+	}
+}
