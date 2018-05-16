@@ -97,3 +97,23 @@ void Star_getNodeDestinations(struct Star * this, size_t outgoingLink, size_t * 
 		exit(1);
 	}
 }
+
+void Star_getNodeOrigins(struct Star * this, size_t incomingLink, size_t * origins, size_t length)
+{
+	size_t i;
+	
+	for (i = 0; i < length; i++) {
+		
+		Link_read(this->incomingLink, incomingLink);
+		origins[i] = Link_getIncomingNode(this->incomingLink);
+		incomingLink = Link_getNextIncoming(this->incomingLink);
+		
+		if ( 0 == incomingLink && i != length) {
+			exit(1);
+		}
+	}
+	
+	if ( 0 != incomingLink ) {
+		exit(1);
+	}
+}

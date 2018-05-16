@@ -56,4 +56,6 @@ void Node_deleteIncomingLink(struct Node * this);
 
 void Node_getNodeDestinations(struct Node * this, size_t ** destinations, size_t * length);
 
+void Node_getNodeOrigins(struct Node * this, size_t ** origins, size_t * length);
+
 #endif

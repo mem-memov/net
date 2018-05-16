@@ -161,17 +161,12 @@ void Space_removeNode(struct Space * this, size_t place)
 	free(nodes);
 	nodes = NULL;
 	
-	
-	
-	size_t link = 0;
-	size_t node = 0;
-
-	do {
-		Space_getIncomingNodes(this, &place, &link, &node);
-		if ( 0 != node) {
-			Space_disconnectNodes(this, node, place);
-		}
-	} while (0 != link);
+	Space_getNodeOrigins(this, place, &nodes, &length);
+	for (i = 0; i < length; i++) {
+		Space_disconnectNodes(this, nodes[i], place);
+	}
+	free(nodes);
+	nodes = NULL;
 	
 	Node_read(this->node, place);
 	Node_delete(this->node);
@@ -224,20 +219,11 @@ void Space_getNodeDestinations(struct Space * this, size_t origin, size_t ** des
 	Node_getNodeDestinations(this->node, destinations, length);
 }
 
-void Space_getIncomingNodes(struct Space * this, const size_t * destination, size_t * link, size_t * origin)
+void Space_getNodeOrigins(struct Space * this, size_t destination, size_t ** origins, size_t * length)
 {
-	if ( 0 == (*link) && 0 == (*origin)) { // starting point
-		Node_read(this->node, (*destination));
-		if ( ! Node_hasIncomingLink(this->node) ) {
-			return;
-		}
-		Node_readIncomingLink(this->node, this->link);
-	} else {
-		Link_read(this->link, (*link));
-	}
+	Node_read(this->node, destination);
 	
-	(*link) = Link_getNextIncoming(this->link);
-	(*origin) = Link_getIncomingNode(this->link);
+	Node_getNodeOrigins(this->node, origins, length);
 }
 
 char Space_isNode(struct Space * this, size_t place)

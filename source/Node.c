@@ -251,3 +251,19 @@ void Node_getNodeDestinations(struct Node * this, size_t ** destinations, size_t
 	
 	Star_getNodeDestinations(this->star, outgoingLinkPlace, (*destinations), (*length));
 }
+
+void Node_getNodeOrigins(struct Node * this, size_t ** origins, size_t * length)
+{
+	size_t incomingLinkPlace = Place_get(this->incomingLink);
+	
+	if ( 0 == incomingLinkPlace ) {
+		(*length) = 0;
+		return;
+	}
+	
+	(*length) = Count_get(this->incomingLinkCount);
+	
+	(*origins) = malloc(sizeof(size_t) * (*length));
+	
+	Star_getNodeOrigins(this->star, incomingLinkPlace, (*origins), (*length));
+}
