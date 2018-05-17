@@ -1,5 +1,5 @@
-net: main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Star.o Stars.o Stream.o Streams.o
-	gcc main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Star.o Stars.o Stream.o Streams.o -o net
+net: main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Graph.o Star.o Stars.o Stream.o Streams.o
+	gcc main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Graph.o Star.o Stars.o Stream.o Streams.o -o net
 
 main.o: main.c
 	gcc -c main.c
@@ -82,8 +82,8 @@ Place.o: Place.c Place.h
 Places.o: Places.c Places.h
 	gcc -c Places.c
 
-Space.o: Space.c Space.h Links.h Nets.h Nodes.h Places.h
-	gcc -c Space.c
+Graph.o: Graph.c Graph.h Links.h Nets.h Nodes.h Places.h
+	gcc -c Graph.c
 
 Star.o: Star.c Star.h
 	gcc -c Star.c

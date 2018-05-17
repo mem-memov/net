@@ -1,4 +1,4 @@
-#include "Space.h"
+#include "Graph.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "Counts.h"
@@ -12,8 +12,8 @@
 #include "Stars.h"
 #include "Streams.h"
 
-struct Space {
-	size_t spaceSize;
+struct Graph {
+	size_t graphSize;
 	size_t entrySize;
 	size_t placeSize;
 	unsigned char * bytes;
@@ -37,18 +37,18 @@ struct Space {
 	struct Link * link;
 };
 
-struct Space * Space_construct(size_t spaceSize)
+struct Graph * Graph_construct(size_t graphSize)
 {
-	struct Space * this = malloc(sizeof(struct Space));
+	struct Graph * this = malloc(sizeof(struct Graph));
 	
-	if (spaceSize < 1) {
+	if (graphSize < 1) {
 		exit(0);
 	}
 	
-	this->spaceSize = spaceSize;
+	this->graphSize = graphSize;
 	this->entrySize = 6;
 	this->placeSize = 4;
-	this->bytes = malloc(this->spaceSize * this->entrySize * this->placeSize);
+	this->bytes = malloc(this->graphSize * this->entrySize * this->placeSize);
 	
 	// factories
 	this->errors = Errors_construct(Error_construct());
@@ -87,7 +87,7 @@ struct Space * Space_construct(size_t spaceSize)
 		Errors_makeNodeError(this->errors)
 	);
 	
-	this->net = Nets_make(this->nets, this->spaceSize, this->entrySize);
+	this->net = Nets_make(this->nets, this->graphSize, this->entrySize);
 	
 	this->imports = Imports_construct(this->streams, this->entrySize, this->placeSize, this->net);
 
@@ -102,7 +102,7 @@ struct Space * Space_construct(size_t spaceSize)
 	return this;
 }
 
-void Space_destruct(struct Space * this)
+void Graph_destruct(struct Graph * this)
 {
 	free(this->places);
 	this->places = NULL;
@@ -132,12 +132,12 @@ void Space_destruct(struct Space * this)
 	this = NULL;
 }
 
-char Space_hasFreePlace(struct Space * this)
+char Graph_hasFreePlace(struct Graph * this)
 {
-	return Net_hasSpaceForEntry(this->net);
+	return Net_hasGraphForEntry(this->net);
 }
 
-size_t Space_addNode(struct Space * this)
+size_t Graph_addNode(struct Graph * this)
 {
 	size_t place = Net_createEntry(this->net, 1);
 	
@@ -146,22 +146,22 @@ size_t Space_addNode(struct Space * this)
 	return place;
 }
 
-void Space_removeNode(struct Space * this, size_t place)
+void Graph_removeNode(struct Graph * this, size_t place)
 {
 	size_t * nodes;
 	size_t length;
 	size_t i;
 	
-	Space_getNodeDestinations(this, place, &nodes, &length);
+	Graph_getNodeDestinations(this, place, &nodes, &length);
 	for (i = 0; i < length; i++) {
-		Space_disconnectNodes(this, place, nodes[i]);
+		Graph_disconnectNodes(this, place, nodes[i]);
 	}
 	free(nodes);
 	nodes = NULL;
 	
-	Space_getNodeOrigins(this, place, &nodes, &length);
+	Graph_getNodeOrigins(this, place, &nodes, &length);
 	for (i = 0; i < length; i++) {
-		Space_disconnectNodes(this, nodes[i], place);
+		Graph_disconnectNodes(this, nodes[i], place);
 	}
 	free(nodes);
 	nodes = NULL;
@@ -172,7 +172,7 @@ void Space_removeNode(struct Space * this, size_t place)
 	Net_addGap(this->net, place, 1);
 }
 
-void Space_connectNodes(struct Space * this, size_t origin, size_t destination)
+void Graph_connectNodes(struct Graph * this, size_t origin, size_t destination)
 {
 	Node_read(this->originNode, origin);
 	Node_read(this->destinationNode, destination);
@@ -184,7 +184,7 @@ void Space_connectNodes(struct Space * this, size_t origin, size_t destination)
 	Node_addIncomingLink(this->destinationNode, this->link);
 }
 
-void Space_disconnectNodes(struct Space * this, size_t origin, size_t destination)
+void Graph_disconnectNodes(struct Graph * this, size_t origin, size_t destination)
 {
 	Node_read(this->originNode, origin);
 	
@@ -201,21 +201,21 @@ void Space_disconnectNodes(struct Space * this, size_t origin, size_t destinatio
 	Net_addGap(this->net, deletedOutgoingLink, 0);
 }
 
-void Space_getNodeDestinations(struct Space * this, size_t origin, size_t ** destinations, size_t * length)
+void Graph_getNodeDestinations(struct Graph * this, size_t origin, size_t ** destinations, size_t * length)
 {
 	Node_read(this->node, origin);
 	
 	Node_getNodeDestinations(this->node, destinations, length);
 }
 
-void Space_getNodeOrigins(struct Space * this, size_t destination, size_t ** origins, size_t * length)
+void Graph_getNodeOrigins(struct Graph * this, size_t destination, size_t ** origins, size_t * length)
 {
 	Node_read(this->node, destination);
 	
 	Node_getNodeOrigins(this->node, origins, length);
 }
 
-char Space_isNode(struct Space * this, size_t place)
+char Graph_isNode(struct Graph * this, size_t place)
 {
 	if (Net_isHead(this->net, place)) {
 		return 0;
@@ -230,7 +230,7 @@ char Space_isNode(struct Space * this, size_t place)
 	return Node_isNode(this->node);
 }
 
-void Space_export(struct Space * this, FILE * file)
+void Graph_export(struct Graph * this, FILE * file)
 {
 	struct Export * export = Net_createExport(this->net);
 	
@@ -239,7 +239,7 @@ void Space_export(struct Space * this, FILE * file)
 	Export_destruct(export);
 }
 
-void Space_import(struct Space * this, FILE * file)
+void Graph_import(struct Graph * this, FILE * file)
 {
 	struct Import * import = Imports_make(this->imports);
 	

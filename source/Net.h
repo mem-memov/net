@@ -12,7 +12,7 @@
 struct Net;
 
 struct Net * Net_construct(
-	size_t spaceSize, 
+	size_t graphSize, 
 	size_t entrySize, 
 	struct Mesh * mesh,
 	struct Exports * exports,
@@ -34,9 +34,9 @@ char Net_isHead(struct Net * this, size_t place);
 
 char Net_isInside(struct Net * this, size_t place);
 
-char Net_isSpaceCut(struct Net * this);
+char Net_isGraphCut(struct Net * this);
 
-char Net_hasSpaceForEntry(struct Net * this);
+char Net_hasGraphForEntry(struct Net * this);
 
 size_t Net_createEntry(struct Net * this, char nodeNotLink);
 

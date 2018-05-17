@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Nets.h"
-#include "Space.h"
+#include "Graph.h"
 
 
 int main(int argc, char** argv) {
 	
-	struct Space * space = Space_construct(100);
+	struct Graph * graph = Graph_construct(100);
 
 	char command[100];
 	size_t place;
@@ -27,10 +27,10 @@ int main(int argc, char** argv) {
 		
 		if (strcmp("create", command) == 0 || strcmp("*", command) == 0) {
 
-			if ( ! Space_hasFreePlace(space)) {
-				printf("No space for new nodes.\n");
+			if ( ! Graph_hasFreePlace(graph)) {
+				printf("No graph for new nodes.\n");
 			} else {
-				place = Space_addNode(space);
+				place = Graph_addNode(graph);
 				printf("Node created: %zu\n", place);
 			}
 
@@ -42,12 +42,12 @@ int main(int argc, char** argv) {
 			printf("node: ");
 			scanf("%zu", &place);
 
-			if ( ! Space_isNode(space, place)) {
+			if ( ! Graph_isNode(graph, place)) {
 				printf("%zu is not a node\n", place);
 				continue;
 			}
 			
-			Space_removeNode(space, place);
+			Graph_removeNode(graph, place);
 
 			continue;
 		}
@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 			printf("origin node:");
 			scanf("%zu", &origin);
 			
-			if ( ! Space_isNode(space, origin)) {
+			if ( ! Graph_isNode(graph, origin)) {
 				printf("%zu is not a node\n", origin);
 				continue;
 			}
@@ -65,12 +65,12 @@ int main(int argc, char** argv) {
 			printf("destination node:");
 			scanf("%zu", &destination);
 			
-			if ( ! Space_isNode(space, destination)) {
+			if ( ! Graph_isNode(graph, destination)) {
 				printf("%zu is not a node\n", destination);
 				continue;
 			}
 
-			Space_connectNodes(space, origin, destination);
+			Graph_connectNodes(graph, origin, destination);
 			
 			continue;
 		}
@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
 			printf("origin node:");
 			scanf("%zu", &origin);
 			
-			if ( ! Space_isNode(space, origin)) {
+			if ( ! Graph_isNode(graph, origin)) {
 				printf("%zu is not a node\n", origin);
 				continue;
 			}
@@ -88,12 +88,12 @@ int main(int argc, char** argv) {
 			printf("destination node:");
 			scanf("%zu", &destination);
 			
-			if ( ! Space_isNode(space, destination)) {
+			if ( ! Graph_isNode(graph, destination)) {
 				printf("%zu is not a node\n", destination);
 				continue;
 			}
 
-			Space_disconnectNodes(space, origin, destination);
+			Graph_disconnectNodes(graph, origin, destination);
 			
 			continue;
 		}
@@ -103,12 +103,12 @@ int main(int argc, char** argv) {
 			printf("node: ");
 			scanf("%zu", &place);
 
-			if ( ! Space_isNode(space, place)) {
+			if ( ! Graph_isNode(graph, place)) {
 				printf("%zu is not a node\n", place);
 				continue;
 			}
 			
-			Space_getNodeDestinations(space, place, &nodes, &length);
+			Graph_getNodeDestinations(graph, place, &nodes, &length);
 			for (i = 0; i < length; i++) {
 				printf("%zu\n", nodes[i]);
 			}
@@ -124,12 +124,12 @@ int main(int argc, char** argv) {
 			printf("node: ");
 			scanf("%zu", &place);
 
-			if ( ! Space_isNode(space, place)) {
+			if ( ! Graph_isNode(graph, place)) {
 				printf("%zu is not a node\n", place);
 				continue;
 			}
 			
-			Space_removeNode(space, place);
+			Graph_removeNode(graph, place);
 			
 			continue;
 		}
@@ -140,7 +140,7 @@ int main(int argc, char** argv) {
 			scanf("%s", filePath);
 
 			file = fopen(filePath, "wb");
-			Space_export(space, file);
+			Graph_export(graph, file);
 			fclose(file);
 			
 			continue;
@@ -152,7 +152,7 @@ int main(int argc, char** argv) {
 			scanf("%s", filePath);
 
 			file = fopen(filePath, "rb");
-			Space_import(space, file);
+			Graph_import(graph, file);
 			fclose(file);
 			
 			continue;

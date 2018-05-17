@@ -34,10 +34,10 @@ void Nets_destruct(struct Nets * this)
 	this = NULL;
 }
 
-struct Net * Nets_make(struct Nets * this, size_t spaceSize, size_t entrySize)
+struct Net * Nets_make(struct Nets * this, size_t graphSize, size_t entrySize)
 {
 	return Net_construct(
-		spaceSize, 
+		graphSize, 
 		entrySize, 
 		Meshes_make(this->meshes),
 		this->exports,

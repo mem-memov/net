@@ -1,7 +1,7 @@
 #include "Net.h"
 
 struct Net {
-	size_t spaceSize;
+	size_t graphSize;
 	size_t entrySize;
 	
 	struct Mesh * mesh;
@@ -17,7 +17,7 @@ struct Net {
 };
 
 struct Net * Net_construct(
-	size_t spaceSize, 
+	size_t graphSize, 
 	size_t entrySize, 
 	struct Mesh * mesh,
 	struct Exports * exports,
@@ -30,7 +30,7 @@ struct Net * Net_construct(
 ) {
 	struct Net * this = malloc(sizeof(struct Net));
 
-	this->spaceSize = spaceSize;
+	this->graphSize = graphSize;
 	this->entrySize = entrySize;
 
 	this->mesh = mesh;
@@ -103,18 +103,18 @@ char Net_isInside(struct Net * this, size_t place)
 	return 0;
 }
 
-char Net_isSpaceCut(struct Net * this)
+char Net_isGraphCut(struct Net * this)
 {
-	if ( Place_get(this->nextPlace) - 1 > this->spaceSize ) {
+	if ( Place_get(this->nextPlace) - 1 > this->graphSize ) {
 		return 1;
 	}
 	
 	return 0;
 }
 
-char Net_hasSpaceForEntry(struct Net * this)
+char Net_hasGraphForEntry(struct Net * this)
 {
-	if ( Place_get(this->nextPlace) < this->spaceSize ) {
+	if ( Place_get(this->nextPlace) < this->graphSize ) {
 		return 1;
 	}
 	
@@ -127,7 +127,7 @@ char Net_hasSpaceForEntry(struct Net * this)
 
 size_t Net_createEntry(struct Net * this, char nodeNotLink)
 {
-	if ( ! Net_hasSpaceForEntry(this)) {
+	if ( ! Net_hasGraphForEntry(this)) {
 		exit(1);
 	}
 	
@@ -167,7 +167,7 @@ struct Export * Net_createExport(struct Net * this)
 
 void Net_import(struct Net * this, struct Stream * stream)
 {
-	if (Net_isSpaceCut(this)) { // TODO: move to error file
+	if (Net_isGraphCut(this)) { // TODO: move to error file
 		exit(1);
 	}
 	

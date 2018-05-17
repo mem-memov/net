@@ -18,7 +18,7 @@ struct Nets * Nets_construct(
 
 void Nets_destruct(struct Nets * this);
 
-struct Net * Nets_make(struct Nets * this, size_t spaceSize, size_t entrySize);
+struct Net * Nets_make(struct Nets * this, size_t graphSize, size_t entrySize);
 
 #endif
 
