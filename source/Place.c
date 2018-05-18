@@ -52,6 +52,10 @@ size_t Place_get(struct Place * this)
 
 void Place_set(struct Place * this, size_t value)
 {
+	if ( 0 > value) {
+		exit(1);
+	}
+	
 	unsigned char i;
 	unsigned char shift;
 	
@@ -59,19 +63,6 @@ void Place_set(struct Place * this, size_t value)
 		shift = 8 * (this->length - i - 1);
 		this->bytes[this->index + i] = (value >> shift) & 0xFF;
 	}
-}
-
-char Place_isZero(struct Place * this)
-{
-	unsigned char i;
-	
-	for (i = this->length - 1; i > 0; i--) {
-		if (this->bytes[this->index + i] > 0) {
-			return 0;
-		}
-	}
-	
-	return 1;
 }
 
 char Place_keepsPosition(struct Place * this)

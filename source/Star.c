@@ -137,3 +137,17 @@ size_t Star_deleteOutgoingLink(struct Star * this, size_t outgoingStartLink, siz
 	
 	return outgoingLink;
 }
+
+size_t Star_deleteIncomingLink(struct Star * this, size_t incomingStartLink, size_t originNode)
+{
+	size_t incomingLink = Star_findIncomingLink(this, incomingStartLink, originNode);
+	
+	if ( 0 == incomingLink ) {
+		return 0;
+	}
+	
+	Link_read(this->incomingLink, incomingLink);
+	Link_delete(this->incomingLink);
+	
+	return incomingLink;
+}

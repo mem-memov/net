@@ -106,31 +106,13 @@ char Node_isNode(struct Node * this)
 	return 0;
 }
 
-char Node_hasIncomingLink(struct Node * this)
-{
-	if ( 0 != Place_get(this->incomingLink) ) {
-		return 1;
-	}
-	
-	return 0;
-}
-
-char Node_hasOutgoingLink(struct Node * this)
-{
-	if ( 0 != Place_get(this->outgoingLink) ) {
-		return 1;
-	}
-	
-	return 0;
-}
-
 void Node_addIncomingLink(struct Node * this, struct Link * link)
 {
 	size_t node = Place_get(this->place);
 	size_t newIncomingLink = Link_getPlace(link);
 	size_t oldIncomingLink;
 	
-	if ( ! Node_hasIncomingLink(this)) {
+	if ( Count_isZero(this->incomingLinkCount) ) {
 		Link_shiftIncoming(link, node);
 	} else {
 		oldIncomingLink = Place_get(this->incomingLink);
@@ -148,7 +130,7 @@ void Node_addOutgoingLink(struct Node * this, struct Link * link)
 	size_t newOutgoingLink = Link_getPlace(link);
 	size_t oldOutgoingLink;
 	
-	if ( ! Node_hasOutgoingLink(this)) {
+	if ( Count_isZero(this->outgoingLinkCount) ) {
 		Link_shiftOutgoing(link, node);
 	} else {
 		oldOutgoingLink = Place_get(this->outgoingLink);
@@ -162,7 +144,7 @@ void Node_addOutgoingLink(struct Node * this, struct Link * link)
 
 size_t Node_findIncomingLink(struct Node * this, size_t origin)
 {
-	if ( ! Node_hasIncomingLink(this)) {
+	if ( Count_isZero(this->incomingLinkCount) ) {
 		return 0;
 	}
 
@@ -173,22 +155,13 @@ size_t Node_findIncomingLink(struct Node * this, size_t origin)
 
 size_t Node_findOutgoingLink(struct Node * this, size_t destination)
 {
-	if ( ! Node_hasOutgoingLink(this)) {
+	if ( Count_isZero(this->incomingLinkCount) ) {
 		return 0;
 	}
 
 	size_t outgoingLink = Place_get(this->outgoingLink);
 	
 	return Star_findOutgoingLink(this->star, outgoingLink, destination);
-}
-
-char Node_hasMoreOutgoingLinks(struct Node * this)
-{
-	if ( Count_get(this->outgoingLinkCount) > Count_get(this->incomingLinkCount)) {
-		return 1;
-	}
-	
-	return 0;
 }
 
 void Node_readOutgoingLink(struct Node * this, struct Link * link)
@@ -226,11 +199,11 @@ size_t Node_deleteDestination(struct Node * this, size_t destinationNode)
 	if ( Count_isZero(this->outgoingLinkCount) ) {
 		Place_set(this->outgoingLink, 0);
 	}
-	
+
 	return deletedOutgoingLink;
 }
 
-void Node_deleteIncomingLink(struct Node * this, size_t deletedIncomingLink)
+void Node_deleteIncomingLink(struct Node * this)
 {
 	NodeError_forbidDeletingIncomingLinkWhenNonePresent(this->error, Count_get(this->incomingLinkCount));
 	
@@ -238,6 +211,38 @@ void Node_deleteIncomingLink(struct Node * this, size_t deletedIncomingLink)
 	
 	if ( Count_isZero(this->incomingLinkCount) ) {
 		Place_set(this->incomingLink, 0);
+	}
+}
+
+size_t Node_deleteOrigin(struct Node * this, size_t originNode)
+{
+	NodeError_forbidDeletingIncomingLinkWhenNonePresent(this->error, Count_get(this->incomingLinkCount));
+	
+	size_t incomingLink = Place_get(this->incomingLink);
+	
+	size_t deletedIncomingLink = Star_deleteIncomingLink(this->star, incomingLink, originNode);
+	
+	if ( 0 == deletedIncomingLink ) {
+		return 0;
+	}
+	
+	Count_decrement(this->incomingLinkCount);
+
+	if ( Count_isZero(this->incomingLinkCount) ) {
+		Place_set(this->incomingLink, 0);
+	}
+	
+	return deletedIncomingLink;
+}
+
+void Node_deleteOutgoingLink(struct Node * this)
+{
+	NodeError_forbidDeletingOutgoingLinkWhenNonePresent(this->error, Count_get(this->outgoingLinkCount));
+	
+	Count_decrement(this->outgoingLinkCount);
+	
+	if ( Count_isZero(this->outgoingLinkCount) ) {
+		Place_set(this->outgoingLink, 0);
 	}
 }
 
@@ -270,4 +275,16 @@ void Node_getNodeOrigins(struct Node * this, size_t ** origins, size_t * length)
 	}
 	
 	Star_getNodeOrigins(this->star, incomingLinkPlace, (*origins), (*length));
+}
+
+char Node_isSmallOrigin(struct Node * this, struct Node * destination)
+{
+	size_t originOutgoingLinkCount = Count_get(this->outgoingLinkCount);
+	size_t destinationIncomingLinkCount = Count_get(destination->incomingLinkCount);
+
+	if ( originOutgoingLinkCount < destinationIncomingLinkCount ) {
+		return 1;
+	}
+	
+	return 0;
 }

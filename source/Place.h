@@ -15,8 +15,6 @@ size_t Place_get(struct Place * this);
 
 void Place_set(struct Place * this, size_t value);
 
-char Place_isZero(struct Place * this);
-
 char Place_keepsPosition(struct Place * this);
 
 #endif

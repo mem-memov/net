@@ -186,19 +186,37 @@ void Graph_connectNodes(struct Graph * this, size_t origin, size_t destination)
 
 void Graph_disconnectNodes(struct Graph * this, size_t origin, size_t destination)
 {
+	size_t deletedOutgoingLink;
+	size_t deletedIncomingLink;
+	
 	Node_read(this->originNode, origin);
-	
-	size_t deletedOutgoingLink = Node_deleteDestination(this->originNode, destination);
-	
-	if ( 0 == deletedOutgoingLink ) {
-		return;
-	}
-	
 	Node_read(this->destinationNode, destination);
 	
-	Node_deleteIncomingLink(this->destinationNode, deletedOutgoingLink);
-	
-	Net_addGap(this->net, deletedOutgoingLink, 0);
+	if ( Node_isSmallOrigin(this->originNode, this->destinationNode) ) {
+
+		deletedOutgoingLink = Node_deleteDestination(this->originNode, destination);
+
+		if ( 0 == deletedOutgoingLink ) {
+			return;
+		}
+
+		Node_deleteIncomingLink(this->destinationNode);
+
+		Net_addGap(this->net, deletedOutgoingLink, 0);
+
+	} else {
+
+		deletedIncomingLink = Node_deleteOrigin(this->destinationNode, origin);
+
+		if ( 0 == deletedIncomingLink ) {
+			return;
+		}
+
+		Node_deleteOutgoingLink(this->originNode);
+
+		Net_addGap(this->net, deletedIncomingLink, 0);
+
+	}
 }
 
 void Graph_getNodeDestinations(struct Graph * this, size_t origin, size_t ** destinations, size_t * length)
