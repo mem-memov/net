@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
 				printf("%zu is not a node\n", place);
 				continue;
 			}
-			
+
 			Graph_getNodeDestinations(graph, place, &nodes, &length);
 			for (i = 0; i < length; i++) {
 				printf("%zu\n", nodes[i]);
@@ -159,6 +159,7 @@ int main(int argc, char** argv) {
 		}
 
 		if (strcmp("exit", command) == 0 || strcmp("q", command) == 0) {
+			Graph_destruct(graph);
 			break;
 		}
 		

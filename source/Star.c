@@ -1,7 +1,7 @@
 #include "Star.h"
 #include <stdlib.h>
 #include "Link.h"
-
+#include <stdio.h>
 struct Star
 {
 	struct Link * incomingLink;
@@ -80,15 +80,18 @@ size_t Star_findOutgoingLink(struct Star * this, size_t outgoingLink, size_t des
 
 void Star_getNodeDestinations(struct Star * this, size_t outgoingLink, size_t * destinations, size_t length)
 {
-	size_t i;
+	size_t index;
+	size_t maxIndex = length - 1;
 	
-	for (i = 0; i < length; i++) {
+	for (index = 0; index <= maxIndex; index++) {
 		
 		Link_read(this->outgoingLink, outgoingLink);
-		destinations[i] = Link_getOutgoingNode(this->outgoingLink);
-		outgoingLink = Link_getNextOutgoing(this->outgoingLink);
 		
-		if ( 0 == outgoingLink && i != length) {
+		destinations[index] = Link_getOutgoingNode(this->outgoingLink);
+		
+		outgoingLink = Link_getNextOutgoing(this->outgoingLink);
+
+		if ( 0 == outgoingLink && index != maxIndex ) {
 			exit(1);
 		}
 	}
@@ -100,15 +103,18 @@ void Star_getNodeDestinations(struct Star * this, size_t outgoingLink, size_t * 
 
 void Star_getNodeOrigins(struct Star * this, size_t incomingLink, size_t * origins, size_t length)
 {
-	size_t i;
+	size_t index;
+	size_t maxIndex = length - 1;
 	
-	for (i = 0; i < length; i++) {
+	for (index = 0; index <= maxIndex; index++) {
 		
 		Link_read(this->incomingLink, incomingLink);
-		origins[i] = Link_getIncomingNode(this->incomingLink);
+		
+		origins[index] = Link_getIncomingNode(this->incomingLink);
+		
 		incomingLink = Link_getNextIncoming(this->incomingLink);
 		
-		if ( 0 == incomingLink && i != length) {
+		if ( 0 == incomingLink && index != maxIndex ) {
 			exit(1);
 		}
 	}

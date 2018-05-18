@@ -60,19 +60,9 @@ void Node_destruct(struct Node * this)
 	this = NULL;
 }
 
-void Node_bind(struct Node * this, size_t place)
-{
-	Place_bind(this->place, place + 0);
-	Place_bind(this->data, place + 1);
-	Count_bind(this->outgoingLinkCount, place + 2);
-	Count_bind(this->incomingLinkCount, place + 3);
-	Place_bind(this->outgoingLink, place + 4);
-	Place_bind(this->incomingLink, place + 5);
-}
-
 void Node_create(struct Node * this, size_t place)
 {
-	Node_bind(this, place);
+	Node_read(this, place);
 
 	Place_set(this->place, place);
 	Place_set(this->data, 0);
@@ -84,7 +74,12 @@ void Node_create(struct Node * this, size_t place)
 
 void Node_read(struct Node * this, size_t place)
 {
-	Node_bind(this, place);
+	Place_bind(this->place, place + 0);
+	Place_bind(this->data, place + 1);
+	Count_bind(this->outgoingLinkCount, place + 2);
+	Count_bind(this->incomingLinkCount, place + 3);
+	Place_bind(this->outgoingLink, place + 4);
+	Place_bind(this->incomingLink, place + 5);
 }
 
 void Node_delete(struct Node * this)
@@ -248,16 +243,15 @@ void Node_deleteIncomingLink(struct Node * this, size_t deletedIncomingLink)
 
 void Node_getNodeDestinations(struct Node * this, size_t ** destinations, size_t * length)
 {
-	size_t outgoingLinkPlace = Place_get(this->outgoingLink);
-	
-	if ( 0 == outgoingLinkPlace ) {
-		(*length) = 0;
-		return;
-	}
-	
 	(*length) = Count_get(this->outgoingLinkCount);
 	
 	(*destinations) = malloc(sizeof(size_t) * (*length));
+	
+	if ( 0 == (*length) ) {
+		return;
+	}
+	
+	size_t outgoingLinkPlace = Place_get(this->outgoingLink);
 	
 	Star_getNodeDestinations(this->star, outgoingLinkPlace, (*destinations), (*length));
 }
@@ -266,14 +260,14 @@ void Node_getNodeOrigins(struct Node * this, size_t ** origins, size_t * length)
 {
 	size_t incomingLinkPlace = Place_get(this->incomingLink);
 	
+	(*length) = Count_get(this->incomingLinkCount);
+	
+	(*origins) = malloc(sizeof(size_t) * (*length));
+	
 	if ( 0 == incomingLinkPlace ) {
 		(*length) = 0;
 		return;
 	}
-	
-	(*length) = Count_get(this->incomingLinkCount);
-	
-	(*origins) = malloc(sizeof(size_t) * (*length));
 	
 	Star_getNodeOrigins(this->star, incomingLinkPlace, (*origins), (*length));
 }

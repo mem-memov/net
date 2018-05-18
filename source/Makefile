@@ -1,5 +1,5 @@
-net: main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Graph.o Star.o Stars.o Stream.o Streams.o
-	gcc main.o Count.o CountError.o Counts.o Error.o Errors.o Export.o Exports.o Import.o Imports.o Gap.o Gaps.o Direction.o DirectionError.o Directions.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Graph.o Star.o Stars.o Stream.o Streams.o -o net
+net: main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Star.o Stars.o Stream.o Streams.o
+	gcc main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Star.o Stars.o Stream.o Streams.o -o net
 
 main.o: main.c
 	gcc -c main.c
@@ -13,6 +13,15 @@ CountError.o: CountError.c CountError.h
 Counts.o: Counts.c Counts.h
 	gcc -c Counts.c
 
+Direction.o: Direction.c Direction.h
+	gcc -c Direction.c
+
+DirectionError.o: Direction.c DirectionError.h
+	gcc -c DirectionError.c
+
+Directions.o: Directions.c Directions.h
+	gcc -c Directions.c
+
 Error.o: Error.c Error.h
 	gcc -c Error.c
 
@@ -25,26 +34,20 @@ Export.o: Export.c Export.h
 Exports.o: Exports.c Exports.h
 	gcc -c Exports.c
 
-Import.o: Import.c Import.h
-	gcc -c Import.c
-
-Imports.o: Imports.c Imports.h
-	gcc -c Imports.c
-
 Gap.o: Gap.c Gap.h
 	gcc -c Gap.c
 
 Gaps.o: Gaps.c Gaps.h
 	gcc -c Gaps.c
 
-Direction.o: Direction.c Direction.h
-	gcc -c Direction.c
+Graph.o: Graph.c Graph.h Links.h Nets.h Nodes.h Places.h
+	gcc -c Graph.c
 
-DirectionError.o: Direction.c DirectionError.h
-	gcc -c DirectionError.c
+Import.o: Import.c Import.h
+	gcc -c Import.c
 
-Directions.o: Directions.c Directions.h
-	gcc -c Directions.c
+Imports.o: Imports.c Imports.h
+	gcc -c Imports.c
 
 Link.o: Link.c Link.h
 	gcc -c Link.c
@@ -81,9 +84,6 @@ Place.o: Place.c Place.h
 	
 Places.o: Places.c Places.h
 	gcc -c Places.c
-
-Graph.o: Graph.c Graph.h Links.h Nets.h Nodes.h Places.h
-	gcc -c Graph.c
 
 Star.o: Star.c Star.h
 	gcc -c Star.c
