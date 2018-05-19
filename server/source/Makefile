@@ -1,5 +1,5 @@
 net-server: main.o Application.o Connection.o Error.o Listener.o Request.o Response.o Server.o Signal.o
-	gcc -lnet main.o Application.o Connection.o Error.o Listener.o Request.o Response.o Server.o Signal.o -o net-server
+	gcc main.o Application.o Connection.o Error.o Listener.o Request.o Response.o Server.o Signal.o -lnet -o net-server
 
 main.o: main.c Server.h
 	gcc -c main.c

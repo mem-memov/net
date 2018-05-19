@@ -7,6 +7,7 @@
 
 struct Application {
     int bufferLength;
+	struct Graph * graph;
 };
 
 struct Application * Application_construct(int bufferLength)
@@ -14,6 +15,8 @@ struct Application * Application_construct(int bufferLength)
 	struct Application * this = malloc(sizeof(struct Application));
 
 	this->bufferLength = bufferLength;
+	
+	this->graph = Graph_construct(100);
 
 	return this;
 }
@@ -26,8 +29,8 @@ void Application_destruct(struct Application * this)
 
 static void Application_create(struct Application * this, struct Request * request, struct Response * response)
 {
-//    long int id = ndb_create();
-//    Response_addNumber(response, id);
+	size_t id = Graph_addNode(this->graph);
+	Response_addNumber(response, id);
 }
 
 static void Application_read(struct Application * this, struct Request * request, struct Response * response)
