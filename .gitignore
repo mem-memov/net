@@ -1,5 +1,6 @@
 **/*.o
-source/net
-source/data
+database/source/net
+database/source/data
+server/source/net-server
 **/test
 nbproject
