@@ -3,6 +3,7 @@
 #include "Connection.h"
 #include "Request.h"
 #include "Response.h"
+#include "Error.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
