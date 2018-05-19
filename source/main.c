@@ -1,7 +1,14 @@
+#include <sys/types.h> /* size_t, ssize_t */
+#include <stdarg.h> /* va_list */
+#include <stddef.h> /* NULL */
+#include <stdint.h> /* int64_t */
+#include <kcgi.h>
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Nets.h"
 #include "Graph.h"
 
 
@@ -13,8 +20,6 @@ int main(int argc, char** argv) {
 	size_t place;
 	size_t origin;
 	size_t destination;
-	size_t link;
-	size_t node;
 	size_t * nodes;
 	size_t length;
 	size_t i;

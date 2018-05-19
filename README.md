@@ -2,11 +2,13 @@
 in-memory graph database written with C
 
 Highlights:
-* no dependencies on external libraries
 * code covered with unit tests
 * fast and clean node removal
 * fast export to dump file
 * reusing identifies
+
+Dependencies:
+* [kcgi](https://kristaps.bsd.lv/kcgi/)
 
 Operations:
 * create node

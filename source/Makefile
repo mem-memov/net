@@ -2,100 +2,100 @@ net: main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Direction
 	gcc main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Star.o Stars.o Stream.o Streams.o -o net
 
 main.o: main.c
-	gcc -c main.c
+	gcc -Wall -c -lkcgi main.c
 
 Count.o: Count.c Count.h
-	gcc -c Count.c
+	gcc -Wall -c Count.c
 
 CountError.o: CountError.c CountError.h
-	gcc -c CountError.c
+	gcc -Wall -c CountError.c
 
 Counts.o: Counts.c Counts.h
-	gcc -c Counts.c
+	gcc -Wall -c Counts.c
 
 Direction.o: Direction.c Direction.h
-	gcc -c Direction.c
+	gcc -Wall -c Direction.c
 
 DirectionError.o: Direction.c DirectionError.h
-	gcc -c DirectionError.c
+	gcc -Wall -c DirectionError.c
 
 Directions.o: Directions.c Directions.h
-	gcc -c Directions.c
+	gcc -Wall -c Directions.c
 
 Error.o: Error.c Error.h
-	gcc -c Error.c
+	gcc -Wall -c Error.c
 
 Errors.o: Errors.c Errors.h
-	gcc -c Errors.c
+	gcc -Wall -c Errors.c
 
 Export.o: Export.c Export.h
-	gcc -c Export.c
+	gcc -Wall -c Export.c
 
 Exports.o: Exports.c Exports.h
-	gcc -c Exports.c
+	gcc -Wall -c Exports.c
 
 Gap.o: Gap.c Gap.h
-	gcc -c Gap.c
+	gcc -Wall -c Gap.c
 
 Gaps.o: Gaps.c Gaps.h
-	gcc -c Gaps.c
+	gcc -Wall -c Gaps.c
 
 Graph.o: Graph.c Graph.h Links.h Nets.h Nodes.h Places.h
-	gcc -c Graph.c
+	gcc -Wall -c Graph.c
 
 Import.o: Import.c Import.h
-	gcc -c Import.c
+	gcc -Wall -c Import.c
 
 Imports.o: Imports.c Imports.h
-	gcc -c Imports.c
+	gcc -Wall -c Imports.c
 
 Link.o: Link.c Link.h
-	gcc -c Link.c
+	gcc -Wall -c Link.c
 	
 LinkError.o: LinkError.c LinkError.h
-	gcc -c LinkError.c
+	gcc -Wall -c LinkError.c
 	
 Links.o: Links.c Links.h
-	gcc -c Links.c
+	gcc -Wall -c Links.c
 
 Mesh.o: Mesh.c Mesh.h
-	gcc -c Mesh.c
+	gcc -Wall -c Mesh.c
 
 Meshes.o: Meshes.c Meshes.h
-	gcc -c Meshes.c
+	gcc -Wall -c Meshes.c
 
 Net.o: Net.c Net.h
-	gcc -c Net.c
+	gcc -Wall -c Net.c
 
 Nets.o: Nets.c Nets.h
-	gcc -c Nets.c
+	gcc -Wall -c Nets.c
 
 Node.o: Node.c Node.h
-	gcc -c Node.c
+	gcc -Wall -c Node.c
 
 NodeError.o: NodeError.c NodeError.h
-	gcc -c NodeError.c
+	gcc -Wall -c NodeError.c
 	
 Nodes.o: Nodes.c Nodes.h
-	gcc -c Nodes.c
+	gcc -Wall -c Nodes.c
 	
 Place.o: Place.c Place.h
-	gcc -c Place.c
+	gcc -Wall -c Place.c
 	
 Places.o: Places.c Places.h
-	gcc -c Places.c
+	gcc -Wall -c Places.c
 
 Star.o: Star.c Star.h
-	gcc -c Star.c
+	gcc -Wall -c Star.c
 
 Stars.o: Stars.c Stars.h
-	gcc -c Stars.c
+	gcc -Wall -c Stars.c
 	
 Stream.o: Stream.c Stream.h
-	gcc -c Stream.c
+	gcc -Wall -c Stream.c
 	
 Streams.o: Streams.c Streams.h
-	gcc -c Streams.c
+	gcc -Wall -c Streams.c
 	
 clean:
 	rm --force *.o net
