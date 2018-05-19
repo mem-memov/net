@@ -69,6 +69,6 @@ void printHelp(int port, int connectionLimit, int bufferLength)
     printf(" outsiders my_container_id my_id_1 my_id_2 ...\n");
     printf(" exit\n");
     printf("Source code:");
-    printf(" https://github.com/mem-memov/ndb-server\n");
+    printf(" https://github.com/mem-memov/net\n");
     printf("Press Ctrl+C to stop this server.\n");
 }
