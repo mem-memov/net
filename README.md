@@ -6,7 +6,6 @@ Highlights:
 * fast and clean node removal
 * fast export to dump file
 * reusing identifies
-* FastCGI
 * Docker container
 
 Dependencies:
