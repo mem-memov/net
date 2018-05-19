@@ -1,4 +1,5 @@
 **/*.o
+**/*.a
 database/source/net
 database/source/data
 server/source/net-server

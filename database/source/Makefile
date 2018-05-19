@@ -98,4 +98,10 @@ Streams.o: Streams.c Streams.h
 	gcc -Wall -c Streams.c
 	
 clean:
-	rm --force *.o net
+	rm --force *.o net libnet.a
+
+install:
+	install net /usr/local/bin/net && rm --force main.o && ar -rcs libnet.a *.o && cp libnet.a /usr/local/lib/libnet.a && cp Graph.h /usr/local/include/net.h
+
+uninstall:
+	rm --force net-server /usr/local/bin/net /usr/local/lib/libnet.a /usr/local/include/net.h
