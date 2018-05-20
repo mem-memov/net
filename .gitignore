@@ -1,7 +1,8 @@
 **/*.o
 **/*.a
-database/source/net
-database/source/data
-server/source/net-server
+graph/source/netgraph
+graph/source/data
+database/netdatabase
+server/source/netserver
 **/test
 nbproject

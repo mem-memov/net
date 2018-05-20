@@ -1,5 +1,5 @@
-net-server: main.o Application.o Connection.o Error.o Listener.o Request.o Response.o Server.o Signal.o
-	gcc main.o Application.o Connection.o Error.o Listener.o Request.o Response.o Server.o Signal.o -lnet -o net-server
+netserver: main.o Application.o Connection.o Error.o Listener.o Request.o Response.o Server.o Signal.o
+	gcc main.o Application.o Connection.o Error.o Listener.o Request.o Response.o Server.o Signal.o -lnetdatabase -o netserver
 
 main.o: main.c Server.h
 	gcc -c main.c
@@ -29,10 +29,10 @@ Signal.o: Signal.c Signal.h Server.h
 	gcc -c Signal.c
 
 clean:
-	rm --force *.o net-server
+	rm --force *.o netserver
 
 install:
-	install net-server /usr/local/bin/net-server
+	install netserver /usr/local/bin/netserver
 
 uninstall:
-	rm /usr/local/bin/net-server
+	rm /usr/local/bin/netserver
