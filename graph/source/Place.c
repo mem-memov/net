@@ -40,8 +40,9 @@ void Place_bind(struct Place * this, size_t position)
 size_t Place_get(struct Place * this)
 {
 	size_t value = 0;
+	unsigned char i;
 	
-	for (unsigned char i = 0; i < this->length; i++) {
+	for (i = 0; i < this->length; i++) {
 		value = value << 8;
 		value += this->bytes[this->index + i];
 	}
@@ -54,10 +55,11 @@ void Place_set(struct Place * this, size_t value)
 	if ( 0 > value) {
 		exit(1);
 	}
-
+	
+	unsigned char i;
 	unsigned char shift;
 	
-	for (unsigned char i = 0; i < this->length; i++) {
+	for (i = 0; i < this->length; i++) {
 		shift = 8 * (this->length - i - 1);
 		this->bytes[this->index + i] = (value >> shift) & 0xFF;
 	}
