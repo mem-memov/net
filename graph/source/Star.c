@@ -80,10 +80,9 @@ size_t Star_findOutgoingLink(struct Star * this, size_t outgoingLink, size_t des
 
 void Star_getNodeDestinations(struct Star * this, size_t outgoingLink, size_t * destinations, size_t length)
 {
-	size_t index;
 	size_t maxIndex = length - 1;
 	
-	for (index = 0; index <= maxIndex; index++) {
+	for (size_t index = 0; index <= maxIndex; index++) {
 		
 		Link_read(this->outgoingLink, outgoingLink);
 		
@@ -103,10 +102,9 @@ void Star_getNodeDestinations(struct Star * this, size_t outgoingLink, size_t * 
 
 void Star_getNodeOrigins(struct Star * this, size_t incomingLink, size_t * origins, size_t length)
 {
-	size_t index;
 	size_t maxIndex = length - 1;
 	
-	for (index = 0; index <= maxIndex; index++) {
+	for (size_t index = 0; index <= maxIndex; index++) {
 		
 		Link_read(this->incomingLink, incomingLink);
 		
