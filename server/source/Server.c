@@ -89,6 +89,8 @@ void Server_start(struct Server * this)
 
 			Application_execute(this->application, Connection_request(connection), Connection_response(connection));
 			Connection_send(connection);
+			
+			
 		}
 //
 //        pid_t processId = fork();
