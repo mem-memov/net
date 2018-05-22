@@ -9,4 +9,6 @@ void Thread_destruct(struct Thread * this);
 
 void Thread_start(struct Thread * this, void * (* function) (void *), void * parameter);
 
+void Thread_stop(struct Thread * this);
+
 #endif

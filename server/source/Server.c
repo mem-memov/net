@@ -61,17 +61,27 @@ void Server_start(struct Server * this)
     Listener_open(this->listener);
     Listener_bind(this->listener);
     Listener_listen(this->listener);
+	
+	struct Thread * thread = Threads_make(this->threads);
+	int oooo = 1;
+	
+	struct Thread * threads[10];
+	int index = 0;
 
     while (1)
     {
+		index++;
+		printf("%d\n", index);
         struct Connection * connection = Listener_accept(this->listener, this->bufferLength);
 		
-		struct Thread * thread = Threads_make(this->threads);
+		threads[index] = Threads_make(this->threads);
 		
-		int oooo = 1;
-		Thread_start(thread, testing, (void *)(&oooo));
-		
+		Thread_start(threads[index], testing, (void *)(&oooo));
+		Thread_stop(threads[index]);
 		Listener_close(this->listener);
+		printf("%d\n", index);
+		
+		
 		
 		while (1) {
 			Connection_receive(connection);
@@ -86,6 +96,10 @@ void Server_start(struct Server * this)
 				Connection_close(connection);
 				exit(0);
 			}
+			
+			
+
+			
 
 			Application_execute(this->application, Connection_request(connection), Connection_response(connection));
 			Connection_send(connection);
@@ -120,6 +134,8 @@ void Server_start(struct Server * this)
 //        }
 
         Connection_close(connection);
+		
+		
     }
 }
 

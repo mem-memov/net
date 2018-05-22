@@ -29,3 +29,8 @@ void Thread_start(struct Thread * this, void * (* function) (void *), void * par
 	pthread_create(&this->id, &this->attributes, function, parameter);
 
 }
+
+void Thread_stop(struct Thread * this)
+{
+	pthread_join(this->id, NULL);
+}
