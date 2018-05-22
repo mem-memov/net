@@ -1,5 +1,5 @@
-netserver: main.o Application.o Connection.o Error.o Listener.o Request.o Response.o Server.o Signal.o
-	gcc main.o Application.o Connection.o Error.o Listener.o Request.o Response.o Server.o Signal.o -lnetdatabase -o netserver
+netserver: main.o Application.o Connection.o Error.o Listener.o Request.o Response.o Server.o Signal.o Thread.o Threads.o
+	gcc main.o Application.o Connection.o Error.o Listener.o Request.o Response.o Server.o Signal.o Thread.o Threads.o -pthread -lnetdatabase -o netserver
 
 main.o: main.c Server.h
 	gcc -c main.c
@@ -27,6 +27,12 @@ Server.o: Server.c Server.h Listener.h Connection.h Request.h Response.h Applica
 
 Signal.o: Signal.c Signal.h Server.h
 	gcc -c Signal.c
+
+Thread.o: Thread.c Thread.h
+	gcc -c Thread.c
+
+Threads.o: Threads.c Threads.h
+	gcc -c Threads.c
 
 clean:
 	rm --force *.o netserver

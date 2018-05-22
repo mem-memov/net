@@ -9,12 +9,17 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+#include "Thread.h"
+#include "Threads.h"
+
 struct Server {
     int port;
     int connectionLimit;
     int bufferLength;
     struct Listener * listener;
     struct Application * application;
+	
+	struct Threads * threads;
 };
 
 struct Server * Server_construct(int port, int connectionLimit, int bufferLength, struct Application * application)
@@ -26,6 +31,9 @@ struct Server * Server_construct(int port, int connectionLimit, int bufferLength
 	this->bufferLength = bufferLength;
 	this->listener = NULL;
     this->application = application;
+	
+	this->threads = Threads_construct();
+	
 
 	return this;
 }
@@ -41,6 +49,11 @@ void Server_destruct(struct Server * this)
 	this = NULL;
 }
 
+void * testing(void * parameter)
+{
+	printf("oooooo\n");
+}
+
 void Server_start(struct Server * this)
 {
     this->listener = Listener_construct(this->port, this->connectionLimit);
@@ -52,32 +65,57 @@ void Server_start(struct Server * this)
     while (1)
     {
         struct Connection * connection = Listener_accept(this->listener, this->bufferLength);
+		
+		struct Thread * thread = Threads_make(this->threads);
+		
+		int oooo = 1;
+		Thread_start(thread, testing, (void *)(&oooo));
+		
+		Listener_close(this->listener);
+		
+		while (1) {
+			Connection_receive(connection);
 
-        pid_t processId = fork();
-        Error_inServerAfterForking((int)processId);
+			if (1 == Connection_isIdle(connection))
+			{
+				continue;
+			}
 
-        if (0 == processId)
-        { // child process code
-            Listener_close(this->listener);
+			if (1 == Connection_mustClose(connection))
+			{
+				Connection_close(connection);
+				exit(0);
+			}
 
-            while (1) {
-                Connection_receive(connection);
-
-                if (1 == Connection_isIdle(connection))
-                {
-                    continue;
-                }
-
-                if (1 == Connection_mustClose(connection))
-                {
-                    Connection_close(connection);
-                    exit(0);
-                }
-
-                Application_execute(this->application, Connection_request(connection), Connection_response(connection));
-                Connection_send(connection);
-            }
-        }
+			Application_execute(this->application, Connection_request(connection), Connection_response(connection));
+			Connection_send(connection);
+		}
+//
+//        pid_t processId = fork();
+//        Error_inServerAfterForking((int)processId);
+//
+//        if (0 == processId)
+//        { // child process code
+//            Listener_close(this->listener);
+//
+//            while (1) {
+//                Connection_receive(connection);
+//
+//                if (1 == Connection_isIdle(connection))
+//                {
+//                    continue;
+//                }
+//
+//                if (1 == Connection_mustClose(connection))
+//                {
+//                    Connection_close(connection);
+//                    exit(0);
+//                }
+//
+//                Application_execute(this->application, Connection_request(connection), Connection_response(connection));
+//                Connection_send(connection);
+//            }
+//        }
 
         Connection_close(connection);
     }
