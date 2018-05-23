@@ -7,4 +7,6 @@ RUN apt-get update && \
     cd net && \
     make --always-make install
 
-CMD netserver
+EXPOSE 43152
+
+CMD netserver --port 43152 --connection-limit 10 --buffer-length 8192 --thread-number 4
