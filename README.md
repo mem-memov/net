@@ -29,3 +29,13 @@ Run tests with:
 ```bash
 make --always-make test
 ```
+
+Build Docker image:
+```
+docker build --tag mem-memov:net .
+```
+
+Run Docker container:
+```
+docker run --detach --name mem_memov_net_container mem-memov:net
+```
