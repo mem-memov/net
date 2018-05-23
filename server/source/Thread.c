@@ -36,10 +36,5 @@ void Thread_start(struct Thread * this, void * (* function) (void *), void * par
 
 void Thread_stop(struct Thread * this)
 {
-	printf("Thread %zu stopped.\n", this->id);
-
-	pthread_exit(NULL);
 	pthread_join(this->id, NULL);
-	
-	Thread_destruct(this);
 }

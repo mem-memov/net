@@ -47,29 +47,31 @@ void Server_destruct(struct Server * this)
 static void * runInThread(void * arg)
 {
 	struct Parameter * parameter = (struct Parameter *)arg;
-	struct Connection * connection = Parameter_getConnection(parameter);
-	struct Thread * thread = Parameter_getThread(parameter);
+	struct Listener * listener = Parameter_getListener(parameter);
 	struct Application * application = Parameter_getApplication(parameter);
-
-	while (1) {
-		Connection_receive(connection);
-
-		if (1 == Connection_isIdle(connection))
-		{
-			continue;
-		}
-
-		if (1 == Connection_mustClose(connection))
-		{
-			Connection_close(connection);
-			break;
-		}
-
-		Application_execute(application, Connection_request(connection), Connection_response(connection));
-		Connection_send(connection);
-	}
+	int bufferLength = Parameter_getBufferLength(parameter);
 	
-	Thread_stop(thread);
+	while (1) {
+		struct Connection * connection = Listener_accept(listener, bufferLength);
+
+		while (1) {
+			Connection_receive(connection);
+
+			if (1 == Connection_isIdle(connection))
+			{
+				continue;
+			}
+
+			if (1 == Connection_mustClose(connection))
+			{
+				Connection_close(connection);
+				break;
+			}
+
+			Application_execute(application, Connection_request(connection), Connection_response(connection));
+			Connection_send(connection);
+		}
+	}
 }
 
 void Server_start(struct Server * this)
@@ -80,17 +82,22 @@ void Server_start(struct Server * this)
     Listener_bind(this->listener);
     Listener_listen(this->listener);
 
-	struct Thread * thread;
+	int maxThreads = 10;
+	struct Thread ** threads = malloc(sizeof(struct Thread *) * maxThreads);
 	
-	while (1) {
-		struct Connection * connection = Listener_accept(this->listener, this->bufferLength);
-		
-		thread = Thread_construct();
-		
-		struct Parameter * parameter = Parameter_construct(connection, thread, this->application);
-		
-		Thread_start(thread, runInThread, (void *)parameter);
+	int i;
+	
+	for ( i = 0; i < maxThreads; i++ ) {
+		threads[i] = Thread_construct();
+		struct Parameter * parameter = Parameter_construct(this->listener, this->bufferLength, this->application);
+		Thread_start(threads[i], runInThread, (void *)parameter);
 	}
+	
+	for ( i = 0; i < maxThreads; i++ ) {
+		Thread_stop(threads[i]);
+	}
+
+	free(threads);
 }
 
 void Server_stop(struct Server * this)
