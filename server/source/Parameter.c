@@ -5,14 +5,16 @@ struct Parameter
 {
 	struct Connection * connection;
 	struct Thread * thread;
+	struct Application * application;
 };
 
-struct Parameter * Parameter_construct(struct Connection * connection, struct Thread * thread)
+struct Parameter * Parameter_construct(struct Connection * connection, struct Thread * thread, struct Application * application)
 {
 	struct Parameter * this = malloc(sizeof(struct Parameter));
 	
 	this->connection = connection;
 	this->thread = thread;
+	this->application = application;
 
 	return this;
 }
@@ -31,4 +33,9 @@ struct Connection * Parameter_getConnection(struct Parameter * this)
 struct Thread * Parameter_getThread(struct Parameter * this)
 {
 	return this->thread;
+}
+
+struct Application * Parameter_getApplication(struct Parameter * this)
+{
+	return this->application;
 }

@@ -44,13 +44,12 @@ void Server_destruct(struct Server * this)
 	this = NULL;
 }
 
-void * testing(void * arg)
+static void * runInThread(void * arg)
 {
-	printf("oooooo\n");
-	
 	struct Parameter * parameter = (struct Parameter *)arg;
 	struct Connection * connection = Parameter_getConnection(parameter);
 	struct Thread * thread = Parameter_getThread(parameter);
+	struct Application * application = Parameter_getApplication(parameter);
 
 	while (1) {
 		Connection_receive(connection);
@@ -66,7 +65,7 @@ void * testing(void * arg)
 			break;
 		}
 
-		//Application_execute(this->application, Connection_request(connection), Connection_response(connection));
+		Application_execute(application, Connection_request(connection), Connection_response(connection));
 		Connection_send(connection);
 	}
 	
@@ -88,9 +87,9 @@ void Server_start(struct Server * this)
 		
 		thread = Thread_construct();
 		
-		struct Parameter * parameter = Parameter_construct(connection, thread);
+		struct Parameter * parameter = Parameter_construct(connection, thread, this->application);
 		
-		Thread_start(thread, testing, (void *)parameter);
+		Thread_start(thread, runInThread, (void *)parameter);
 	}
 }
 
