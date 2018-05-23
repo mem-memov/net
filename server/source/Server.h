@@ -5,7 +5,13 @@
 
 struct Server;
 
-struct Server * Server_construct(int port, int connectionLimit, int bufferLength, struct Application * application);
+struct Server * Server_construct(
+    int port, 
+    int connectionLimit, 
+    int bufferLength, 
+    int threadNumber,
+    struct Application * application
+);
 
 void Server_destruct(struct Server * this);
 

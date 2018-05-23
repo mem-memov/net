@@ -30,8 +30,6 @@ void Thread_start(struct Thread * this, void * (* function) (void *), void * par
 	pthread_attr_init(&this->attributes);
 	
 	pthread_create(&this->id, &this->attributes, function, parameter);
-	
-	printf("Thread %zu started.\n", this->id);
 }
 
 void Thread_stop(struct Thread * this)

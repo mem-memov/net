@@ -41,10 +41,16 @@ int main(int argc, char *argv[])
     {
         bufferLength = (int)strtol(argv[3], NULL, 10);
     }
+	
+	int threadNumber = 4;
+    if (5 <= argc)
+    {
+        threadNumber = (int)strtol(argv[4], NULL, 10);
+    }
 
     struct Application * application = Application_construct(bufferLength);
 
-    server = Server_construct(port, connectionLimit, bufferLength, application);
+    server = Server_construct(port, connectionLimit, bufferLength, threadNumber, application);
 
     printHelp(port, connectionLimit, bufferLength);
     Server_start(server);
