@@ -20,8 +20,7 @@ Operations:
 
 Build with:
 ```bash
-cd ./source
-make --always-make
+sudo make --always-make
 ```
 Run tests with:
 ```bash

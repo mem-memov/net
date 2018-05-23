@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+#include "Parameter.h"
 #include "Thread.h"
 #include "Threads.h"
 
@@ -49,9 +50,33 @@ void Server_destruct(struct Server * this)
 	this = NULL;
 }
 
-void * testing(void * parameter)
+void * testing(void * arg)
 {
 	printf("oooooo\n");
+	
+	struct Parameter * parameter = (struct Parameter *)arg;
+	struct Connection * connection = Parameter_getConnection(parameter);
+	struct Thread * thread = Parameter_getThread(parameter);
+
+	while (1) {
+		Connection_receive(connection);
+
+		if (1 == Connection_isIdle(connection))
+		{
+			continue;
+		}
+
+		if (1 == Connection_mustClose(connection))
+		{
+			Connection_close(connection);
+			break;
+		}
+
+		//Application_execute(this->application, Connection_request(connection), Connection_response(connection));
+		Connection_send(connection);
+	}
+	
+	Thread_stop(thread);
 }
 
 void Server_start(struct Server * this)
@@ -67,76 +92,15 @@ void Server_start(struct Server * this)
 	
 	struct Thread * threads[10];
 	int index = 0;
-
-    while (1)
-    {
+	
+	while (1) {
+		struct Connection * connection = Listener_accept(this->listener, this->bufferLength);
 		index++;
-		printf("%d\n", index);
-        struct Connection * connection = Listener_accept(this->listener, this->bufferLength);
-		
 		threads[index] = Threads_make(this->threads);
-		
-		Thread_start(threads[index], testing, (void *)(&oooo));
-		Thread_stop(threads[index]);
-		Listener_close(this->listener);
+		struct Parameter * parameter = Parameter_construct(connection, threads[index]);
+		Thread_start(threads[index], testing, (void *)parameter);
 		printf("%d\n", index);
-		
-		
-		
-		while (1) {
-			Connection_receive(connection);
-
-			if (1 == Connection_isIdle(connection))
-			{
-				continue;
-			}
-
-			if (1 == Connection_mustClose(connection))
-			{
-				Connection_close(connection);
-				exit(0);
-			}
-			
-			
-
-			
-
-			Application_execute(this->application, Connection_request(connection), Connection_response(connection));
-			Connection_send(connection);
-			
-			
-		}
-//
-//        pid_t processId = fork();
-//        Error_inServerAfterForking((int)processId);
-//
-//        if (0 == processId)
-//        { // child process code
-//            Listener_close(this->listener);
-//
-//            while (1) {
-//                Connection_receive(connection);
-//
-//                if (1 == Connection_isIdle(connection))
-//                {
-//                    continue;
-//                }
-//
-//                if (1 == Connection_mustClose(connection))
-//                {
-//                    Connection_close(connection);
-//                    exit(0);
-//                }
-//
-//                Application_execute(this->application, Connection_request(connection), Connection_response(connection));
-//                Connection_send(connection);
-//            }
-//        }
-
-        Connection_close(connection);
-		
-		
-    }
+	}
 }
 
 void Server_stop(struct Server * this)

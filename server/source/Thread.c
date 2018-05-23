@@ -26,11 +26,12 @@ void Thread_destruct(struct Thread * this)
 void Thread_start(struct Thread * this, void * (* function) (void *), void * parameter)
 {
 	pthread_attr_init(&this->attributes);
+	
 	pthread_create(&this->id, &this->attributes, function, parameter);
-
 }
 
 void Thread_stop(struct Thread * this)
 {
+	pthread_exit(NULL);
 	pthread_join(this->id, NULL);
 }
