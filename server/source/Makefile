@@ -1,5 +1,5 @@
-netserver: main.o Application.o Connection.o Error.o Listener.o Parameter.o Request.o Response.o Server.o Signal.o Thread.o Threads.o
-	gcc main.o Application.o Connection.o Error.o Listener.o Parameter.o Request.o Response.o Server.o Signal.o Thread.o Threads.o -pthread -lnetdatabase -o netserver
+netserver: main.o Application.o Connection.o Error.o Listener.o Parameter.o Pool.o Request.o Response.o Server.o Signal.o Thread.o Threads.o
+	gcc main.o Application.o Connection.o Error.o Listener.o Parameter.o Pool.o Request.o Response.o Server.o Signal.o Thread.o Threads.o -pthread -lnetdatabase -o netserver
 
 main.o: main.c Server.h
 	gcc -c main.c
@@ -18,6 +18,9 @@ Listener.o: Listener.c Listener.h Connection.h Request.h Response.h Error.h
 
 Parameter.o: Parameter.c Parameter.h
 	gcc -c Parameter.c
+
+Pool.o: Pool.c Pool.h
+	gcc -c Pool.c
 
 Request.o: Request.c Request.h
 	gcc -c Request.c

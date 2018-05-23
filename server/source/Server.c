@@ -10,6 +10,7 @@
 #include <sys/types.h>
 
 #include "Parameter.h"
+#include "Pool.h"
 #include "Thread.h"
 #include "Threads.h"
 
@@ -19,8 +20,8 @@ struct Server {
     int bufferLength;
     struct Listener * listener;
     struct Application * application;
-	
-	struct Threads * threads;
+
+	struct Pool * pool;
 };
 
 struct Server * Server_construct(int port, int connectionLimit, int bufferLength, struct Application * application)
@@ -33,7 +34,9 @@ struct Server * Server_construct(int port, int connectionLimit, int bufferLength
 	this->listener = NULL;
     this->application = application;
 	
-	this->threads = Threads_construct();
+	this->pool = Pool_construct(
+		Threads_construct()
+	);
 	
 
 	return this;
@@ -45,6 +48,8 @@ void Server_destruct(struct Server * this)
     {
         Listener_destruct(this->listener);
     }
+	
+	Pool_destruct(this->pool);
 
     free(this);
 	this = NULL;
@@ -86,20 +91,17 @@ void Server_start(struct Server * this)
     Listener_open(this->listener);
     Listener_bind(this->listener);
     Listener_listen(this->listener);
-	
-	struct Thread * thread = Threads_make(this->threads);
-	int oooo = 1;
-	
-	struct Thread * threads[10];
-	int index = 0;
+
+	struct Thread * thread;
 	
 	while (1) {
 		struct Connection * connection = Listener_accept(this->listener, this->bufferLength);
-		index++;
-		threads[index] = Threads_make(this->threads);
-		struct Parameter * parameter = Parameter_construct(connection, threads[index]);
-		Thread_start(threads[index], testing, (void *)parameter);
-		printf("%d\n", index);
+		
+		thread = Pool_getThread(this->pool);
+		
+		struct Parameter * parameter = Parameter_construct(connection, thread);
+		
+		Thread_start(thread, testing, (void *)parameter);
 	}
 }
 

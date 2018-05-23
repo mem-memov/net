@@ -11,4 +11,8 @@ void Thread_start(struct Thread * this, void * (* function) (void *), void * par
 
 void Thread_stop(struct Thread * this);
 
+struct Thread * Thread_getNext(struct Thread * this);
+
+char Thread_isIdle(struct Thread * this);
+
 #endif

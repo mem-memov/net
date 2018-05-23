@@ -9,6 +9,6 @@ struct Threads * Threads_construct();
 
 void Threads_destruct(struct Threads * this);
 
-struct Thread * Threads_make(struct Threads * this);
+struct Thread * Threads_make(struct Threads * this, struct Thread * next);
 
 #endif

@@ -19,7 +19,7 @@ void Threads_destruct(struct Threads * this)
 	this = NULL;
 }
 
-struct Thread * Threads_make(struct Threads * this)
+struct Thread * Threads_make(struct Threads * this, struct Thread * next)
 {
-	return Thread_construct();
+	return Thread_construct(next);
 }
