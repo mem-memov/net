@@ -8,8 +8,11 @@ Highlights:
 * reusing identifies
 * Docker container
 
+Requirements:
+* Linux
+
 Dependencies:
-* [kcgi](https://kristaps.bsd.lv/kcgi/)
+* pthread
 
 Operations:
 * create node
@@ -20,10 +23,9 @@ Operations:
 
 Build with:
 ```bash
-sudo make --always-make
+sudo make --always-make install
 ```
 Run tests with:
 ```bash
-cd ./tests
-make --always-make
+make --always-make test
 ```

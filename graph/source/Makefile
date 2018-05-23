@@ -98,7 +98,7 @@ Streams.o: Streams.c Streams.h
 	gcc -Wall -c Streams.c
 	
 clean:
-	rm --force *.o netgraph libnet.a
+	rm --force *.o netgraph libnetgraph.a
 
 install:
 	install netgraph /usr/local/bin/netgraph && rm --force main.o && ar -rcs libnetgraph.a *.o && cp libnetgraph.a /usr/local/lib/libnetgraph.a && cp Graph.h /usr/local/include/netgraph.h

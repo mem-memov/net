@@ -4,6 +4,9 @@ netdatabase: main.o Database.o
 Database.o: Database.c Database.h
 	gcc -Wall -c Database.c
 	
+clean:
+	rm --force *.o netdatabase libnetdatabase.a
+	
 install:
 	install netdatabase /usr/local/bin/netdatabase && rm --force main.o && ar -rcs libnetdatabase.a *.o && cp libnetdatabase.a /usr/local/lib/libnetdatabase.a && cp Database.h /usr/local/include/netdatabase.h
 
