@@ -90,11 +90,11 @@ void Server_start(struct Server * this)
     Listener_listen(this->listener);
 	
 	struct Thread ** threads = malloc(sizeof(struct Thread *) * this->threadNumber);
+	struct Parameter * parameter = Parameter_construct(this->listener, this->bufferLength, this->application);
 
 	int i;
 	for ( i = 0; i < this->threadNumber; i++ ) {
 		threads[i] = Thread_construct();
-		struct Parameter * parameter = Parameter_construct(this->listener, this->bufferLength, this->application);
 		Thread_start(threads[i], runInThread, (void *)parameter);
 	}
 	

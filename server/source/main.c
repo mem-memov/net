@@ -1,6 +1,7 @@
 #include "Server.h"
 #include "Signal.h"
 #include "Application.h"
+#include "Help.h"
 #include "Command.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -27,7 +28,9 @@ int main(int argc, char *argv[])
 	int bufferLength;
 	int threadNumber;
 	
-	struct Command * command = Command_construct(argc, argv);
+	struct Help * help = Help_construct();
+	
+	struct Command * command = Command_construct(argc, argv, help);
 	
 	Command_getParameters(command, &port, &connectionLimit, &bufferLength, &threadNumber);
 	
@@ -40,22 +43,12 @@ int main(int argc, char *argv[])
 
     server = Server_construct(port, connectionLimit, bufferLength, threadNumber, application);
 
-    printHelp(port, connectionLimit, bufferLength, threadNumber);
+    Help_printStatus(help, port, connectionLimit, bufferLength, threadNumber);
+	
+	Help_destruct(help);
+	
     Server_start(server);
 
     return(0);
 }
 
-void printHelp(int port, int connectionLimit, int bufferLength, int threadNumber)
-{
-    printf("Node Database Server is running:\n");
-    printf(" port: %d.\n", port);
-    printf(" maximum connections: %d\n", connectionLimit);
-    printf(" buffer size: %d bytes\n", bufferLength);
-    printf(" thread number: %d\n", threadNumber);
-    printf("Commands:\n");
-    printf(" exit\n");
-    printf("Source code:");
-    printf(" https://github.com/mem-memov/net\n");
-    printf("Press Ctrl+C to stop this server.\n");
-}
