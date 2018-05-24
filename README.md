@@ -37,5 +37,5 @@ docker build --tag mem-memov:net .
 
 Run Docker container:
 ```
-docker run --detach --name mem_memov_net_container mem-memov:net
+docker run --detach --publish 43152:43152 --name mem_memov_net_container mem-memov:net
 ```

@@ -40,18 +40,19 @@ void Command_getParameters(
 	
     int letter;
     int digit_optind = 0;
+	
+	int this_option_optind = optind ? optind : 1;
+	int option_index = 0;
+	const char * short_options = "p:c:b:t:";
+	static struct option long_options[] = {
+		{"port", required_argument, &portFlag, 43152},
+		{"connection-limit", required_argument, &connectionLimitFlag, 10},
+		{"buffer-length", required_argument, &bufferLengthFlag, 8192},
+		{"thread-number", required_argument, &threadNumberFlag, 4},
+		{NULL, 0, NULL,  0 }
+	};
 
 	while (1) {
-        int this_option_optind = optind ? optind : 1;
-        int option_index = 0;
-		const char * short_options = "p:c:b:t:";
-        static struct option long_options[] = {
-			{"port", required_argument, &portFlag, 43152},
-			{"connection-limit", required_argument, &connectionLimitFlag, 10},
-			{"buffer-length", required_argument, &bufferLengthFlag, 8192},
-			{"thread-number", required_argument, &threadNumberFlag, 4},
-            {NULL, 0, NULL,  0 }
-        };
 
 		letter = getopt_long(this->count, this->values, short_options, long_options, &option_index);
 		
@@ -71,7 +72,16 @@ void Command_getParameters(
 				}
 				printf ("\n");
 				break;
-			
+				
+			case '0':
+			case '1':
+			case '2':
+				if (digit_optind != 0 && digit_optind != this_option_optind) {
+					printf("digits occur in two different argv-elements.\n");
+				}
+				digit_optind = this_option_optind;
+				printf("option %c\n", letter);
+				break;
 			
 			case 'p' : 
 				* port = (int)strtol(optarg, NULL, 10);
@@ -108,8 +118,8 @@ void Command_getParameters(
 	}
 
 	
-	* port = portFlag;
-	* connectionLimit = connectionLimitFlag;
-	* bufferLength = bufferLengthFlag;
-	* threadNumber = threadNumberFlag;
+//	* port = portFlag;
+//	* connectionLimit = connectionLimitFlag;
+//	* bufferLength = bufferLengthFlag;
+//	* threadNumber = threadNumberFlag;
 }
