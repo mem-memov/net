@@ -1,9 +1,9 @@
 #include "Server.h"
 #include "Signal.h"
 #include "Application.h"
+#include "Command.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <getopt.h>
 
 struct Server * server = NULL;
 
@@ -27,37 +27,11 @@ int main(int argc, char *argv[])
 	int bufferLength;
 	int threadNumber;
 	
-	int opt = 0;
+	struct Command * command = Command_construct(argc, argv);
 	
-    const char * short_options = "pcbt";
-
-    const struct option long_options[] = {
-        {"port", required_argument, &port, 43152},
-        {"connection-limit", required_argument, &connectionLimit, 10},
-        {"buffer-length", required_argument, &bufferLength, 8192},
-        {"thread-number", required_argument, &threadNumber, 4},
-        {NULL,0,NULL,0}
-    };
-
-    while (opt = getopt_long(argc, argv, short_options, long_options, NULL) != -1) {
-		switch (opt) {
-			case 'p' : 
-				port = (int)strtol(optarg, NULL, 10);
-				break;
-			case 'c' : 
-				connectionLimit = (int)strtol(optarg, NULL, 10);
-				break;
-			case 'b' : 
-				bufferLength = (int)strtol(optarg, NULL, 10);
-				break;
-			case 't' : 
-				threadNumber = (int)strtol(optarg, NULL, 10);
-				break;
-			default:
-				printf("unknown flag");
-				exit(EXIT_FAILURE);
-		}
-	}
+	Command_getParameters(command, &port, &connectionLimit, &bufferLength, &threadNumber);
+	
+	Command_destruct(command);
 
     struct Signal * sigint = Signal_constructSigint(handleShutDown);
     Signal_catch(sigint);
