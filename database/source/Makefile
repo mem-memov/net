@@ -1,6 +1,12 @@
-netdatabase: main.o Database.o
-	gcc  main.o Database.o -lnetgraph -o netdatabase
+netdatabase: main.o Collection.o Collections.o Database.o
+	gcc  main.o Collection.o Collections.o Database.o -lnetgraph -o netdatabase
 
+Collection.o: Collection.c Collection.h
+	gcc -Wall -c Collection.c
+	
+Collections.o: Collections.c Collections.h
+	gcc -Wall -c Collections.c
+	
 Database.o: Database.c Database.h
 	gcc -Wall -c Database.c
 	

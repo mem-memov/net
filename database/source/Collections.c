@@ -21,5 +21,5 @@ void Collections_destruct(struct Collections * this)
 
 struct Collection * Collections_make(struct Collections * this, size_t length)
 {
-	return Collection_construct(size_t length);
+	return Collection_construct(length);
 }

@@ -4,13 +4,11 @@
 #include <netgraph.h>
 #include "Collection.h"
 #include "Collections.h"
-#include "Entries.h"
 
 struct Database;
 
 struct Database * Database_construct(
 	struct Graph * graph, 
-	struct Entries * entries, 
 	struct Collections * collections
 );
 
