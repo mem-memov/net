@@ -1,5 +1,7 @@
 # net
-in-memory graph database written with C
+searchable text server
+
+Searchable texts are written with the purpose to be easily searched. In fact search operations happen very often while an author is creating such a text. They help to simplify input prompting with options. Each word gets connected to a small number of other words, each of them provided with a category. Categories are chosen freely by the author. Several authors help each other defining categories.
 
 Highlights:
 * code covered with unit tests
@@ -13,13 +15,6 @@ Requirements:
 
 Dependencies:
 * pthread
-
-Operations:
-* create node
-* remove node
-* connect nodes
-* disconnect nodes
-* show connections of a node
 
 Build with:
 ```bash
