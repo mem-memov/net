@@ -37,7 +37,7 @@ Run Docker container:
 docker run --detach --publish 43152:43152 --name mem_memov_net_container mem-memov:net
 ```
 
-Searchable texts:
+Searchable text example:
 ```
 Молодая рыжая собака — помесь такса с дворняжкой — очень похожая мордой на лисицу бегала взад и вперед по тротуару беспокойно оглядывалась по сторонам.
 
