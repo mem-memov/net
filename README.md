@@ -3,7 +3,7 @@ searchable text server
 
 Searchable texts are written with the purpose to be easily searched. In fact search operations happen very often while an author is creating such a text. They help to simplify input prompting with options. Each word gets connected to a small number of other words, each of them provided with a category. Categories are chosen freely by the author. Several authors help each other defining categories.
 
-This format can be used by machines to communicate with humans. When all sorts of machines put their status information into a common channel they can be found by you and me. Now it is of no use because only software developers understand messages of their machines.
+This format can be used by machines to communicate with humans. When all sorts of machines put their status information into a common channel they can be found by you and me. Now it is not possible because only software developers understand messages of their machines.
 
 Highlights:
 * code covered with unit tests
