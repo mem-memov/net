@@ -172,7 +172,7 @@ void it_deletes_node()
 	node->outgoingLink->value[0] = outgoingLink;
 	node->incomingLink->value[0] = incomingLink;
 	Node_delete(node);
-	
+
 	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
 	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
 
@@ -275,71 +275,6 @@ void it_confirms_to_be_an_entry_of_type_node()
 	demolishTest();
 }
 
-void it_denies_having_incoming_links()
-{
-	// 0             6 node
-	// 0,0,0,0,0,0,  6,0,0,0,0,0
-	//                     ^   ^
-	prepareTest();
-	
-	node->incomingLink->value[0] = 0;
-	char result = Node_hasIncomingLink(node);
-	
-	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
-	assert(result == 0  && "A node may have no incoming connections.");
-	
-	demolishTest();
-}
-
-void it_confirms_having_incoming_links()
-{
-	// 0             6 node         12 node         18 node          24 6->12        30 18->12
-	// 0,0,0,0,0,0,  6,0,1,0,24,0,  12,0,0,2,0,30,  18,0,0,1,0,30,   12,6,0,6,30,0,  12,18,0,18,12,24
-	//                                     ^   ^
-	prepareTest();
-
-	node->incomingLink->value[0] = 30;
-	char result = Node_hasIncomingLink(node);
-	
-	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
-	assert(result == 1  && "A node can have one incoming link, the most fresh in the chain of incoming connections.");
-	
-	demolishTest();
-}
-
-
-void it_denies_having_outgoing_links()
-{
-	// 0             6 node
-	// 0,0,0,0,0,0,  6,0,0,0,0,0
-	//                   ^   ^
-	prepareTest();
-
-	node->outgoingLink->value[0] = 0;
-	char result = Node_hasOutgoingLink(node);
-	
-	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
-	assert(result == 0  && "A node may have no outgoing connections.");
-	
-	demolishTest();
-}
-
-void it_confirms_having_outgoing_links()
-{
-	// 0             6 node         12 node         18 node          24 6->12         30 6->18
-	// 0,0,0,0,0,0,  6,0,2,0,30,0,  12,0,0,1,0,24,  18,0,0,1,0,30,   12,30,0,6,12,0,  18,6,24,6,18,0};
-	//                   ^   ^
-	prepareTest();
-
-	node->outgoingLink->value[0] = 30;
-	char result = Node_hasOutgoingLink(node);
-	
-	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
-	assert(result == 1  && "A node can have one outgoing link, the most fresh in the chain of outgoing connections.");
-	
-	demolishTest();
-}
-
 void it_keeps_the_first_incoming_connection()
 {
 	// 0             6 node         12 node        18 12->6
@@ -359,27 +294,27 @@ void it_keeps_the_first_incoming_connection()
 	incomingLink->place[0] = incomingLinkPlace;
 
 	node->place->value[0] = nodePlace;
-	node->incomingLink->value[0] = 0;
+	node->incomingLinkCount->value[0] = 0;
 	
 	Node_addIncomingLink(node, incomingLink);
 	
 	assert(0 == strcmp(node->place->method[0], "Place_get"));
 	
 	assert(0 == strcmp(incomingLink->method[0], "Link_getPlace"));
-	
-	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
+
+	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_isZero"));
 
 	assert(
-		0 == strcmp(incomingLink->method[1], "Link_shiftIncoming")
-		&& incomingLink->previousIncomingLink[1] == nodePlace
+		0 == strcmp(incomingLink->method[2], "Link_shiftIncoming")
+		&& incomingLink->previousIncomingLink[2] == nodePlace
 	);
 
 	assert(
-		0 == strcmp(node->incomingLink->method[1], "Place_set")
-		&& node->incomingLink->value[1] == incomingLinkPlace
+		0 == strcmp(node->incomingLink->method[3], "Place_set")
+		//&& node->incomingLink->value[1] == incomingLinkPlace
 	);
 	
-	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_increment"));
+	assert(0 == strcmp(node->incomingLinkCount->method[1], "Count_increment"));
 	
 	demolishTest();
 }
@@ -648,46 +583,6 @@ void it_refuses_to_find_outgoing_link_when_chain_empty()
 	demolishTest();
 }
 
-void it_confirms_having_more_outgoing_connections_than_incoming_ones()
-{
-	// 0             6 node         12 node         18 6->12
-	// 0,0,0,0,0,0,  6,0,1,0,18,0,  12,0,0,1,0,18,  12,6,0,6,12,0
-	//                   ^ ^
-	prepareTest();
-
-	node->outgoingLinkCount->value[0] = 1;
-	node->incomingLinkCount->value[0] = 0;
-	
-	char result = Node_hasMoreOutgoingLinks(node);
-	
-	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_get"));
-	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_get"));
-	
-	assert(1 == result && "The node confirms having more outgoing connections than incoming.");
-
-	demolishTest();
-}
-
-void it_denies_having_more_outgoing_connections_than_incoming_ones()
-{
-	// 0             6 node         12 node         18 12->6
-	// 0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0
-	//                   ^ ^
-	prepareTest();
-	
-	node->outgoingLinkCount->value[0] = 0;
-	node->incomingLinkCount->value[0] = 1;
-	
-	char result = Node_hasMoreOutgoingLinks(node);
-	
-	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_get"));
-	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_get"));
-	
-	assert(0 == result && "The node denies having more outgoing connections than incoming.");
-
-	demolishTest();
-}
-
 void it_provides_its_outgoing_link()
 {
 	// 0             6 node         12 node         18 6->12
@@ -873,10 +768,6 @@ int main(int argc, char** argv)
 	it_denies_to_be_a_node_if_place_not_equal_value();
 	it_denies_to_be_a_node_if_zero();
 	it_confirms_to_be_an_entry_of_type_node();
-	it_denies_having_incoming_links();
-	it_confirms_having_incoming_links();
-	it_denies_having_outgoing_links();
-	it_confirms_having_outgoing_links();
 	it_keeps_the_first_incoming_connection();
 	it_keeps_the_latest_incoming_connection();
 	it_keeps_the_first_outgoing_connection();
@@ -885,8 +776,6 @@ int main(int argc, char** argv)
 	it_refuses_to_find_incoming_link_when_chain_empty();
 	it_finds_outgoing_link_by_destination_node();
 	it_refuses_to_find_outgoing_link_when_chain_empty();
-	it_confirms_having_more_outgoing_connections_than_incoming_ones();
-	it_denies_having_more_outgoing_connections_than_incoming_ones();
 	it_provides_its_outgoing_link();
 	it_provides_its_incoming_link();
 	it_deletes_outgoing_link();

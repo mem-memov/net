@@ -17,6 +17,11 @@ struct Star
 	size_t outgoingLink[STAR_MAX_CALLS];
 	size_t destinationNode[STAR_MAX_CALLS];
 	size_t foundOutgoingLink[STAR_MAX_CALLS];
+	size_t * destinations[STAR_MAX_CALLS];
+	size_t * origins[STAR_MAX_CALLS];
+	size_t length[STAR_MAX_CALLS];
+	size_t outgoingStartLink[STAR_MAX_CALLS];
+	size_t incomingStartLink[STAR_MAX_CALLS];
 };
 
 struct Star * Star_mock()
@@ -38,8 +43,13 @@ struct Star * Star_mock()
 		this->outgoingLink[i] = 55555;
 		this->destinationNode[i] = 55555;
 		this->foundOutgoingLink[i] = 55555;
+		this->destinations[i] = NULL;
+		this->origins[i] = NULL;
+		this->length[i] = 55555;
+		this->outgoingStartLink[i] = 55555;
+		this->incomingStartLink[i] = 55555;
 	}
-	
+
 	return this;
 }
 
@@ -95,4 +105,54 @@ size_t Star_findOutgoingLink(struct Star * this, size_t outgoingLink, size_t des
 	this->call++;
 	
 	return foundOutgoingLink;
+}
+
+void Star_getNodeDestinations(struct Star * this, size_t outgoingLink, size_t * destinations, size_t length)
+{
+	this->method[this->call] = "Star_getNodeDestinations";
+	
+	this->outgoingLink[this->call] = outgoingLink;
+	destinations = this->destinations[this->call];
+	this->length[this->call] = length;
+	
+	this->call++;
+}
+
+void Star_getNodeOrigins(struct Star * this, size_t incomingLink, size_t * origins, size_t length)
+{
+	this->method[this->call] = "Star_getNodeOrigins";
+	
+	this->incomingLink[this->call] = incomingLink;
+	origins = this->origins[this->call];
+	this->length[this->call] = length;
+	
+	this->call++;
+}
+
+size_t Star_deleteOutgoingLink(struct Star * this, size_t outgoingStartLink, size_t destinationNode)
+{
+	this->method[this->call] = "Star_deleteOutgoingLink";
+	
+	this->outgoingStartLink[this->call] = outgoingStartLink;
+	this->destinationNode[this->call] = destinationNode;
+	
+	size_t outgoingLink = this->outgoingLink[this->call];
+	
+	this->call++;
+	
+	return outgoingLink;
+}
+
+size_t Star_deleteIncomingLink(struct Star * this, size_t incomingStartLink, size_t originNode)
+{
+	this->method[this->call] = "Star_deleteIncomingLink";
+	
+	this->incomingStartLink[this->call] = incomingStartLink;
+	this->originNode[this->call] = originNode;
+	
+	size_t incomingLink = this->incomingLink[this->call];
+	
+	this->call++;
+	
+	return incomingLink;
 }

@@ -6,11 +6,11 @@
 struct Place
 {
 	char call;
+	char * method[PLACE_MAX_CALLS];
 	size_t value[PLACE_MAX_CALLS];
 	size_t position[PLACE_MAX_CALLS];
 	char isZero[COUNT_MAX_CALLS];
 	char keepsPosition[PLACE_MAX_CALLS];
-	char * method[PLACE_MAX_CALLS];
 };
 
 struct Place * Place_mock()
@@ -21,11 +21,11 @@ struct Place * Place_mock()
 	
 	char i;
 	for (i = 0; i < PLACE_MAX_CALLS; i++) {
+		this->method[i] = "method not specified";
 		this->value[i] = 55555;
 		this->position[i] = 55555;
 		this->isZero[i] = 27;
 		this->keepsPosition[i] = 28;
-		this->method[i] = "method not specified";
 	}
 
 	return this;
