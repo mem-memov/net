@@ -1,4 +1,4 @@
-#include "../../source/Star.h"
+#include "../source/Star.h"
 #include <stdlib.h>
 
 #define STAR_MAX_CALLS 1

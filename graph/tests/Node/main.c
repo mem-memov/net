@@ -7,7 +7,7 @@
 #include "Link.c"
 #include "NodeError.c"
 #include "Place.c"
-#include "Star.c"
+#include "../Star.c"
 
 struct Node * node;
 struct Place * place;
