@@ -3,10 +3,10 @@
 #include <string.h>
 #include <assert.h>
 #include "../../source/Node.c"
-#include "Count.c"
-#include "Link.c"
-#include "NodeError.c"
-#include "Place.c"
+#include "../Count.c"
+#include "../Link.c"
+#include "../NodeError.c"
+#include "../Place.c"
 #include "../Star.c"
 
 struct Node * node;

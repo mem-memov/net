@@ -1,4 +1,4 @@
-#include "../../source/Place.h"
+#include "../source/Place.h"
 #include <stdlib.h>
 
 #define PLACE_MAX_CALLS 4

@@ -1,4 +1,4 @@
-#include "../../source/NodeError.h"
+#include "../source/NodeError.h"
 #include <stdlib.h>
 
 struct NodeError {
