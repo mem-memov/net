@@ -1,7 +1,6 @@
 #include "Star.h"
 #include <stdlib.h>
-#include "Link.h"
-#include <stdio.h>
+
 struct Star
 {
 	struct Link * incomingLink;
