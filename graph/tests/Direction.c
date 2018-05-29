@@ -1,6 +1,6 @@
-#include "../../source/Direction.h"
+#include "../source/Direction.h"
 #include <stdlib.h>
-#include "../../source/DirectionError.h"
+#include "../source/DirectionError.h"
 
 struct Direction {
 	size_t place;

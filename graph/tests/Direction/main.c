@@ -3,8 +3,8 @@
 #include <string.h>
 #include <assert.h>
 #include "../../source/Direction.c"
-#include "DirectionError.c"
-#include "Place.c"
+#include "../DirectionError.c"
+#include "../Place.c"
 
 struct DirectionError * nextOutgoingError;
 struct Direction * nextOutgoing;

@@ -1,4 +1,4 @@
-#include "../../source/DirectionError.h"
+#include "../source/DirectionError.h"
 #include <stdlib.h>
 
 struct DirectionError {

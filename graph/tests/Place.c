@@ -9,7 +9,6 @@ struct Place
 	char * method[PLACE_MAX_CALLS];
 	size_t value[PLACE_MAX_CALLS];
 	size_t position[PLACE_MAX_CALLS];
-	char isZero[COUNT_MAX_CALLS];
 	char keepsPosition[PLACE_MAX_CALLS];
 };
 
@@ -24,7 +23,6 @@ struct Place * Place_mock()
 		this->method[i] = "method not specified";
 		this->value[i] = 55555;
 		this->position[i] = 55555;
-		this->isZero[i] = 27;
 		this->keepsPosition[i] = 28;
 	}
 
@@ -62,16 +60,6 @@ void Place_set(struct Place * this, size_t value)
 	this->value[this->call] = value;
 	
 	this->call++;
-}
-
-char Place_isZero(struct Place * this)
-{
-	this->method[this->call] = "Count_isZero";
-	char isZero = this->isZero[this->call];
-	
-	this->call++;
-	
-	return isZero;
 }
 
 char Place_keepsPosition(struct Place * this)

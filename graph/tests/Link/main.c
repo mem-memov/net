@@ -3,8 +3,8 @@
 #include <string.h>
 #include <assert.h>
 #include "../../source/Link.c"
-#include "Direction.c"
-#include "LinkError.c"
+#include "../Direction.c"
+#include "../LinkError.c"
 
 struct Link * link;
 struct LinkError * error;

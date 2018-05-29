@@ -1,4 +1,4 @@
-#include "../../source/LinkError.h"
+#include "../source/LinkError.h"
 #include <stdlib.h>
 
 struct LinkError {

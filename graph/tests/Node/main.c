@@ -397,7 +397,7 @@ void it_keeps_the_first_outgoing_connection()
 	outgoingLink->place[0] = outgoingLinkPlace;
 	
 	node->place->value[0] = nodePlace;
-	node->outgoingLink->isZero[0] = 1;
+	node->outgoingLinkCount->isZero[0] = 1;
 	
 	Node_addOutgoingLink(node, outgoingLink);
 	
