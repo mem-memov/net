@@ -155,7 +155,7 @@ size_t Node_findIncomingLink(struct Node * this, size_t origin)
 
 size_t Node_findOutgoingLink(struct Node * this, size_t destination)
 {
-	if ( Count_isZero(this->incomingLinkCount) ) {
+	if ( Count_isZero(this->outgoingLinkCount) ) {
 		return 0;
 	}
 

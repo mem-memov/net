@@ -445,7 +445,7 @@ void it_keeps_the_latest_outgoing_connection()
 	outgoingLink->place[0] = newOutgoingLinkPlace;
 	
 	node->place->value[0] = nodePlace;
-	node->incomingLinkCount->isZero[0] = 0;
+	node->outgoingLinkCount->isZero[0] = 0;
 	node->outgoingLink->value[0] = oldOutgoingLinkPlace;
 	
 	Node_addOutgoingLink(node, outgoingLink);
@@ -457,27 +457,25 @@ void it_keeps_the_latest_outgoing_connection()
 	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_isZero"));
 	
 	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
+
+	assert(
+		0 == strcmp(outgoingLink->method[1], "Link_joinOutgoing")
+		&& outgoingLink->previousOutgoingLink[1] == nodePlace
+		&& outgoingLink->nextOutgoingLink[1] == oldOutgoingLinkPlace
+	);
 	
-//	assert(0 == strcmp(node->outgoingLink->method[1], "Place_get"));
-//	
-//	assert(
-//		0 == strcmp(outgoingLink->method[1], "Link_joinOutgoing")
-//		&& outgoingLink->previousOutgoingLink[1] == nodePlace
-//		&& outgoingLink->nextOutgoingLink[1] == oldOutgoingLinkPlace
-//	);
-//	
-//	assert(
-//		0 == strcmp(star->method[0], "Star_addOutgoingLink")
-//		&& star->oldOutgoingLink[0] == oldOutgoingLinkPlace
-//		&& star->newOutgoingLink[0] == newOutgoingLinkPlace
-//	);
-//	
-//	assert(
-//		0 == strcmp(node->outgoingLink->method[2], "Place_set")
-//		&& node->outgoingLink->value[2] == newOutgoingLinkPlace
-//	);
-//	
-//	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_increment"));
+	assert(
+		0 == strcmp(star->method[0], "Star_addOutgoingLink")
+		&& star->oldOutgoingLink[0] == oldOutgoingLinkPlace
+		&& star->newOutgoingLink[0] == newOutgoingLinkPlace
+	);
+	
+	assert(
+		0 == strcmp(node->outgoingLink->method[1], "Place_set")
+		&& node->outgoingLink->value[1] == newOutgoingLinkPlace
+	);
+	
+	assert(0 == strcmp(node->outgoingLinkCount->method[1], "Count_increment"));
 
 	demolishTest();
 }
@@ -495,13 +493,14 @@ void it_finds_incoming_link_by_origin_node()
 	
 	star->foundIncomingLink[0] = incomingLinkPlace;	
 	
+	node->incomingLinkCount->isZero[0] = 0;
 	node->incomingLink->value[0] = incomingLinkPlace;
-	node->incomingLink->value[1] = incomingLinkPlace;
 
 	size_t result = Node_findIncomingLink(node, originNodePlace);
 	
+	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_isZero"));
+	
 	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
-	assert(0 == strcmp(node->incomingLink->method[1], "Place_get"));
 	
 	assert(
 		0 == strcmp(star->method[0], "Star_findIncomingLink")
@@ -523,11 +522,11 @@ void it_refuses_to_find_incoming_link_when_chain_empty()
 	
 	size_t originNodePlace = 12;
 	
-	node->incomingLink->value[0] = 0;
+	node->incomingLinkCount->isZero[0] = 1;
 	
 	size_t result = Node_findIncomingLink(node, originNodePlace);
 	
-	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
+	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_isZero"));
 
 	assert(0 == result && "The node notifies about failure with zero value.");
 	
@@ -544,15 +543,16 @@ void it_finds_outgoing_link_by_destination_node()
 	size_t destinationNodePlace = 6;
 	size_t outgoingLinkPlace = 18;
 	
-	node->outgoingLink->value[0] = outgoingLinkPlace;
-	node->outgoingLink->value[1] = outgoingLinkPlace;
-	
 	star->foundOutgoingLink[0] = outgoingLinkPlace;
+	
+	node->outgoingLinkCount->isZero[0] = 0;
+	node->outgoingLink->value[0] = outgoingLinkPlace;
 	
 	size_t result = Node_findOutgoingLink(node, destinationNodePlace);
 	
+	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_isZero"));
+	
 	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
-	assert(0 == strcmp(node->outgoingLink->method[1], "Place_get"));
 
 	assert(
 		0 == strcmp(star->method[0], "Star_findOutgoingLink")
@@ -574,11 +574,11 @@ void it_refuses_to_find_outgoing_link_when_chain_empty()
 	
 	size_t destinationNodePlace = 12;
 	
-	node->outgoingLink->value[0] = 0;
+	node->outgoingLinkCount->isZero[0] = 1;
 	
 	size_t result = Node_findOutgoingLink(node, destinationNodePlace);
 	
-	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
+	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_isZero"));
 
 	assert(0 == result && "The node notifies about failure with zero value.");
 	
