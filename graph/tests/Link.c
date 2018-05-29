@@ -60,6 +60,7 @@ size_t Link_getPlace(struct Link * this)
 void Link_create(struct Link * this, size_t place, size_t origin, size_t destination)
 {
 	this->method[this->call] = "Link_create";
+	this->place[this->call] = place;
 	this->originNode[this->call] = origin;
 	this->destinationNode[this->call] = destination;
 	
