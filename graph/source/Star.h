@@ -3,10 +3,15 @@
 
 #include <stdlib.h>
 #include "Link.h"
+#include "StarError.h"
 
 struct Star;
 
-struct Star * Star_construct(struct Link * incomingLink, struct Link * outgoingLink);
+struct Star * Star_construct(
+    struct Link * incomingLink, 
+    struct Link * outgoingLink,
+    struct StarError * error
+);
 
 void Star_destruct(struct Star * this);
 

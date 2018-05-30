@@ -1,19 +1,24 @@
 #include "Star.h"
-#include <stdlib.h>
 
 struct Star
 {
 	struct Link * incomingLink;
 	struct Link * outgoingLink;
+	struct StarError * error;
 };
 
-struct Star * Star_construct(struct Link * incomingLink, struct Link * outgoingLink)
-{
+struct Star * Star_construct(
+	struct Link * incomingLink, 
+	struct Link * outgoingLink,
+	struct StarError * error
+) {
 	struct Star * this = malloc(sizeof(struct Star));
 
 	// pool
 	this->incomingLink = incomingLink;
 	this->outgoingLink = outgoingLink;
+	
+	this->error = error;
 
 	return this;
 }

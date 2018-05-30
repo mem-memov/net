@@ -78,7 +78,10 @@ struct Graph * Graph_construct(size_t graphSize)
 		)
 	);
 	
-	this->stars = Stars_construct(this->links);
+	this->stars = Stars_construct(
+		this->links,
+		Errors_makeStarError(this->errors)
+	);
 	
 	this->nodes = Nodes_construct(
 		this->places, 

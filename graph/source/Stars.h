@@ -3,10 +3,12 @@
 
 #include "Links.h"
 #include "Star.h"
+#include "Star.h"
+#include "StarError.h"
 
 struct Stars;
 
-struct Stars * Stars_construct(struct Links * links);
+struct Stars * Stars_construct(struct Links * links, struct StarError * starError);
 
 void Stars_destruct(struct Stars * this);
 

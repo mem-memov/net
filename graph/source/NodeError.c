@@ -1,6 +1,4 @@
 #include "NodeError.h"
-#include <stdlib.h>
-#include "Error.h"
 
 struct NodeError {
 	struct Error * error;
