@@ -20,7 +20,7 @@ struct Count * Count_mock()
 	
 	char i;
 	for (i = 0; i < COUNT_MAX_CALLS; i++) {
-		this->method[i] = "method not specified";
+		this->method[i] = "method never called";
 		this->position[i] = 5555;
 		this->isZero[i] = 27;
 		this->value[i] = 5555;

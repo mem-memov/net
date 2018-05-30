@@ -22,7 +22,7 @@ struct Direction * Direction_mock()
 	this->next = 55555;
 	this->node = 55555;
 	this->result = 55555;
-	this->method = "method not specified";
+	this->method = "method never called";
 
 	return this;
 }

@@ -20,7 +20,7 @@ struct Place * Place_mock()
 	
 	char i;
 	for (i = 0; i < PLACE_MAX_CALLS; i++) {
-		this->method[i] = "method not specified";
+		this->method[i] = "method never called";
 		this->value[i] = 55555;
 		this->position[i] = 55555;
 		this->keepsPosition[i] = 28;

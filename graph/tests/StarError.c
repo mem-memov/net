@@ -20,7 +20,7 @@ struct StarError * StarError_mock()
 	
 	char i;
 	for (i = 0; i < STARERROR_MAX_CALLS; i++) {
-		this->method[i] = "method not specified";
+		this->method[i] = "method never called";
 		this->outgoingLink[i] = 55555;
 		this->incomingLink[i] = 55555;
 		this->index[i] = 55555;

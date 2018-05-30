@@ -13,7 +13,7 @@ struct LinkError * LinkError_mock()
 	
 	this->origin = 55555;
 	this->destination = 55555;
-	this->method = "method not specified";
+	this->method = "method never called";
 
 	return this;
 }

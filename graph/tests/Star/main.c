@@ -180,14 +180,103 @@ void it_deletes_outgoing_link()
 	prepareTest();
 	
 	size_t outgoingStartLink = 18;
+	size_t foundOutgoingLink = 48;
 	size_t destinationNode = 36;
+	
+	telescope->foundOutgoingLink[0] = foundOutgoingLink;
 	
 	Star_deleteOutgoingLink(star, outgoingStartLink, destinationNode);
 	
-//	assert(
-//		0 == strcmp(incomingLink->method[0], "Link_read") 
-//		&& incomingLink->place[0] == nextIncomingLinkPlace
-//	);
+	assert(
+		0 == strcmp(telescope->method[0], "Telescope_findOutgoingLink") 
+		&& telescope->outgoingLink[0] == outgoingStartLink
+		&& telescope->destinationNode[0] == destinationNode
+	);
+	
+	assert(
+		0 == strcmp(outgoingLink->method[0], "Link_read") 
+		&& outgoingLink->place[0] == foundOutgoingLink
+	);
+	
+	assert(0 == strcmp(outgoingLink->method[1], "Link_delete"));
+	
+	demolishTest();
+}
+
+void it_skips_deleting_outgoing_link_if_not_found()
+{
+	prepareTest();
+	
+	size_t outgoingStartLink = 18;
+	size_t foundOutgoingLink = 48;
+	size_t destinationNode = 36;
+	
+	telescope->foundOutgoingLink[0] = 0;
+	
+	Star_deleteOutgoingLink(star, outgoingStartLink, destinationNode);
+	
+	assert(
+		0 == strcmp(telescope->method[0], "Telescope_findOutgoingLink") 
+		&& telescope->outgoingLink[0] == outgoingStartLink
+		&& telescope->destinationNode[0] == destinationNode
+	);
+	
+	assert(0 == strcmp(outgoingLink->method[0], "method never called"));
+	
+	assert(0 == strcmp(outgoingLink->method[1], "method never called"));
+	
+	demolishTest();
+}
+
+void it_deletes_incoming_link()
+{
+	prepareTest();
+	
+	size_t incomingStartLink = 18;
+	size_t foundIncomingLink = 48;
+	size_t originNode = 36;
+	
+	telescope->foundIncomingLink[0] = foundIncomingLink;
+	
+	Star_deleteIncomingLink(star, incomingStartLink, originNode);
+	
+	assert(
+		0 == strcmp(telescope->method[0], "Telescope_findIncomingLink") 
+		&& telescope->incomingLink[0] == incomingStartLink
+		&& telescope->originNode[0] == originNode
+	);
+	
+	assert(
+		0 == strcmp(incomingLink->method[0], "Link_read") 
+		&& incomingLink->place[0] == foundIncomingLink
+	);
+	
+	assert(0 == strcmp(incomingLink->method[1], "Link_delete"));
+	
+	demolishTest();
+}
+
+void it_skips_deleting_incoming_link_if_not_found()
+{
+	prepareTest();
+	
+	size_t incomingStartLink = 18;
+	size_t foundIncomingLink = 48;
+	size_t originNode = 36;
+	
+	telescope->foundIncomingLink[0] = 0;
+	
+	Star_deleteIncomingLink(star, incomingStartLink, originNode);
+	
+	assert(
+		0 == strcmp(telescope->method[0], "Telescope_findIncomingLink") 
+		&& telescope->incomingLink[0] == incomingStartLink
+		&& telescope->originNode[0] == originNode
+	);
+	
+	assert(0 == strcmp(incomingLink->method[0], "method never called"));
+	
+	assert(0 == strcmp(incomingLink->method[1], "method never called"));
 	
 	demolishTest();
 }
@@ -199,6 +288,9 @@ int main(int argc, char** argv)
 	it_finds_destinations();
 	it_finds_origins();
 	it_deletes_outgoing_link();
+	it_skips_deleting_outgoing_link_if_not_found();
+	it_deletes_incoming_link();
+	it_skips_deleting_incoming_link_if_not_found();
 
 	return (EXIT_SUCCESS);
 }

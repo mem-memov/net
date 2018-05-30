@@ -23,7 +23,7 @@ struct Telescope * Telescope_mock()
 	
 	char i;
 	for (i = 0; i < TELESCOPE_MAX_CALLS; i++) {
-		this->method[i] = "method not specified";
+		this->method[i] = "method never called";
 		this->incomingLink[i] = 55555;
 		this->originNode[i] = 55555;
 		this->foundIncomingLink[i] = 55555;

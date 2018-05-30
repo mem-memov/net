@@ -30,7 +30,7 @@ struct Star * Star_mock()
 	
 	char i;
 	for (i = 0; i < STAR_MAX_CALLS; i++) {
-		this->method[i] = "method not specified";
+		this->method[i] = "method never called";
 		this->oldIncomingLink[i] = 55555;
 		this->newIncomingLink[i] = 55555;
 		this->oldOutgoingLink[i] = 55555;

@@ -25,7 +25,7 @@ struct Link * Link_mock()
 	
 	char i;
 	for (i = 0; i < LINK_MAX_CALLS; i++) {
-		this->method[i] = "method not specified";
+		this->method[i] = "method never called";
 		this->place[i] = 55555;
 		this->previousIncomingLink[i] = 55555;
 		this->previousOutgoingLink[i] = 55555;

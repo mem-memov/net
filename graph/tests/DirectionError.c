@@ -13,7 +13,7 @@ struct DirectionError * DirectionError_mock()
 
 	this->previous = 55555;
 	this->next = 55555;
-	this->method = "method not specified";
+	this->method = "method never called";
 	
 	return this;
 }

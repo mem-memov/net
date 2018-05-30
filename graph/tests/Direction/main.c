@@ -387,12 +387,12 @@ void it_gets_deleted_without_reconnection()
 	assert(0 == strcmp(outgoing->next->method[0], "Place_get"));
 	
 	// next bind
-	assert(0 == strcmp(nextOutgoing->node->method[0], "method not specified"));
-	assert(0 == strcmp(nextOutgoing->previous->method[0], "method not specified"));
-	assert(0 == strcmp(nextOutgoing->next->method[0], "method not specified"));
+	assert(0 == strcmp(nextOutgoing->node->method[0], "method never called"));
+	assert(0 == strcmp(nextOutgoing->previous->method[0], "method never called"));
+	assert(0 == strcmp(nextOutgoing->next->method[0], "method never called"));
 	
 	// next append
-	assert(0 == strcmp(nextOutgoing->previous->method[1], "method not specified"));
+	assert(0 == strcmp(nextOutgoing->previous->method[1], "method never called"));
 	
 	assert(
 		0 == strcmp(outgoing->node->method[0], "Place_set") 
