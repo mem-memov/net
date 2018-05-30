@@ -222,6 +222,50 @@ void it_finds_no_outgoing_link()
 	demolishTest();
 }
 
+void it_finds_destinations()
+{
+	prepareTest();
+	
+	size_t outgoingLinkPlace = 24;
+	size_t nextOutgoingLinkPlace = 120;
+	size_t length = 2;
+	size_t * destinations = malloc(sizeof(size_t) * length);
+	size_t destination = 36;
+	size_t nextDestination = 126;
+	
+	outgoingLink->destinationNode[1] = destination;
+	outgoingLink->nextOutgoingLink[2] = nextOutgoingLinkPlace;
+	outgoingLink->destinationNode[4] = nextDestination;
+	outgoingLink->nextOutgoingLink[5] = 0;
+	
+	Star_getNodeDestinations(star, outgoingLinkPlace, destinations, length);
+	
+	assert(
+		0 == strcmp(outgoingLink->method[0], "Link_read") 
+		&& outgoingLink->place[0] == outgoingLinkPlace
+	);
+	
+	assert(0 == strcmp(outgoingLink->method[1], "Link_getOutgoingNode"));
+	
+	assert(0 == strcmp(outgoingLink->method[2], "Link_getNextOutgoing"));
+	
+	assert(
+		0 == strcmp(outgoingLink->method[3], "Link_read") 
+		&& outgoingLink->place[3] == nextOutgoingLinkPlace
+	);
+	
+	assert(0 == strcmp(outgoingLink->method[4], "Link_getOutgoingNode"));
+	
+	assert(0 == strcmp(outgoingLink->method[5], "Link_getNextOutgoing"));
+	
+	assert(destinations[0] == destination);
+	assert(destinations[1] == nextDestination);
+	
+	free(destinations);
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	it_adds_incoming_links();
@@ -230,6 +274,7 @@ int main(int argc, char** argv)
 	it_finds_no_incoming_link();
 	it_finds_outgoing_link();
 	it_finds_no_outgoing_link();
+	it_finds_destinations();
 
 	return (EXIT_SUCCESS);
 }
