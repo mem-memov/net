@@ -114,7 +114,7 @@ char Link_isOutgoingToNode(struct Link * this, size_t destination)
 	this->method[this->call] = "Link_isOutgoingToNode";
 	this->destinationNode[this->call] = destination;
 	
-	size_t isOutgoingToNode = this->isOutgoingToNode[this->call];
+	char isOutgoingToNode = this->isOutgoingToNode[this->call];
 		
 	this->call++;
 	
@@ -131,7 +131,7 @@ char Link_isIncomingFromNode(struct Link * this, size_t origin)
 {
 	this->method[this->call] = "Link_isIncomingFromNode";
 	this->originNode[this->call] = origin;
-	size_t isIncomingFromNode = this->isIncomingFromNode[this->call];
+	char isIncomingFromNode = this->isIncomingFromNode[this->call];
 		
 	this->call++;
 	

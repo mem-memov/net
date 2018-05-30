@@ -56,10 +56,97 @@ void it_adds_outgoing_links()
 	demolishTest();
 }
 
+void it_finds_incoming_link()
+{
+	prepareTest();
+	
+	size_t incomingLinkPlace = 24;
+	size_t originNodePlace = 6;
+	size_t nextIncomingLinkPlace = 42;
+	
+	incomingLink->isIncomingFromNode[1] = 0;
+	incomingLink->nextIncomingLink[2] = nextIncomingLinkPlace;
+	incomingLink->isIncomingFromNode[4] = 1;
+	
+	size_t result = Star_findIncomingLink(star, incomingLinkPlace, originNodePlace);
+	
+	assert(
+		0 == strcmp(incomingLink->method[0], "Link_read") 
+		&& incomingLink->place[0] == incomingLinkPlace
+	);
+	
+	assert(
+		0 == strcmp(incomingLink->method[1], "Link_isIncomingFromNode") 
+		&& incomingLink->originNode[1] == originNodePlace
+	);
+	
+	assert(0 == strcmp(incomingLink->method[2], "Link_getNextIncoming"));
+	
+	assert(
+		0 == strcmp(incomingLink->method[3], "Link_read") 
+		&& incomingLink->place[3] == nextIncomingLinkPlace
+	);
+	
+	assert(
+		0 == strcmp(incomingLink->method[4], "Link_isIncomingFromNode") 
+		&& incomingLink->originNode[4] == originNodePlace
+	);
+	
+	assert(result == nextIncomingLinkPlace);
+	
+	demolishTest();
+}
+
+void it_finds_no_incoming_link()
+{
+	prepareTest();
+	
+	size_t incomingLinkPlace = 24;
+	size_t originNodePlace = 6;
+	size_t nextIncomingLinkPlace = 42;
+	
+	incomingLink->isIncomingFromNode[1] = 0;
+	incomingLink->nextIncomingLink[2] = nextIncomingLinkPlace;
+	//incomingLink->isIncomingFromNode[4] = 0;
+	
+	size_t result = Star_findIncomingLink(star, incomingLinkPlace, originNodePlace);
+	
+	printf("isIncomingFromNode: %d\n",incomingLink->isIncomingFromNode[4]);
+	
+	assert(
+		0 == strcmp(incomingLink->method[0], "Link_read") 
+		&& incomingLink->place[0] == incomingLinkPlace
+	);
+
+	assert(
+		0 == strcmp(incomingLink->method[1], "Link_isIncomingFromNode") 
+		&& incomingLink->originNode[1] == originNodePlace
+	);
+	
+	assert(0 == strcmp(incomingLink->method[2], "Link_getNextIncoming"));
+	
+	assert(
+		0 == strcmp(incomingLink->method[3], "Link_read") 
+		&& incomingLink->place[3] == nextIncomingLinkPlace
+	);
+	
+	
+//	assert(
+//		0 == strcmp(incomingLink->method[4], "Link_isIncomingFromNode") 
+//		&& incomingLink->originNode[4] == originNodePlace
+//	);
+//	
+//	assert(result == 0);
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	it_adds_incoming_links();
 	it_adds_outgoing_links();
+	it_finds_incoming_link();
+	it_finds_no_incoming_link();
 
 	return (EXIT_SUCCESS);
 }
