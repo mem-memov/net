@@ -94,15 +94,11 @@ void Star_getNodeDestinations(struct Star * this, size_t outgoingLink, size_t * 
 		destinations[index] = Link_getOutgoingNode(this->outgoingLink);
 		
 		outgoingLink = Link_getNextOutgoing(this->outgoingLink);
-
-		if ( 0 == outgoingLink && index != maxIndex ) {
-			exit(1);
-		}
+		
+		StarError_forbidShortDestinationList(this->error, outgoingLink, index, maxIndex);
 	}
 	
-	if ( 0 != outgoingLink ) {
-		exit(1);
-	}
+	StarError_forbidLongDestinationList(this->error, outgoingLink);
 }
 
 void Star_getNodeOrigins(struct Star * this, size_t incomingLink, size_t * origins, size_t length)
@@ -118,14 +114,10 @@ void Star_getNodeOrigins(struct Star * this, size_t incomingLink, size_t * origi
 		
 		incomingLink = Link_getNextIncoming(this->incomingLink);
 		
-		if ( 0 == incomingLink && index != maxIndex ) {
-			exit(1);
-		}
+		StarError_forbidShortOriginList(this->error, incomingLink, index, maxIndex);
 	}
 	
-	if ( 0 != incomingLink ) {
-		exit(1);
-	}
+	StarError_forbidLongOriginList(this->error, incomingLink);
 }
 
 size_t Star_deleteOutgoingLink(struct Star * this, size_t outgoingStartLink, size_t destinationNode)

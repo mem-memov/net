@@ -4,22 +4,26 @@
 #include <assert.h>
 #include "../../source/Star.c"
 #include "../Link.c"
+#include "../StarError.c"
 
 struct Star * star;
 struct Link * incomingLink;
 struct Link * outgoingLink;
+struct StarError * starError;
 
 void prepareTest()
 {
 	incomingLink = Link_mock();
 	outgoingLink = Link_mock();
+	starError = StarError_mock();
 	
-	star = Star_construct(incomingLink, outgoingLink);
+	star = Star_construct(incomingLink, outgoingLink, starError);
 }
 
 void demolishTest()
 {
 	Star_destruct(star);
+	StarError_destruct(starError);
 }
 
 void it_adds_incoming_links()
@@ -240,6 +244,8 @@ void it_finds_destinations()
 	
 	Star_getNodeDestinations(star, outgoingLinkPlace, destinations, length);
 	
+	// first
+	
 	assert(
 		0 == strcmp(outgoingLink->method[0], "Link_read") 
 		&& outgoingLink->place[0] == outgoingLinkPlace
@@ -248,6 +254,10 @@ void it_finds_destinations()
 	assert(0 == strcmp(outgoingLink->method[1], "Link_getOutgoingNode"));
 	
 	assert(0 == strcmp(outgoingLink->method[2], "Link_getNextOutgoing"));
+	
+	assert(0 == strcmp(starError->method[0], "StarError_forbidShortDestinationList"));
+	
+	// next
 	
 	assert(
 		0 == strcmp(outgoingLink->method[3], "Link_read") 
@@ -258,10 +268,72 @@ void it_finds_destinations()
 	
 	assert(0 == strcmp(outgoingLink->method[5], "Link_getNextOutgoing"));
 	
+	assert(0 == strcmp(starError->method[1], "StarError_forbidShortDestinationList"));
+	
+	// exit
+	
+	assert(0 == strcmp(starError->method[2], "StarError_forbidLongDestinationList"));
+	
 	assert(destinations[0] == destination);
 	assert(destinations[1] == nextDestination);
 	
 	free(destinations);
+	
+	demolishTest();
+}
+
+void it_finds_origins()
+{
+	prepareTest();
+	
+	size_t incomingLinkPlace = 24;
+	size_t nextIncomingLinkPlace = 120;
+	size_t length = 2;
+	size_t * origins = malloc(sizeof(size_t) * length);
+	size_t origin = 36;
+	size_t nextOrigin = 126;
+	
+	incomingLink->originNode[1] = origin;
+	incomingLink->nextIncomingLink[2] = nextIncomingLinkPlace;
+	incomingLink->originNode[4] = nextOrigin;
+	incomingLink->nextIncomingLink[5] = 0;
+	
+	Star_getNodeOrigins(star, incomingLinkPlace, origins, length);
+	
+	// first
+	
+	assert(
+		0 == strcmp(incomingLink->method[0], "Link_read") 
+		&& incomingLink->place[0] == incomingLinkPlace
+	);
+	
+	assert(0 == strcmp(incomingLink->method[1], "Link_getIncomingNode"));
+	
+	assert(0 == strcmp(incomingLink->method[2], "Link_getNextIncoming"));
+	
+	assert(0 == strcmp(starError->method[0], "StarError_forbidShortOriginList"));
+	
+	// next
+	
+	assert(
+		0 == strcmp(incomingLink->method[3], "Link_read") 
+		&& incomingLink->place[3] == nextIncomingLinkPlace
+	);
+	
+	assert(0 == strcmp(incomingLink->method[4], "Link_getIncomingNode"));
+	
+	assert(0 == strcmp(incomingLink->method[5], "Link_getNextIncoming"));
+	
+	assert(0 == strcmp(starError->method[1], "StarError_forbidShortOriginList"));
+	
+	// exit
+	
+	assert(0 == strcmp(starError->method[2], "StarError_forbidLongOriginList"));
+	
+	assert(origins[0] == origin);
+	assert(origins[1] == nextOrigin);
+	
+	free(origins);
 	
 	demolishTest();
 }
@@ -275,6 +347,7 @@ int main(int argc, char** argv)
 	it_finds_outgoing_link();
 	it_finds_no_outgoing_link();
 	it_finds_destinations();
+	it_finds_origins();
 
 	return (EXIT_SUCCESS);
 }
