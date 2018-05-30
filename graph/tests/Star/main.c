@@ -139,12 +139,97 @@ void it_finds_no_incoming_link()
 	demolishTest();
 }
 
+void it_finds_outgoing_link()
+{
+	prepareTest();
+	
+	size_t outgoingLinkPlace = 24;
+	size_t destinationNodePlace = 6;
+	size_t nextOutgoingLinkPlace = 42;
+	
+	outgoingLink->isOutgoingToNode[1] = 0;
+	outgoingLink->nextOutgoingLink[2] = nextOutgoingLinkPlace;
+	outgoingLink->isOutgoingToNode[4] = 1;
+	
+	size_t result = Star_findOutgoingLink(star, outgoingLinkPlace, destinationNodePlace);
+	
+	assert(
+		0 == strcmp(outgoingLink->method[0], "Link_read") 
+		&& outgoingLink->place[0] == outgoingLinkPlace
+	);
+	
+	assert(
+		0 == strcmp(outgoingLink->method[1], "Link_isOutgoingToNode") 
+		&& outgoingLink->destinationNode[1] == destinationNodePlace
+	);
+	
+	assert(0 == strcmp(outgoingLink->method[2], "Link_getNextOutgoing"));
+	
+	assert(
+		0 == strcmp(outgoingLink->method[3], "Link_read") 
+		&& outgoingLink->place[3] == nextOutgoingLinkPlace
+	);
+	
+	assert(
+		0 == strcmp(outgoingLink->method[4], "Link_isOutgoingToNode") 
+		&& outgoingLink->destinationNode[4] == destinationNodePlace
+	);
+	
+	assert(result == nextOutgoingLinkPlace);
+	
+	demolishTest();
+}
+
+void it_finds_no_outgoing_link()
+{
+	prepareTest();
+	
+	size_t outgoingLinkPlace = 24;
+	size_t destinationNodePlace = 6;
+	size_t nextOutgoingLinkPlace = 42;
+	
+	outgoingLink->isOutgoingToNode[1] = 0;
+	outgoingLink->nextOutgoingLink[2] = nextOutgoingLinkPlace;
+	outgoingLink->isOutgoingToNode[4] = 0;
+	outgoingLink->nextOutgoingLink[5] = 0;
+	
+	size_t result = Star_findOutgoingLink(star, outgoingLinkPlace, destinationNodePlace);
+
+	assert(
+		0 == strcmp(outgoingLink->method[0], "Link_read") 
+		&& outgoingLink->place[0] == outgoingLinkPlace
+	);
+
+	assert(
+		0 == strcmp(outgoingLink->method[1], "Link_isOutgoingToNode") 
+		&& outgoingLink->destinationNode[1] == destinationNodePlace
+	);
+	
+	assert(0 == strcmp(outgoingLink->method[2], "Link_getNextOutgoing"));
+	
+	assert(
+		0 == strcmp(outgoingLink->method[3], "Link_read") 
+		&& outgoingLink->place[3] == nextOutgoingLinkPlace
+	);
+
+	assert(
+		0 == strcmp(outgoingLink->method[4], "Link_isOutgoingToNode") 
+		&& outgoingLink->destinationNode[4] == destinationNodePlace
+	);
+	
+	assert(result == 0);
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	it_adds_incoming_links();
 	it_adds_outgoing_links();
-	//it_finds_incoming_link();
+	it_finds_incoming_link();
 	it_finds_no_incoming_link();
+	it_finds_outgoing_link();
+	it_finds_no_outgoing_link();
 
 	return (EXIT_SUCCESS);
 }
