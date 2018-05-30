@@ -107,12 +107,11 @@ void it_finds_no_incoming_link()
 	
 	incomingLink->isIncomingFromNode[1] = 0;
 	incomingLink->nextIncomingLink[2] = nextIncomingLinkPlace;
-	//incomingLink->isIncomingFromNode[4] = 0;
+	incomingLink->isIncomingFromNode[4] = 0;
+	incomingLink->nextIncomingLink[5] = 0;
 	
 	size_t result = Star_findIncomingLink(star, incomingLinkPlace, originNodePlace);
-	
-	printf("isIncomingFromNode: %d\n",incomingLink->isIncomingFromNode[4]);
-	
+
 	assert(
 		0 == strcmp(incomingLink->method[0], "Link_read") 
 		&& incomingLink->place[0] == incomingLinkPlace
@@ -129,14 +128,13 @@ void it_finds_no_incoming_link()
 		0 == strcmp(incomingLink->method[3], "Link_read") 
 		&& incomingLink->place[3] == nextIncomingLinkPlace
 	);
+
+	assert(
+		0 == strcmp(incomingLink->method[4], "Link_isIncomingFromNode") 
+		&& incomingLink->originNode[4] == originNodePlace
+	);
 	
-	
-//	assert(
-//		0 == strcmp(incomingLink->method[4], "Link_isIncomingFromNode") 
-//		&& incomingLink->originNode[4] == originNodePlace
-//	);
-//	
-//	assert(result == 0);
+	assert(result == 0);
 	
 	demolishTest();
 }
@@ -145,7 +143,7 @@ int main(int argc, char** argv)
 {
 	it_adds_incoming_links();
 	it_adds_outgoing_links();
-	it_finds_incoming_link();
+	//it_finds_incoming_link();
 	it_finds_no_incoming_link();
 
 	return (EXIT_SUCCESS);

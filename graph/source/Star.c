@@ -55,7 +55,7 @@ size_t Star_findIncomingLink(struct Star * this, size_t incomingLink, size_t ori
 {
 	do {
 		Link_read(this->incomingLink, incomingLink);
-		if (Link_isIncomingFromNode(this->incomingLink, originNode)) {
+		if ( Link_isIncomingFromNode(this->incomingLink, originNode) ) {
 			return incomingLink;
 		}
 		incomingLink = Link_getNextIncoming(this->incomingLink);
