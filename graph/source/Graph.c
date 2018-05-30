@@ -11,6 +11,7 @@
 #include "Places.h"
 #include "Stars.h"
 #include "Streams.h"
+#include "Telescopes.h"
 
 struct Graph {
 	size_t graphSize;
@@ -77,9 +78,12 @@ struct Graph * Graph_construct(size_t graphSize)
 			Errors_makeDirectionError(this->errors)
 		)
 	);
-	
+
 	this->stars = Stars_construct(
 		this->links,
+		Telescopes_construct(
+			this->links
+		),
 		Errors_makeStarError(this->errors)
 	);
 	

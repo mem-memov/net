@@ -142,28 +142,6 @@ void Node_addOutgoingLink(struct Node * this, struct Link * link)
 	Count_increment(this->outgoingLinkCount);
 }
 
-size_t Node_findIncomingLink(struct Node * this, size_t origin)
-{
-	if ( Count_isZero(this->incomingLinkCount) ) {
-		return 0;
-	}
-
-	size_t incomingLink = Place_get(this->incomingLink);
-	
-	return Star_findIncomingLink(this->star, incomingLink, origin);
-}
-
-size_t Node_findOutgoingLink(struct Node * this, size_t destination)
-{
-	if ( Count_isZero(this->outgoingLinkCount) ) {
-		return 0;
-	}
-
-	size_t outgoingLink = Place_get(this->outgoingLink);
-	
-	return Star_findOutgoingLink(this->star, outgoingLink, destination);
-}
-
 void Node_readOutgoingLink(struct Node * this, struct Link * link)
 {
 	size_t outgoingLinkPlace = Place_get(this->outgoingLink);

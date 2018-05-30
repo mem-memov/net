@@ -5,19 +5,22 @@
 #include "../../source/Star.c"
 #include "../Link.c"
 #include "../StarError.c"
+#include "../Telescope.c"
 
 struct Star * star;
 struct Link * incomingLink;
 struct Link * outgoingLink;
+struct Telescope * telescope;
 struct StarError * starError;
 
 void prepareTest()
 {
 	incomingLink = Link_mock();
 	outgoingLink = Link_mock();
+	telescope = Telescope_mock();
 	starError = StarError_mock();
 	
-	star = Star_construct(incomingLink, outgoingLink, starError);
+	star = Star_construct(incomingLink, outgoingLink, telescope, starError);
 }
 
 void demolishTest()
@@ -56,172 +59,6 @@ void it_adds_outgoing_links()
 		0 == strcmp(outgoingLink->method[0], "Link_read") 
 		&& outgoingLink->place[0] == oldOutgoingLink
 	);
-	
-	demolishTest();
-}
-
-void it_finds_incoming_link()
-{
-	prepareTest();
-	
-	size_t incomingLinkPlace = 24;
-	size_t originNodePlace = 6;
-	size_t nextIncomingLinkPlace = 42;
-	
-	incomingLink->isIncomingFromNode[1] = 0;
-	incomingLink->nextIncomingLink[2] = nextIncomingLinkPlace;
-	incomingLink->isIncomingFromNode[4] = 1;
-	
-	size_t result = Star_findIncomingLink(star, incomingLinkPlace, originNodePlace);
-	
-	assert(
-		0 == strcmp(incomingLink->method[0], "Link_read") 
-		&& incomingLink->place[0] == incomingLinkPlace
-	);
-	
-	assert(
-		0 == strcmp(incomingLink->method[1], "Link_isIncomingFromNode") 
-		&& incomingLink->originNode[1] == originNodePlace
-	);
-	
-	assert(0 == strcmp(incomingLink->method[2], "Link_getNextIncoming"));
-	
-	assert(
-		0 == strcmp(incomingLink->method[3], "Link_read") 
-		&& incomingLink->place[3] == nextIncomingLinkPlace
-	);
-	
-	assert(
-		0 == strcmp(incomingLink->method[4], "Link_isIncomingFromNode") 
-		&& incomingLink->originNode[4] == originNodePlace
-	);
-	
-	assert(result == nextIncomingLinkPlace);
-	
-	demolishTest();
-}
-
-void it_finds_no_incoming_link()
-{
-	prepareTest();
-	
-	size_t incomingLinkPlace = 24;
-	size_t originNodePlace = 6;
-	size_t nextIncomingLinkPlace = 42;
-	
-	incomingLink->isIncomingFromNode[1] = 0;
-	incomingLink->nextIncomingLink[2] = nextIncomingLinkPlace;
-	incomingLink->isIncomingFromNode[4] = 0;
-	incomingLink->nextIncomingLink[5] = 0;
-	
-	size_t result = Star_findIncomingLink(star, incomingLinkPlace, originNodePlace);
-
-	assert(
-		0 == strcmp(incomingLink->method[0], "Link_read") 
-		&& incomingLink->place[0] == incomingLinkPlace
-	);
-
-	assert(
-		0 == strcmp(incomingLink->method[1], "Link_isIncomingFromNode") 
-		&& incomingLink->originNode[1] == originNodePlace
-	);
-	
-	assert(0 == strcmp(incomingLink->method[2], "Link_getNextIncoming"));
-	
-	assert(
-		0 == strcmp(incomingLink->method[3], "Link_read") 
-		&& incomingLink->place[3] == nextIncomingLinkPlace
-	);
-
-	assert(
-		0 == strcmp(incomingLink->method[4], "Link_isIncomingFromNode") 
-		&& incomingLink->originNode[4] == originNodePlace
-	);
-	
-	assert(result == 0);
-	
-	demolishTest();
-}
-
-void it_finds_outgoing_link()
-{
-	prepareTest();
-	
-	size_t outgoingLinkPlace = 24;
-	size_t destinationNodePlace = 6;
-	size_t nextOutgoingLinkPlace = 42;
-	
-	outgoingLink->isOutgoingToNode[1] = 0;
-	outgoingLink->nextOutgoingLink[2] = nextOutgoingLinkPlace;
-	outgoingLink->isOutgoingToNode[4] = 1;
-	
-	size_t result = Star_findOutgoingLink(star, outgoingLinkPlace, destinationNodePlace);
-	
-	assert(
-		0 == strcmp(outgoingLink->method[0], "Link_read") 
-		&& outgoingLink->place[0] == outgoingLinkPlace
-	);
-	
-	assert(
-		0 == strcmp(outgoingLink->method[1], "Link_isOutgoingToNode") 
-		&& outgoingLink->destinationNode[1] == destinationNodePlace
-	);
-	
-	assert(0 == strcmp(outgoingLink->method[2], "Link_getNextOutgoing"));
-	
-	assert(
-		0 == strcmp(outgoingLink->method[3], "Link_read") 
-		&& outgoingLink->place[3] == nextOutgoingLinkPlace
-	);
-	
-	assert(
-		0 == strcmp(outgoingLink->method[4], "Link_isOutgoingToNode") 
-		&& outgoingLink->destinationNode[4] == destinationNodePlace
-	);
-	
-	assert(result == nextOutgoingLinkPlace);
-	
-	demolishTest();
-}
-
-void it_finds_no_outgoing_link()
-{
-	prepareTest();
-	
-	size_t outgoingLinkPlace = 24;
-	size_t destinationNodePlace = 6;
-	size_t nextOutgoingLinkPlace = 42;
-	
-	outgoingLink->isOutgoingToNode[1] = 0;
-	outgoingLink->nextOutgoingLink[2] = nextOutgoingLinkPlace;
-	outgoingLink->isOutgoingToNode[4] = 0;
-	outgoingLink->nextOutgoingLink[5] = 0;
-	
-	size_t result = Star_findOutgoingLink(star, outgoingLinkPlace, destinationNodePlace);
-
-	assert(
-		0 == strcmp(outgoingLink->method[0], "Link_read") 
-		&& outgoingLink->place[0] == outgoingLinkPlace
-	);
-
-	assert(
-		0 == strcmp(outgoingLink->method[1], "Link_isOutgoingToNode") 
-		&& outgoingLink->destinationNode[1] == destinationNodePlace
-	);
-	
-	assert(0 == strcmp(outgoingLink->method[2], "Link_getNextOutgoing"));
-	
-	assert(
-		0 == strcmp(outgoingLink->method[3], "Link_read") 
-		&& outgoingLink->place[3] == nextOutgoingLinkPlace
-	);
-
-	assert(
-		0 == strcmp(outgoingLink->method[4], "Link_isOutgoingToNode") 
-		&& outgoingLink->destinationNode[4] == destinationNodePlace
-	);
-	
-	assert(result == 0);
 	
 	demolishTest();
 }
@@ -338,16 +175,30 @@ void it_finds_origins()
 	demolishTest();
 }
 
+void it_deletes_outgoing_link()
+{
+	prepareTest();
+	
+	size_t outgoingStartLink = 18;
+	size_t destinationNode = 36;
+	
+	Star_deleteOutgoingLink(star, outgoingStartLink, destinationNode);
+	
+//	assert(
+//		0 == strcmp(incomingLink->method[0], "Link_read") 
+//		&& incomingLink->place[0] == nextIncomingLinkPlace
+//	);
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	it_adds_incoming_links();
 	it_adds_outgoing_links();
-	it_finds_incoming_link();
-	it_finds_no_incoming_link();
-	it_finds_outgoing_link();
-	it_finds_no_outgoing_link();
 	it_finds_destinations();
 	it_finds_origins();
+	it_deletes_outgoing_link();
 
 	return (EXIT_SUCCESS);
 }

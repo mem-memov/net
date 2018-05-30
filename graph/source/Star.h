@@ -4,12 +4,14 @@
 #include <stdlib.h>
 #include "Link.h"
 #include "StarError.h"
+#include "Telescope.h"
 
 struct Star;
 
 struct Star * Star_construct(
     struct Link * incomingLink, 
     struct Link * outgoingLink,
+    struct Telescope * telescope,
     struct StarError * error
 );
 

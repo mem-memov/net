@@ -480,111 +480,6 @@ void it_keeps_the_latest_outgoing_connection()
 	demolishTest();
 }
 
-void it_finds_incoming_link_by_origin_node()
-{
-	// 0             6 node         12 node         18 12->6
-	// 0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0
-	//                                                     ^
-	
-	prepareTest();
-
-	size_t originNodePlace = 12;
-	size_t incomingLinkPlace = 18;
-	
-	star->foundIncomingLink[0] = incomingLinkPlace;	
-	
-	node->incomingLinkCount->isZero[0] = 0;
-	node->incomingLink->value[0] = incomingLinkPlace;
-
-	size_t result = Node_findIncomingLink(node, originNodePlace);
-	
-	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_isZero"));
-	
-	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
-	
-	assert(
-		0 == strcmp(star->method[0], "Star_findIncomingLink")
-		&& star->incomingLink[0] == incomingLinkPlace
-		&& star->originNode[0] == originNodePlace
-	);
-	
-	assert(result == incomingLinkPlace && "A destination node returns the link that connects it to an origin node.");
-
-	demolishTest();
-}
-
-void it_refuses_to_find_incoming_link_when_chain_empty()
-{
-	//                 0             6 node
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
-	
-	prepareTest();
-	
-	size_t originNodePlace = 12;
-	
-	node->incomingLinkCount->isZero[0] = 1;
-	
-	size_t result = Node_findIncomingLink(node, originNodePlace);
-	
-	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_isZero"));
-
-	assert(0 == result && "The node notifies about failure with zero value.");
-	
-	demolishTest();
-}
-
-void it_finds_outgoing_link_by_destination_node()
-{
-	//                 0             6 node         12 node         18 12->6
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,1,0,18,  12,0,1,0,18,0,  6,12,0,12,6,0};
-	
-	prepareTest();
-
-	size_t destinationNodePlace = 6;
-	size_t outgoingLinkPlace = 18;
-	
-	star->foundOutgoingLink[0] = outgoingLinkPlace;
-	
-	node->outgoingLinkCount->isZero[0] = 0;
-	node->outgoingLink->value[0] = outgoingLinkPlace;
-	
-	size_t result = Node_findOutgoingLink(node, destinationNodePlace);
-	
-	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_isZero"));
-	
-	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
-
-	assert(
-		0 == strcmp(star->method[0], "Star_findOutgoingLink")
-		&& star->outgoingLink[0] == outgoingLinkPlace
-		&& star->destinationNode[0] == destinationNodePlace
-	);
-
-	assert(result == outgoingLinkPlace && "An origin node returns the link that connects it to a destination node.");
-	
-	demolishTest();
-}
-
-void it_refuses_to_find_outgoing_link_when_chain_empty()
-{
-	//                 0             6 node
-	size_t places[] = {0,0,0,0,0,0,  6,0,0,0,0,0};
-	
-	prepareTest();
-	
-	size_t destinationNodePlace = 12;
-	
-	node->outgoingLinkCount->isZero[0] = 1;
-	
-	size_t result = Node_findOutgoingLink(node, destinationNodePlace);
-	
-	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_isZero"));
-
-	assert(0 == result && "The node notifies about failure with zero value.");
-	
-	demolishTest();
-}
-
 void it_provides_its_outgoing_link()
 {
 	// 0             6 node         12 node         18 6->12
@@ -774,10 +669,6 @@ int main(int argc, char** argv)
 	it_keeps_the_latest_incoming_connection();
 	it_keeps_the_first_outgoing_connection();
 	it_keeps_the_latest_outgoing_connection();
-	it_finds_incoming_link_by_origin_node();
-	it_refuses_to_find_incoming_link_when_chain_empty();
-	it_finds_outgoing_link_by_destination_node();
-	it_refuses_to_find_outgoing_link_when_chain_empty();
 	it_provides_its_outgoing_link();
 	it_provides_its_incoming_link();
 	it_deletes_outgoing_link();

@@ -36,10 +36,6 @@ void Node_addIncomingLink(struct Node * this, struct Link * link);
 
 void Node_addOutgoingLink(struct Node * this, struct Link * link);
 
-size_t Node_findIncomingLink(struct Node * this, size_t origin);
-
-size_t Node_findOutgoingLink(struct Node * this, size_t destination);
-
 void Node_readOutgoingLink(struct Node * this, struct Link * link);
 
 void Node_readIncomingLink(struct Node * this, struct Link * link);

@@ -4,12 +4,14 @@ struct Star
 {
 	struct Link * incomingLink;
 	struct Link * outgoingLink;
+	struct Telescope * telescope;
 	struct StarError * error;
 };
 
 struct Star * Star_construct(
 	struct Link * incomingLink, 
 	struct Link * outgoingLink,
+	struct Telescope * telescope,
 	struct StarError * error
 ) {
 	struct Star * this = malloc(sizeof(struct Star));
@@ -17,6 +19,8 @@ struct Star * Star_construct(
 	// pool
 	this->incomingLink = incomingLink;
 	this->outgoingLink = outgoingLink;
+	
+	this->telescope = telescope;
 	
 	this->error = error;
 
@@ -27,6 +31,8 @@ void Star_destruct(struct Star * this)
 {
 	Link_destruct(this->incomingLink);
 	Link_destruct(this->outgoingLink);
+	
+	Telescope_destruct(this->telescope);
 	
 	free(this);
 	this = NULL;
@@ -54,32 +60,6 @@ void Star_addOutgoingLink(struct Star * this, size_t oldOutgoingLink, size_t new
 		this->outgoingLink, 
 		newOutgoingLink
 	);
-}
-
-size_t Star_findIncomingLink(struct Star * this, size_t incomingLink, size_t originNode)
-{
-	do {
-		Link_read(this->incomingLink, incomingLink);
-		if ( Link_isIncomingFromNode(this->incomingLink, originNode) ) {
-			return incomingLink;
-		}
-		incomingLink = Link_getNextIncoming(this->incomingLink);
-	} while( 0 != incomingLink );
-	
-	return 0;
-}
-
-size_t Star_findOutgoingLink(struct Star * this, size_t outgoingLink, size_t destinationNode)
-{
-	do {
-		Link_read(this->outgoingLink, outgoingLink);
-		if (Link_isOutgoingToNode(this->outgoingLink, destinationNode)) {
-			return outgoingLink;
-		}
-		outgoingLink = Link_getNextOutgoing(this->outgoingLink);
-	} while( 0 != outgoingLink );
-	
-	return 0;
 }
 
 void Star_getNodeDestinations(struct Star * this, size_t outgoingLink, size_t * destinations, size_t length)
@@ -122,7 +102,7 @@ void Star_getNodeOrigins(struct Star * this, size_t incomingLink, size_t * origi
 
 size_t Star_deleteOutgoingLink(struct Star * this, size_t outgoingStartLink, size_t destinationNode)
 {
-	size_t outgoingLink = Star_findOutgoingLink(this, outgoingStartLink, destinationNode);
+	size_t outgoingLink = Telescope_findOutgoingLink(this->telescope, outgoingStartLink, destinationNode);
 	
 	if ( 0 == outgoingLink ) {
 		return 0;
@@ -136,7 +116,7 @@ size_t Star_deleteOutgoingLink(struct Star * this, size_t outgoingStartLink, siz
 
 size_t Star_deleteIncomingLink(struct Star * this, size_t incomingStartLink, size_t originNode)
 {
-	size_t incomingLink = Star_findIncomingLink(this, incomingStartLink, originNode);
+	size_t incomingLink = Telescope_findIncomingLink(this->telescope, incomingStartLink, originNode);
 	
 	if ( 0 == incomingLink ) {
 		return 0;

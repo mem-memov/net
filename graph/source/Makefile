@@ -1,5 +1,5 @@
-netgraph: main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Star.o StarError.o Stars.o Stream.o Streams.o
-	gcc  main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Star.o StarError.o Stars.o Stream.o Streams.o -o netgraph
+netgraph: main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o
+	gcc  main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o -o netgraph
 
 main.o: main.c
 	gcc -Wall -c main.c
@@ -99,6 +99,12 @@ Stream.o: Stream.c Stream.h
 	
 Streams.o: Streams.c Streams.h
 	gcc -Wall -c Streams.c
+	
+Telescope.o: Telescope.c Telescope.h
+	gcc -Wall -c Telescope.c
+	
+Telescopes.o: Telescopes.c Telescopes.h
+	gcc -Wall -c Telescopes.c
 	
 clean:
 	rm --force *.o netgraph libnetgraph.a

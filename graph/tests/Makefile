@@ -8,3 +8,5 @@ node:
 	$(MAKE) -C Node
 star:
 	$(MAKE) -C Star
+telescope:
+	$(MAKE) -C Telescope
