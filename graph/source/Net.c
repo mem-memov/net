@@ -102,15 +102,6 @@ char Net_isCovering(struct Net * this, size_t place)
 	return 1;
 }
 
-char Net_isGraphCut(struct Net * this)
-{
-	if ( Place_get(this->nextPlace) - 1 > this->graphSize ) {
-		return 1;
-	}
-	
-	return 0;
-}
-
 char Net_hasSpaceForEntry(struct Net * this)
 {
 	if ( Place_get(this->nextPlace) < this->graphSize ) {
@@ -166,14 +157,8 @@ struct Export * Net_createExport(struct Net * this)
 
 void Net_import(struct Net * this, struct Stream * stream)
 {
-	size_t one = Place_get(this->one);
-	if ( 1 != one ) {
-		exit(1);
-	}
-	
-	if (Net_isGraphCut(this)) { // TODO: move to error file
-		exit(1);
-	}
+	NetError_requireOneToVerifyCorrectPlaceSize(this->error, Place_get(this->one));
+	NetError_requireFittingInSize(this->error, Place_get(this->nextPlace), this->graphSize);
 	
 	size_t placeSize = Place_get(this->placeSize);
 	size_t nextPlace = Place_get(this->nextPlace);

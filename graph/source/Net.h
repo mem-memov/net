@@ -34,8 +34,6 @@ void Net_read(struct Net * this);
 
 char Net_isCovering(struct Net * this, size_t place);
 
-char Net_isGraphCut(struct Net * this);
-
 char Net_hasSpaceForEntry(struct Net * this);
 
 size_t Net_createEntry(struct Net * this, char nodeNotLink);
