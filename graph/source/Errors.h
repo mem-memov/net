@@ -5,6 +5,7 @@
 #include "DirectionError.h"
 #include "Error.h"
 #include "LinkError.h"
+#include "NetError.h"
 #include "NodeError.h"
 #include "StarError.h"
 
@@ -19,6 +20,8 @@ struct CountError * Errors_makeCountError(struct Errors * this);
 struct DirectionError * Errors_makeDirectionError(struct Errors * this);
 
 struct LinkError * Errors_makeLinkError(struct Errors * this);
+
+struct NetError * Errors_makeNetError(struct Errors * this);
 
 struct NodeError * Errors_makeNodeError(struct Errors * this);
 

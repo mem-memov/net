@@ -6,6 +6,7 @@
 #include "Export.h"
 #include "Exports.h"
 #include "Mesh.h"
+#include "NetError.h"
 #include "Place.h"
 #include "Stream.h"
 
@@ -21,7 +22,8 @@ struct Net * Net_construct(
 	struct Place * nextPlace,
 	struct Place * gapPlace,
 	struct Count * nodeCount,
-	struct Count * linkCount
+	struct Count * linkCount,
+        struct NetError * error
 );
 
 void Net_destruct(struct Net * this);
@@ -30,13 +32,11 @@ void Net_create(struct Net * this, size_t placeSize);
 
 void Net_read(struct Net * this);
 
-char Net_isHead(struct Net * this, size_t place);
-
-char Net_isInside(struct Net * this, size_t place);
+char Net_isCovering(struct Net * this, size_t place);
 
 char Net_isGraphCut(struct Net * this);
 
-char Net_hasGraphForEntry(struct Net * this);
+char Net_hasSpaceForEntry(struct Net * this);
 
 size_t Net_createEntry(struct Net * this, char nodeNotLink);
 

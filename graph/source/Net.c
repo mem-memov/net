@@ -14,6 +14,7 @@ struct Net {
 	struct Place * gapPlace;
 	struct Count * nodeCount;
 	struct Count * linkCount;
+	struct NetError * error;
 };
 
 struct Net * Net_construct(
@@ -26,7 +27,8 @@ struct Net * Net_construct(
 	struct Place * nextPlace,
 	struct Place * gapPlace,
 	struct Count * nodeCount,
-	struct Count * linkCount
+	struct Count * linkCount,
+	struct NetError * error
 ) {
 	struct Net * this = malloc(sizeof(struct Net));
 
@@ -44,6 +46,8 @@ struct Net * Net_construct(
 	this->gapPlace = gapPlace;
 	this->nodeCount = nodeCount;
 	this->linkCount = linkCount;
+	
+	this->error = error;
 
 	return this;
 }
@@ -85,22 +89,17 @@ void Net_read(struct Net * this)
 	Count_bind(this->linkCount, 5);
 }
 
-char Net_isHead(struct Net * this, size_t place)
+char Net_isCovering(struct Net * this, size_t place)
 {
 	if (place < this->entrySize) {
-		return 1;
+		return 0;
 	}
 	
-	return 0;
-}
-
-char Net_isInside(struct Net * this, size_t place)
-{
-	if ( place < Place_get(this->nextPlace) ) {
-		return 1;
+	if ( place >= Place_get(this->nextPlace) ) {
+		return 0;
 	}
 	
-	return 0;
+	return 1;
 }
 
 char Net_isGraphCut(struct Net * this)
@@ -112,7 +111,7 @@ char Net_isGraphCut(struct Net * this)
 	return 0;
 }
 
-char Net_hasGraphForEntry(struct Net * this)
+char Net_hasSpaceForEntry(struct Net * this)
 {
 	if ( Place_get(this->nextPlace) < this->graphSize ) {
 		return 1;
@@ -127,7 +126,7 @@ char Net_hasGraphForEntry(struct Net * this)
 
 size_t Net_createEntry(struct Net * this, char nodeNotLink)
 {
-	if ( ! Net_hasGraphForEntry(this)) {
+	if ( ! Net_hasSpaceForEntry(this)) {
 		exit(1);
 	}
 	
@@ -167,6 +166,11 @@ struct Export * Net_createExport(struct Net * this)
 
 void Net_import(struct Net * this, struct Stream * stream)
 {
+	size_t one = Place_get(this->one);
+	if ( 1 != one ) {
+		exit(1);
+	}
+	
 	if (Net_isGraphCut(this)) { // TODO: move to error file
 		exit(1);
 	}

@@ -68,7 +68,8 @@ struct Graph * Graph_construct(size_t graphSize)
 		Meshes_construct(
 			Gaps_construct(this->places)
 		),
-		Exports_construct(this->streams)
+		Exports_construct(this->streams),
+		Errors_makeNetError(this->errors)
 	);
 	
 	this->links = Links_construct(
@@ -141,7 +142,7 @@ void Graph_destruct(struct Graph * this)
 
 char Graph_hasFreePlace(struct Graph * this)
 {
-	return Net_hasGraphForEntry(this->net);
+	return Net_hasSpaceForEntry(this->net);
 }
 
 size_t Graph_addNode(struct Graph * this)
@@ -242,11 +243,7 @@ void Graph_getNodeOrigins(struct Graph * this, size_t destination, size_t ** ori
 
 char Graph_isNode(struct Graph * this, size_t place)
 {
-	if (Net_isHead(this->net, place)) {
-		return 0;
-	}
-	
-	if ( ! Net_isInside(this->net, place) ) {
+	if ( ! Net_isCovering(this->net, place)) {
 		return 0;
 	}
 	

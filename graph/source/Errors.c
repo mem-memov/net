@@ -7,6 +7,7 @@ struct Errors
 	struct CountError * countError;
 	struct DirectionError * directionError;
 	struct LinkError * linkError;
+	struct NetError * netError;
 	struct NodeError * nodeError;
 	struct StarError * starError;
 };
@@ -20,6 +21,7 @@ struct Errors * Errors_construct(struct Error * error)
 	this->countError = NULL;
 	this->directionError = NULL;
 	this->linkError = NULL;
+	this->netError = NULL;
 	this->nodeError = NULL;
 	this->starError = NULL;
 	
@@ -36,6 +38,9 @@ void Errors_destruct(struct Errors * this)
 	}
 	if (NULL != this->linkError) {
 		LinkError_destruct(this->linkError);
+	}
+	if (NULL != this->netError) {
+		NetError_destruct(this->netError);
 	}
 	if (NULL != this->nodeError) {
 		NodeError_destruct(this->nodeError);
@@ -74,6 +79,15 @@ struct LinkError * Errors_makeLinkError(struct Errors * this)
 	}
 	
 	return this->linkError;
+}
+
+struct NetError * Errors_makeNetError(struct Errors * this)
+{
+	if (NULL == this->netError) {
+		this->netError = NetError_construct(this->error);
+	}
+	
+	return this->netError;
 }
 
 struct NodeError * Errors_makeNodeError(struct Errors * this)

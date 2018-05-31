@@ -7,13 +7,15 @@ struct Nets
 	struct Counts * counts;
 	struct Meshes * meshes;
 	struct Exports * exports;
+	struct NetError * netError;
 };
 
 struct Nets * Nets_construct(
 	struct Places * places, 
 	struct Counts * counts, 
 	struct Meshes * meshes, 
-	struct Exports * exports
+	struct Exports * exports,
+	struct NetError * netError
 ) {
 	struct Nets * this = malloc(sizeof(struct Nets));
 	
@@ -21,6 +23,7 @@ struct Nets * Nets_construct(
 	this->counts = counts;
 	this->meshes = meshes;
 	this->exports = exports;
+	this->netError = netError;
 	
 	return this;
 }
@@ -46,6 +49,7 @@ struct Net * Nets_make(struct Nets * this, size_t graphSize, size_t entrySize)
 		Places_make(this->places),
 		Places_make(this->places),
 		Counts_make(this->counts),
-		Counts_make(this->counts)
+		Counts_make(this->counts),
+		this->netError
 	);
 }
