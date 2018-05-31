@@ -83,18 +83,9 @@ size_t Direction_getPlace(struct Direction * this)
 	return this->place;
 }
 
-void Direction_bind(struct Direction * this, size_t place)
-{
-	this->place = place;
-	
-	Place_bind(this->node, place + this->offset + 0);
-	Place_bind(this->previous, place + this->offset + 1);
-	Place_bind(this->next, place + this->offset + 2);
-}
-
 void Direction_create(struct Direction * this, size_t place, size_t destination)
 {
-	Direction_bind(this, place);
+	Direction_read(this, place);
 	
 	Place_set(this->node, destination);
 	Place_set(this->previous, 0);
@@ -103,7 +94,11 @@ void Direction_create(struct Direction * this, size_t place, size_t destination)
 
 void Direction_read(struct Direction * this, size_t place)
 {
-	Direction_bind(this, place);
+	this->place = place;
+	
+	Place_bind(this->node, place + this->offset + 0);
+	Place_bind(this->previous, place + this->offset + 1);
+	Place_bind(this->next, place + this->offset + 2);
 }
 
 void Direction_joinChain(struct Direction * this, size_t previous, size_t next)

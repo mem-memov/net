@@ -1,19 +1,27 @@
 #include "../source/LinkError.h"
 #include <stdlib.h>
 
+#define LINK_MAX_CALLS 1
+
 struct LinkError {
-	size_t origin;
-	size_t destination;
-	char * method;
+	char call;
+	char * method[LINK_MAX_CALLS];
+	size_t origin[LINK_MAX_CALLS];
+	size_t destination[LINK_MAX_CALLS];
 };
 
 struct LinkError * LinkError_mock()
 {
 	struct LinkError * this = malloc(sizeof(struct LinkError));
 	
-	this->origin = 55555;
-	this->destination = 55555;
-	this->method = "method never called";
+	this->call = 0;
+	
+	char i;
+	for (i = 0; i < LINK_MAX_CALLS; i++) {
+		this->method[i] = "method never called";
+		this->origin[i] = 5555;
+		this->destination[i] = 5555;
+	}
 
 	return this;
 }
@@ -26,7 +34,9 @@ void LinkError_destruct(struct LinkError * this)
 
 void LinkError_forbidSelfPointingNodes(struct LinkError * this, size_t origin, size_t destination)
 {
-	this->method = "LinkError_forbidSelfPointingNodes";
-	this->origin = origin;
-	this->destination = destination;
+	this->method[this->call] = "LinkError_forbidSelfPointingNodes";
+	this->origin[this->call] = origin;
+	this->destination[this->call] = destination;
+	
+	this->call++;
 }

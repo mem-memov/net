@@ -182,9 +182,9 @@ void it_joins_chain_of_directions()
 	Direction_joinChain(outgoing, previousPlace, nextPlace);
 	
 	assert(
-		0 == strcmp(outgoingError->method, "DirectionError_forbidZeroAndEqualtyForPreviousAndNext") 
-		&& outgoingError->previous == previousPlace
-		&& outgoingError->next == nextPlace
+		0 == strcmp(outgoingError->method[0], "DirectionError_forbidZeroAndEqualtyForPreviousAndNext") 
+		&& outgoingError->previous[0] == previousPlace
+		&& outgoingError->next[0] == nextPlace
 	);
 	assert(
 		0 == strcmp(outgoing->previous->method[0], "Place_set") 
@@ -212,8 +212,8 @@ void it_gets_appended_to_a_previous_direction()
 	Direction_append(outgoing, previousPlace);
 	
 	assert(
-		0 == strcmp(outgoingError->method, "DirectionError_forbidZeroPlaceForPrevious") 
-		&& outgoingError->previous == previousPlace
+		0 == strcmp(outgoingError->method[0], "DirectionError_forbidZeroPlaceForPrevious") 
+		&& outgoingError->previous[0] == previousPlace
 	);
 	
 	assert(
@@ -322,8 +322,8 @@ void it_gets_deleted_with_reconnection()
 	assert(0 == strcmp(outgoing->next->method[0], "Place_get"));
 
 	assert(
-		0 == strcmp(outgoingError->method, "DirectionError_forbidZeroPlaceForPrevious") 
-		&& outgoingError->previous == previousPlace
+		0 == strcmp(outgoingError->method[0], "DirectionError_forbidZeroPlaceForPrevious") 
+		&& outgoingError->previous[0] == previousPlace
 	);
 
 	// next bind
