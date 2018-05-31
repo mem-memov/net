@@ -8,6 +8,8 @@ link:
 	$(MAKE) -C Link
 mesh:
 	$(MAKE) -C Mesh
+net:
+	$(MAKE) -C Net
 node:
 	$(MAKE) -C Node
 star:
