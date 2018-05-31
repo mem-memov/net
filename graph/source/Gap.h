@@ -7,12 +7,12 @@
 struct Gap;
 
 struct Gap * Gap_construct(
-	struct Place * zero,
-	struct Place * count,
-	struct Place * next,
-	struct Place * three,
-	struct Place * four,
-	struct Place * five
+    struct Place * zero,
+    struct Place * count,
+    struct Place * next,
+    struct Place * three,
+    struct Place * four,
+    struct Place * five
 );
 
 void Gap_destruct(struct Gap * this);

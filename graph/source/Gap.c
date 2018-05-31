@@ -1,5 +1,4 @@
 #include "Gap.h"
-#include <stdlib.h>
 
 struct Gap {
 	// fields

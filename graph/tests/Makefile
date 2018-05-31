@@ -1,7 +1,9 @@
-all: direction link node star
+all: direction gap link node star
 
 direction:
 	$(MAKE) -C Direction
+gap:
+	$(MAKE) -C Gap
 link:
 	$(MAKE) -C Link
 node:
