@@ -44,6 +44,8 @@ void prepareTest()
 void demolishTest()
 {
 	Net_destruct(net);
+	Error_destruct(error);
+	Exports_destruct(exports);
 }
 
 int main(int argc, char** argv)
