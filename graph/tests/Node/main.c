@@ -177,9 +177,9 @@ void it_deletes_node()
 	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
 
 	assert(
-		0 == strcmp(error->method, "NodeError_forbidDeletingNodeWithConnections") 
-		&& outgoingLink == error->outgoingLink 
-		&& incomingLink == error->incomingLink
+		0 == strcmp(error->method[0], "NodeError_forbidDeletingNodeWithConnections") 
+		&& outgoingLink == error->outgoingLink[0]
+		&& incomingLink == error->incomingLink[0]
 	);
 	
 	assert(
@@ -497,8 +497,8 @@ void it_provides_its_outgoing_link()
 	assert(0 == strcmp(node->outgoingLink->method[0], "Place_get"));
 	
 	assert(
-		0 == strcmp(error->method, "NodeError_forbidReadingOutgoingLinkWhenNonePresent")
-		&& error->outgoingLink == outgoingLinkPlace
+		0 == strcmp(error->method[0], "NodeError_forbidReadingOutgoingLinkWhenNonePresent")
+		&& error->outgoingLink[0] == outgoingLinkPlace
 	);
 	
 	assert(
@@ -526,8 +526,8 @@ void it_provides_its_incoming_link()
 	assert(0 == strcmp(node->incomingLink->method[0], "Place_get"));
 	
 	assert(
-		0 == strcmp(error->method, "NodeError_forbidReadingIncomingLinkWhenNonePresent")
-		&& error->incomingLink == incomingLinkPlace
+		0 == strcmp(error->method[0], "NodeError_forbidReadingIncomingLinkWhenNonePresent")
+		&& error->incomingLink[0] == incomingLinkPlace
 	);
 	
 	assert(
@@ -554,8 +554,8 @@ void it_deletes_outgoing_link()
 	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_get"));
 	
 	assert(
-		0 == strcmp(error->method, "NodeError_forbidDeletingOutgoingLinkWhenNonePresent")
-		&&  error->outgoingLinkCount == 2
+		0 == strcmp(error->method[0], "NodeError_forbidDeletingOutgoingLinkWhenNonePresent")
+		&&  error->outgoingLinkCount[0] == 2
 	);
 	
 	assert(0 == strcmp(node->outgoingLinkCount->method[1], "Count_decrement"));
@@ -581,8 +581,8 @@ void it_deletes_last_outgoing_link()
 	assert(0 == strcmp(node->outgoingLinkCount->method[0], "Count_get"));
 	
 	assert(
-		0 == strcmp(error->method, "NodeError_forbidDeletingOutgoingLinkWhenNonePresent")
-		&&  error->outgoingLinkCount == 1
+		0 == strcmp(error->method[0], "NodeError_forbidDeletingOutgoingLinkWhenNonePresent")
+		&&  error->outgoingLinkCount[0] == 1
 	);
 	
 	assert(0 == strcmp(node->outgoingLinkCount->method[1], "Count_decrement"));
@@ -613,8 +613,8 @@ void it_deletes_incoming_link()
 	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_get"));
 	
 	assert(
-		0 == strcmp(error->method, "NodeError_forbidDeletingIncomingLinkWhenNonePresent")
-		&&  error->incomingLinkCount == 2
+		0 == strcmp(error->method[0], "NodeError_forbidDeletingIncomingLinkWhenNonePresent")
+		&&  error->incomingLinkCount[0] == 2
 	);
 
 	assert(0 == strcmp(node->incomingLinkCount->method[1], "Count_decrement"));
@@ -640,8 +640,8 @@ void it_deletes_last_incoming_link()
 	assert(0 == strcmp(node->incomingLinkCount->method[0], "Count_get"));
 	
 	assert(
-		0 == strcmp(error->method, "NodeError_forbidDeletingIncomingLinkWhenNonePresent")
-		&&  error->incomingLinkCount == 1
+		0 == strcmp(error->method[0], "NodeError_forbidDeletingIncomingLinkWhenNonePresent")
+		&&  error->incomingLinkCount[0] == 1
 	);
 
 	assert(0 == strcmp(node->incomingLinkCount->method[1], "Count_decrement"));
