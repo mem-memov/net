@@ -6,7 +6,7 @@
 #include "Error.h"
 #include "KnitterError.h"
 #include "LinkError.h"
-#include "NetError.h"
+#include "BoatError.h"
 #include "NodeError.h"
 #include "StarError.h"
 
@@ -24,7 +24,7 @@ struct KnitterError * Errors_makeKnitterError(struct Errors * this);
 
 struct LinkError * Errors_makeLinkError(struct Errors * this);
 
-struct NetError * Errors_makeNetError(struct Errors * this);
+struct BoatError * Errors_makeBoatError(struct Errors * this);
 
 struct NodeError * Errors_makeNodeError(struct Errors * this);
 

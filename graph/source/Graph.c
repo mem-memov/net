@@ -7,7 +7,7 @@
 #include "Imports.h"
 #include "Knitters.h"
 #include "Links.h"
-#include "Nets.h"
+#include "Boats.h"
 #include "Nodes.h"
 #include "Places.h"
 #include "Spaces.h"
@@ -20,14 +20,14 @@ struct Graph {
 	size_t entrySize;
 	size_t placeSize;
 	unsigned char * bytes;
-	struct Net * net;
+	struct Boat * boat;
 
 	// factories
 	struct Streams * streams;
 	struct Counts * counts;
 	struct Errors * errors;
 	struct Links * links;
-	struct Nets * nets;
+	struct Boats * boats;
 	struct Nodes * nodes;
 	struct Places * places;
 	struct Stars * stars;
@@ -64,7 +64,7 @@ struct Graph * Graph_construct(size_t graphSize)
 		Errors_makeCountError(this->errors)
 	);
 	
-	this->nets = Nets_construct(
+	this->boats = Boats_construct(
 		this->places, 
 		this->counts, 
 		Knitters_construct(
@@ -76,7 +76,7 @@ struct Graph * Graph_construct(size_t graphSize)
 			Errors_makeKnitterError(this->errors)
 		),
 		Exports_construct(this->streams),
-		Errors_makeNetError(this->errors)
+		Errors_makeBoatError(this->errors)
 	);
 	
 	this->links = Links_construct(
@@ -102,9 +102,9 @@ struct Graph * Graph_construct(size_t graphSize)
 		Errors_makeNodeError(this->errors)
 	);
 	
-	this->net = Nets_make(this->nets, this->graphSize, this->entrySize);
+	this->boat = Boats_make(this->boats, this->graphSize, this->entrySize);
 	
-	this->imports = Imports_construct(this->streams, this->entrySize, this->placeSize, this->net);
+	this->imports = Imports_construct(this->streams, this->entrySize, this->placeSize, this->boat);
 
 	// pool
 	this->node = Nodes_make(this->nodes);
@@ -112,7 +112,7 @@ struct Graph * Graph_construct(size_t graphSize)
 	this->destinationNode = Nodes_make(this->nodes);
 	this->link = Links_make(this->links);
 	
-	Net_create(this->net, this->placeSize);
+	Boat_create(this->boat, this->placeSize);
 
 	return this;
 }
@@ -123,7 +123,7 @@ void Graph_destruct(struct Graph * this)
 	this->places = NULL;
 	
 	// fields
-	Net_destruct(this->net);
+	Boat_destruct(this->boat);
 	
 	// pool
 	Node_destruct(this->node);
@@ -133,7 +133,7 @@ void Graph_destruct(struct Graph * this)
 	
 	// factories
 	Counts_destruct(this->counts);
-	Nets_destruct(this->nets);
+	Boats_destruct(this->boats);
 	Stars_destruct(this->stars);
 	Links_destruct(this->links);
 	Nodes_destruct(this->nodes);
@@ -149,12 +149,12 @@ void Graph_destruct(struct Graph * this)
 
 char Graph_hasFreePlace(struct Graph * this)
 {
-	return Net_hasSpaceForEntry(this->net);
+	return Boat_hasSpaceForEntry(this->boat);
 }
 
 size_t Graph_addNode(struct Graph * this)
 {
-	size_t place = Net_createNodeEntry(this->net);
+	size_t place = Boat_createNodeEntry(this->boat);
 	
 	Node_create(this->node, place);
 
@@ -184,7 +184,7 @@ void Graph_removeNode(struct Graph * this, size_t place)
 	Node_read(this->node, place);
 	Node_delete(this->node);
 	
-	Net_deleteNodeEntry(this->net, place);
+	Boat_deleteNodeEntry(this->boat, place);
 }
 
 void Graph_connectNodes(struct Graph * this, size_t origin, size_t destination)
@@ -192,7 +192,7 @@ void Graph_connectNodes(struct Graph * this, size_t origin, size_t destination)
 	Node_read(this->originNode, origin);
 	Node_read(this->destinationNode, destination);
 
-	size_t link = Net_createLinkEntry(this->net);
+	size_t link = Boat_createLinkEntry(this->boat);
 	Link_create(this->link, link, origin, destination);
 
 	Node_addOutgoingLink(this->originNode, this->link);
@@ -217,7 +217,7 @@ void Graph_disconnectNodes(struct Graph * this, size_t origin, size_t destinatio
 
 		Node_deleteIncomingLink(this->destinationNode);
 
-		Net_deleteLinkEntry(this->net, deletedOutgoingLink);
+		Boat_deleteLinkEntry(this->boat, deletedOutgoingLink);
 
 	} else {
 
@@ -229,7 +229,7 @@ void Graph_disconnectNodes(struct Graph * this, size_t origin, size_t destinatio
 
 		Node_deleteOutgoingLink(this->originNode);
 
-		Net_deleteLinkEntry(this->net, deletedIncomingLink);
+		Boat_deleteLinkEntry(this->boat, deletedIncomingLink);
 
 	}
 }
@@ -250,7 +250,7 @@ void Graph_getNodeOrigins(struct Graph * this, size_t destination, size_t ** ori
 
 char Graph_isNode(struct Graph * this, size_t place)
 {
-	if ( ! Net_isCovering(this->net, place)) {
+	if ( ! Boat_isCovering(this->boat, place)) {
 		return 0;
 	}
 	
@@ -261,7 +261,7 @@ char Graph_isNode(struct Graph * this, size_t place)
 
 void Graph_export(struct Graph * this, FILE * file)
 {
-	struct Export * export = Net_createExport(this->net);
+	struct Export * export = Boat_createExport(this->boat);
 	
 	Export_write(export, file);
 	

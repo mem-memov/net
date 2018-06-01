@@ -1,14 +1,15 @@
 #include "KnitterError.h"
-#include <stdlib.h>
 
 struct KnitterError
 {
-	//
+	struct Error * error;
 };
 
-struct KnitterError * KnitterError_construct()
+struct KnitterError * KnitterError_construct(struct Error * error)
 {
 	struct KnitterError * this = malloc(sizeof(struct KnitterError));
+	
+	this->error = error;
 
 	return this;
 }

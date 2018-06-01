@@ -1,9 +1,12 @@
 #ifndef KNITTERERROR_H
 #define KNITTERERROR_H
 
+#include <stdlib.h>
+#include "Error.h"
+
 struct KnitterError;
 
-struct KnitterError * KnitterError_construct();
+struct KnitterError * KnitterError_construct(struct Error * error);
 
 void KnitterError_destruct(struct KnitterError * this);
 

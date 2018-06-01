@@ -1,5 +1,7 @@
-all: direction gap link mesh net node star
+all: boat direction gap link mesh node star
 
+boat:
+	$(MAKE) -C Boat
 direction:
 	$(MAKE) -C Direction
 gap:
@@ -8,8 +10,6 @@ link:
 	$(MAKE) -C Link
 mesh:
 	$(MAKE) -C Mesh
-net:
-	$(MAKE) -C Net
 node:
 	$(MAKE) -C Node
 star:

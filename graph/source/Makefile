@@ -1,8 +1,17 @@
-netgraph: main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Knitter.o Knitters.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o NetError.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o
-	gcc  main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Knitter.o Knitters.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o NetError.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o -o netgraph
+netgraph: main.o Boat.o BoatError.o Boats.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Knitter.o KnitterError.o Knitters.o Link.o LinkError.o Links.o Mesh.o Meshes.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o
+	gcc  main.o Boat.o BoatError.o Boats.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Knitter.o KnitterError.o Knitters.o Link.o LinkError.o Links.o Mesh.o Meshes.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o -o netgraph
 
 main.o: main.c
 	gcc -Wall -c main.c
+
+Boat.o: Boat.c Boat.h
+	gcc -Wall -c Boat.c
+
+BoatError.o: BoatError.c BoatError.h
+	gcc -Wall -c BoatError.c
+
+Boats.o: Boats.c Boats.h
+	gcc -Wall -c Boats.c
 
 Count.o: Count.c Count.h
 	gcc -Wall -c Count.c
@@ -40,7 +49,7 @@ Gap.o: Gap.c Gap.h
 Gaps.o: Gaps.c Gaps.h
 	gcc -Wall -c Gaps.c
 
-Graph.o: Graph.c Graph.h Links.h Nets.h Nodes.h Places.h
+Graph.o: Graph.c Graph.h Links.h Boats.h Nodes.h Places.h
 	gcc -Wall -c Graph.c
 
 Import.o: Import.c Import.h
@@ -51,6 +60,9 @@ Imports.o: Imports.c Imports.h
 
 Knitter.o: Knitter.c Knitter.h
 	gcc -Wall -c Knitter.c
+	
+KnitterError.o: KnitterError.c KnitterError.h
+	gcc -Wall -c KnitterError.c
 	
 Knitters.o: Knitters.c Knitters.h
 	gcc -Wall -c Knitters.c
@@ -69,15 +81,6 @@ Mesh.o: Mesh.c Mesh.h
 
 Meshes.o: Meshes.c Meshes.h
 	gcc -Wall -c Meshes.c
-
-Net.o: Net.c Net.h
-	gcc -Wall -c Net.c
-
-NetError.o: NetError.c NetError.h
-	gcc -Wall -c NetError.c
-
-Nets.o: Nets.c Nets.h
-	gcc -Wall -c Nets.c
 
 Node.o: Node.c Node.h
 	gcc -Wall -c Node.c

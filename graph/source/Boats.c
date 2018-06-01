@@ -1,33 +1,33 @@
-#include "Nets.h"
+#include "Boats.h"
 
-struct Nets
+struct Boats
 {
 	struct Places * places;
 	struct Counts * counts;
 	struct Knitters * knitters;
 	struct Exports * exports;
-	struct NetError * netError;
+	struct BoatError * boatError;
 };
 
-struct Nets * Nets_construct(
+struct Boats * Boats_construct(
 	struct Places * places, 
 	struct Counts * counts, 
 	struct Knitters * knitters, 
 	struct Exports * exports,
-	struct NetError * netError
+	struct BoatError * boatError
 ) {
-	struct Nets * this = malloc(sizeof(struct Nets));
+	struct Boats * this = malloc(sizeof(struct Boats));
 	
 	this->places = places;
 	this->counts = counts;
 	this->knitters = knitters;
 	this->exports = exports;
-	this->netError = netError;
+	this->boatError = boatError;
 	
 	return this;
 }
 
-void Nets_destruct(struct Nets * this)
+void Boats_destruct(struct Boats * this)
 {
 	Knitters_destruct(this->knitters);
 	Exports_destruct(this->exports);
@@ -36,9 +36,9 @@ void Nets_destruct(struct Nets * this)
 	this = NULL;
 }
 
-struct Net * Nets_make(struct Nets * this, size_t graphSize, size_t entrySize)
+struct Boat * Boats_make(struct Boats * this, size_t graphSize, size_t entrySize)
 {
-	return Net_construct(
+	return Boat_construct(
 		graphSize, 
 		entrySize, 
 		this->exports,
@@ -46,6 +46,6 @@ struct Net * Nets_make(struct Nets * this, size_t graphSize, size_t entrySize)
 		Counts_make(this->counts),
 		Counts_make(this->counts),
 		Knitters_make(this->knitters, entrySize),
-		this->netError
+		this->boatError
 	);
 }
