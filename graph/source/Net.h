@@ -26,7 +26,7 @@ void Net_create(struct Net * this, size_t placeSize);
 
 void Net_read(struct Net * this);
 
-char Net_hasCreatedEntry(struct Net * this, size_t place);
+char Net_hasEntry(struct Net * this, size_t place);
 
 char Net_canCreateEntry(struct Net * this);
 

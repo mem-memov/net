@@ -57,9 +57,9 @@ void Net_read(struct Net * this)
 	this->call++;
 }
 
-char Net_hasCreatedEntry(struct Net * this, size_t place)
+char Net_hasEntry(struct Net * this, size_t place)
 {
-	this->method[this->call] = "Net_hasCreatedEntry";
+	this->method[this->call] = "Net_hasEntry";
 	this->place[this->call] = place;
 	
 	char hasCreatedEntry = this->hasCreatedEntry[this->call];

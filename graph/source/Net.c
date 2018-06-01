@@ -71,7 +71,7 @@ void Net_read(struct Net * this)
 	Place_bind(this->gapPlace, 3);
 }
 
-char Net_hasCreatedEntry(struct Net * this, size_t place)
+char Net_hasEntry(struct Net * this, size_t place)
 {
 	if (place < this->entrySize) {
 		return 0;
@@ -104,7 +104,7 @@ size_t Net_createEntry(struct Net * this)
 		Place_set(this->gapPlace, nextGapPlace);
 	} else {
 		place = Place_get(this->nextPlace);
-		Place_set(this->nextPlace, Place_get(this->nextPlace) + this->entrySize);
+		Place_set(this->nextPlace, place + this->entrySize);
 	}
 
 	return place;

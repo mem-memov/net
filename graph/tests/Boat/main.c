@@ -111,7 +111,7 @@ void it_checks_if_place_covered_by_boat()
 	
 	char result = Boat_isCovering(boat, place);
 	
-	assert(0 == strcmp(net->method[0], "Net_hasCreatedEntry"));
+	assert(0 == strcmp(net->method[0], "Net_hasEntry"));
 	
 	assert(result == 1);
 	

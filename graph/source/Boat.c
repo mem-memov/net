@@ -76,7 +76,7 @@ void Boat_read(struct Boat * this)
 
 char Boat_isCovering(struct Boat * this, size_t place)
 {
-	return Net_hasCreatedEntry(this->net, place);
+	return Net_hasEntry(this->net, place);
 }
 
 char Boat_hasSpaceForEntry(struct Boat * this)
