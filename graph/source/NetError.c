@@ -33,3 +33,10 @@ void NetError_requireFittingInSize(struct NetError * this, size_t nextPlace, siz
 		Error_terminate(this->error);
 	}
 }
+
+void NetError_requireFreeSpaceAvailable(struct NetError * this, char isAvailable)
+{
+	if ( ! isAvailable ) {
+		Error_terminate(this->error);
+	}
+}

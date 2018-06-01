@@ -1,5 +1,5 @@
-netgraph: main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o NetError.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o
-	gcc  main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o NetError.o Node.o NodeError.o Nodes.o Place.o Places.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o -o netgraph
+netgraph: main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Knitter.o Knitters.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o NetError.o Nets.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o
+	gcc  main.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Knitter.o Knitters.o Link.o LinkError.o Links.o Mesh.o Meshes.o Net.o Nets.o NetError.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o -o netgraph
 
 main.o: main.c
 	gcc -Wall -c main.c
@@ -49,6 +49,12 @@ Import.o: Import.c Import.h
 Imports.o: Imports.c Imports.h
 	gcc -Wall -c Imports.c
 
+Knitter.o: Knitter.c Knitter.h
+	gcc -Wall -c Knitter.c
+	
+Knitters.o: Knitters.c Knitters.h
+	gcc -Wall -c Knitters.c
+	
 Link.o: Link.c Link.h
 	gcc -Wall -c Link.c
 	
@@ -87,6 +93,12 @@ Place.o: Place.c Place.h
 	
 Places.o: Places.c Places.h
 	gcc -Wall -c Places.c
+
+Space.o: Space.c Space.h
+	gcc -Wall -c Space.c
+
+Spaces.o: Spaces.c Spaces.h
+	gcc -Wall -c Spaces.c
 
 Star.o: Star.c Star.h
 	gcc -Wall -c Star.c

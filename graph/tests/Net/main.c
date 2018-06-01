@@ -184,6 +184,57 @@ void it_denies_place_covered_by_net_when_behind_naxt_place()
 	demolishTest();
 }
 
+void it_confirms_free_space_if_next_entry_fits_garph_limit()
+{
+	prepareTest();
+	
+	nextPlace->value[0] = graphSize - 12;
+	
+	char result = Net_hasSpaceForEntry(net);
+	
+	assert(0 == strcmp(nextPlace->method[0], "Place_get"));
+	
+	assert(result == 1);
+	
+	demolishTest();
+}
+
+void it_confirms_free_space_if_gaps_present()
+{
+	prepareTest();
+	
+	nextPlace->value[0] = graphSize;
+	gapPlace->value[0] = graphSize - 12;
+	
+	char result = Net_hasSpaceForEntry(net);
+	
+	assert(0 == strcmp(nextPlace->method[0], "Place_get"));
+	
+	assert(0 == strcmp(gapPlace->method[0], "Place_get"));
+	
+	assert(result == 1);
+	
+	demolishTest();
+}
+
+void it_denies_having_free_space()
+{
+	prepareTest();
+	
+	nextPlace->value[0] = graphSize;
+	gapPlace->value[0] = 0;
+	
+	char result = Net_hasSpaceForEntry(net);
+	
+	assert(0 == strcmp(nextPlace->method[0], "Place_get"));
+	
+	assert(0 == strcmp(gapPlace->method[0], "Place_get"));
+	
+	assert(result == 0);
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	it_writes_new_net_to_store();
@@ -191,6 +242,9 @@ int main(int argc, char** argv)
 	it_confirms_place_covered_by_net();
 	it_denies_place_covered_by_net_when_place_in_head();
 	it_denies_place_covered_by_net_when_behind_naxt_place();
+	it_confirms_free_space_if_next_entry_fits_garph_limit();
+	it_confirms_free_space_if_gaps_present();
+	it_denies_having_free_space();
 
 	return (EXIT_SUCCESS);
 }

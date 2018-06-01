@@ -1,9 +1,10 @@
 #ifndef NETS_H
 #define NETS_H
 
+#include <stdlib.h>
 #include "Counts.h"
 #include "Exports.h"
-#include "Meshes.h"
+#include "Knitters.h"
 #include "Net.h"
 #include "NetError.h"
 #include "Places.h"
@@ -13,7 +14,7 @@ struct Nets;
 struct Nets * Nets_construct(
 	struct Places * places, 
 	struct Counts * counts, 
-	struct Meshes * meshes, 
+        struct Knitters * knitters,
 	struct Exports * exports,
         struct NetError * netError
 );

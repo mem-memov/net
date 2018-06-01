@@ -5,10 +5,12 @@
 #include "Errors.h"
 #include "Exports.h"
 #include "Imports.h"
+#include "Knitters.h"
 #include "Links.h"
 #include "Nets.h"
 #include "Nodes.h"
 #include "Places.h"
+#include "Spaces.h"
 #include "Stars.h"
 #include "Streams.h"
 #include "Telescopes.h"
@@ -65,8 +67,12 @@ struct Graph * Graph_construct(size_t graphSize)
 	this->nets = Nets_construct(
 		this->places, 
 		this->counts, 
-		Meshes_construct(
-			Gaps_construct(this->places)
+		Knitters_construct(
+			Meshes_construct(
+				Gaps_construct(this->places)
+			),
+			this->places,
+			Spaces_construct()
 		),
 		Exports_construct(this->streams),
 		Errors_makeNetError(this->errors)
@@ -147,7 +153,7 @@ char Graph_hasFreePlace(struct Graph * this)
 
 size_t Graph_addNode(struct Graph * this)
 {
-	size_t place = Net_createEntry(this->net, 1);
+	size_t place = Net_createNodeEntry(this->net);
 	
 	Node_create(this->node, place);
 
@@ -177,7 +183,7 @@ void Graph_removeNode(struct Graph * this, size_t place)
 	Node_read(this->node, place);
 	Node_delete(this->node);
 	
-	Net_addGap(this->net, place, 1);
+	Net_addNodeGap(this->net, place);
 }
 
 void Graph_connectNodes(struct Graph * this, size_t origin, size_t destination)
@@ -185,7 +191,7 @@ void Graph_connectNodes(struct Graph * this, size_t origin, size_t destination)
 	Node_read(this->originNode, origin);
 	Node_read(this->destinationNode, destination);
 
-	size_t link = Net_createEntry(this->net, 0);
+	size_t link = Net_createLinkEntry(this->net);
 	Link_create(this->link, link, origin, destination);
 
 	Node_addOutgoingLink(this->originNode, this->link);
@@ -210,7 +216,7 @@ void Graph_disconnectNodes(struct Graph * this, size_t origin, size_t destinatio
 
 		Node_deleteIncomingLink(this->destinationNode);
 
-		Net_addGap(this->net, deletedOutgoingLink, 0);
+		Net_addLinkGap(this->net, deletedOutgoingLink);
 
 	} else {
 
@@ -222,7 +228,7 @@ void Graph_disconnectNodes(struct Graph * this, size_t origin, size_t destinatio
 
 		Node_deleteOutgoingLink(this->originNode);
 
-		Net_addGap(this->net, deletedIncomingLink, 0);
+		Net_addLinkGap(this->net, deletedIncomingLink);
 
 	}
 }
