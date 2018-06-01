@@ -38,9 +38,34 @@ void demolishTest()
 	NetError_destruct(error);
 }
 
+void it_writes_new_net_to_store()
+{
+	prepareTest();
+	
+	size_t placeSizeInBytes = 4;
+	
+	Net_create(net, placeSizeInBytes);
+	
+	// bind
+	assert(
+		0 == strcmp(placeSize->method[0], "Place_bind") 
+		&& placeSize->position[0] == 1
+	);
+	assert(
+		0 == strcmp(nextPlace->method[0], "Place_bind") 
+		&& nextPlace->position[0] == 2
+	);
+	assert(
+		0 == strcmp(gapPlace->method[0], "Place_bind") 
+		&& gapPlace->position[0] == 3
+	);
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
-
+	it_writes_new_net_to_store();
 
 	return (EXIT_SUCCESS);
 }
