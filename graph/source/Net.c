@@ -48,6 +48,9 @@ void Net_destruct(struct Net * this)
 	Place_destruct(this->nextPlace);
 	Place_destruct(this->gapPlace);
 	
+	Mesh_destruct(this->mesh);
+	Space_destruct(this->space);
+	
 	free(this);
 	this = NULL;
 }

@@ -131,17 +131,12 @@ char Link_isIncomingFromNode(struct Link * this, size_t origin)
 {
 	this->method[this->call] = "Link_isIncomingFromNode";
 	this->originNode[this->call] = origin;
+	
 	char isIncomingFromNode = this->isIncomingFromNode[this->call];
 
 	this->call++;
 	
-	if (1 == isIncomingFromNode) {
-		return 1;
-	} 
-	
-	if (0 == isIncomingFromNode) {
-		return 0;
-	}
+	return isIncomingFromNode;
 }
 
 size_t Link_getNextOutgoing(struct Link * this)
