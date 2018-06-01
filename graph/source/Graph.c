@@ -5,7 +5,7 @@
 #include "Errors.h"
 #include "Exports.h"
 #include "Imports.h"
-#include "Knitters.h"
+#include "Nets.h"
 #include "Links.h"
 #include "Boats.h"
 #include "Nodes.h"
@@ -67,13 +67,13 @@ struct Graph * Graph_construct(size_t graphSize)
 	this->boats = Boats_construct(
 		this->places, 
 		this->counts, 
-		Knitters_construct(
+		Nets_construct(
 			Meshes_construct(
 				Gaps_construct(this->places)
 			),
 			this->places,
 			Spaces_construct(graphSize),
-			Errors_makeKnitterError(this->errors)
+			Errors_makeNetError(this->errors)
 		),
 		Exports_construct(this->streams),
 		Errors_makeBoatError(this->errors)

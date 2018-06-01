@@ -4,7 +4,7 @@
 #include "CountError.h"
 #include "DirectionError.h"
 #include "Error.h"
-#include "KnitterError.h"
+#include "NetError.h"
 #include "LinkError.h"
 #include "BoatError.h"
 #include "NodeError.h"
@@ -20,7 +20,7 @@ struct CountError * Errors_makeCountError(struct Errors * this);
 
 struct DirectionError * Errors_makeDirectionError(struct Errors * this);
 
-struct KnitterError * Errors_makeKnitterError(struct Errors * this);
+struct NetError * Errors_makeNetError(struct Errors * this);
 
 struct LinkError * Errors_makeLinkError(struct Errors * this);
 

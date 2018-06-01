@@ -6,7 +6,7 @@
 #include "../Count.c"
 #include "../Export.c"
 #include "../Exports.c"
-#include "../Knitter.c"
+#include "../Net.c"
 #include "../BoatError.c"
 #include "../Place.c"
 #include "../Stream.c"
@@ -18,7 +18,7 @@ struct Exports * exports;
 struct Place * one;
 struct Count * nodeCount;
 struct Count * linkCount;
-struct Knitter * knitter;
+struct Net * net;
 struct BoatError * error;
 
 void prepareTest()
@@ -29,10 +29,10 @@ void prepareTest()
 	one = Place_mock();
 	nodeCount = Count_mock();
 	linkCount = Count_mock();
-	knitter = Knitter_mock();
+	net = Net_mock();
 	error = BoatError_mock();
 	
-	boat = Boat_construct(graphSize, entrySize, exports, one, nodeCount, linkCount, knitter, error);
+	boat = Boat_construct(graphSize, entrySize, exports, one, nodeCount, linkCount, net, error);
 }
 
 void demolishTest()
@@ -54,7 +54,7 @@ void it_writes_new_boat_to_store()
 		0 == strcmp(one->method[0], "Place_bind") 
 		&& one->position[0] == 0
 	);
-	assert(0 == strcmp(knitter->method[0], "Knitter_read"));
+	assert(0 == strcmp(net->method[0], "Net_read"));
 	assert(
 		0 == strcmp(nodeCount->method[0], "Count_bind") 
 		&& nodeCount->position[0] == 4
@@ -69,8 +69,8 @@ void it_writes_new_boat_to_store()
 		&& one->value[1] == 1
 	);
 	assert(
-		0 == strcmp(knitter->method[1], "Knitter_create") 
-		&& knitter->placeSize[1] == placeSizeByteLength
+		0 == strcmp(net->method[1], "Net_create") 
+		&& net->placeSize[1] == placeSizeByteLength
 	);
 	assert(0 == strcmp(nodeCount->method[1], "Count_create"));
 	assert(0 == strcmp(linkCount->method[1], "Count_create"));
@@ -88,7 +88,7 @@ void it_reads_boat_fields_from_store()
 		0 == strcmp(one->method[0], "Place_bind") 
 		&& one->position[0] == 0
 	);
-	assert(0 == strcmp(knitter->method[0], "Knitter_read"));
+	assert(0 == strcmp(net->method[0], "Net_read"));
 	assert(
 		0 == strcmp(nodeCount->method[0], "Count_bind") 
 		&& nodeCount->position[0] == 4
@@ -107,11 +107,11 @@ void it_checks_if_place_covered_by_boat()
 	
 	size_t place = 18;
 	
-	knitter->hasCreatedEntry[0] = 1;
+	net->hasCreatedEntry[0] = 1;
 	
 	char result = Boat_isCovering(boat, place);
 	
-	assert(0 == strcmp(knitter->method[0], "Knitter_hasCreatedEntry"));
+	assert(0 == strcmp(net->method[0], "Net_hasCreatedEntry"));
 	
 	assert(result == 1);
 	
@@ -122,11 +122,11 @@ void it_checks_free_space()
 {
 	prepareTest();
 	
-	knitter->canCreateEntry[0] = 0;
+	net->canCreateEntry[0] = 0;
 	
 	char result = Boat_hasSpaceForEntry(boat);
 	
-	assert(0 == strcmp(knitter->method[0], "Knitter_canCreateEntry"));
+	assert(0 == strcmp(net->method[0], "Net_canCreateEntry"));
 	
 	assert(result == 0);
 	
@@ -140,19 +140,19 @@ void it_creates_link_entry()
 	size_t place = 72;
 	char hasFreeSpace = 1;
 	
-	knitter->canCreateEntry[0] = hasFreeSpace;
-	knitter->place[1] = place;
+	net->canCreateEntry[0] = hasFreeSpace;
+	net->place[1] = place;
 	
 	size_t result = Boat_createLinkEntry(boat);
 	
-	assert(0 == strcmp(knitter->method[0], "Knitter_canCreateEntry"));
+	assert(0 == strcmp(net->method[0], "Net_canCreateEntry"));
 	
 	assert(
 		0 == strcmp(error->method[0], "BoatError_requireFreeSpaceAvailable") 
 		&& error->isAvailable[0] == hasFreeSpace
 	);
 	
-	assert(0 == strcmp(knitter->method[1], "Knitter_createEntry"));
+	assert(0 == strcmp(net->method[1], "Net_createEntry"));
 	
 	assert(0 == strcmp(linkCount->method[0], "Count_increment"));
 	
@@ -168,19 +168,19 @@ void it_creates_node_entry()
 	size_t place = 72;
 	char hasFreeSpace = 1;
 	
-	knitter->canCreateEntry[0] = hasFreeSpace;
-	knitter->place[1] = place;
+	net->canCreateEntry[0] = hasFreeSpace;
+	net->place[1] = place;
 	
 	size_t result = Boat_createNodeEntry(boat);
 	
-	assert(0 == strcmp(knitter->method[0], "Knitter_canCreateEntry"));
+	assert(0 == strcmp(net->method[0], "Net_canCreateEntry"));
 	
 	assert(
 		0 == strcmp(error->method[0], "BoatError_requireFreeSpaceAvailable") 
 		&& error->isAvailable[0] == hasFreeSpace
 	);
 	
-	assert(0 == strcmp(knitter->method[1], "Knitter_createEntry"));
+	assert(0 == strcmp(net->method[1], "Net_createEntry"));
 	
 	assert(0 == strcmp(nodeCount->method[0], "Count_increment"));
 	
@@ -198,8 +198,8 @@ void it_deletes_link_entry()
 	Boat_deleteLinkEntry(boat, place);
 	
 	assert(
-		0 == strcmp(knitter->method[0], "Knitter_deleteEntry") 
-		&& knitter->place[0] == place
+		0 == strcmp(net->method[0], "Net_deleteEntry") 
+		&& net->place[0] == place
 	);
 	
 	assert(0 == strcmp(linkCount->method[0], "Count_decrement"));
@@ -216,8 +216,8 @@ void it_deletes_node_entry()
 	Boat_deleteNodeEntry(boat, place);
 	
 	assert(
-		0 == strcmp(knitter->method[0], "Knitter_deleteEntry") 
-		&& knitter->place[0] == place
+		0 == strcmp(net->method[0], "Net_deleteEntry") 
+		&& net->place[0] == place
 	);
 	
 	assert(0 == strcmp(nodeCount->method[0], "Count_decrement"));
@@ -231,14 +231,14 @@ void it_creates_export()
 	
 	size_t size = 200;
 	
-	knitter->size[0] = size;
+	net->size[0] = size;
 	
 	struct Export * export = Export_mock();
 	exports->export[0] = export;
 	
 	struct Export * result = Boat_createExport(boat);
 	
-	assert(0 == strcmp(knitter->method[0], "Knitter_calculateSize"));
+	assert(0 == strcmp(net->method[0], "Net_calculateSize"));
 
 	assert(
 		0 == strcmp(exports->method[0], "Exports_make") 
@@ -268,9 +268,9 @@ void it_imports_stream()
 	);
 	
 	assert(
-		0 == strcmp(knitter->method[0], "Knitter_import") 
-		&& knitter->stream[0] == stream
-		&& knitter->graphSize[0] == boat->graphSize
+		0 == strcmp(net->method[0], "Net_import") 
+		&& net->stream[0] == stream
+		&& net->graphSize[0] == boat->graphSize
 	);
 	
 	demolishTest();

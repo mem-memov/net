@@ -1,5 +1,5 @@
-netgraph: main.o Boat.o BoatError.o Boats.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Knitter.o KnitterError.o Knitters.o Link.o LinkError.o Links.o Mesh.o Meshes.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o
-	gcc  main.o Boat.o BoatError.o Boats.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Knitter.o KnitterError.o Knitters.o Link.o LinkError.o Links.o Mesh.o Meshes.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o -o netgraph
+netgraph: main.o Boat.o BoatError.o Boats.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Net.o NetError.o Nets.o Link.o LinkError.o Links.o Mesh.o Meshes.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o
+	gcc  main.o Boat.o BoatError.o Boats.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Net.o NetError.o Nets.o Link.o LinkError.o Links.o Mesh.o Meshes.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o -o netgraph
 
 main.o: main.c
 	gcc -Wall -c main.c
@@ -58,14 +58,14 @@ Import.o: Import.c Import.h
 Imports.o: Imports.c Imports.h
 	gcc -Wall -c Imports.c
 
-Knitter.o: Knitter.c Knitter.h
-	gcc -Wall -c Knitter.c
+Net.o: Net.c Net.h
+	gcc -Wall -c Net.c
 	
-KnitterError.o: KnitterError.c KnitterError.h
-	gcc -Wall -c KnitterError.c
+NetError.o: NetError.c NetError.h
+	gcc -Wall -c NetError.c
 	
-Knitters.o: Knitters.c Knitters.h
-	gcc -Wall -c Knitters.c
+Nets.o: Nets.c Nets.h
+	gcc -Wall -c Nets.c
 	
 Link.o: Link.c Link.h
 	gcc -Wall -c Link.c

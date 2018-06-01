@@ -10,7 +10,7 @@ struct Boat {
 	struct Count * nodeCount;
 	struct Count * linkCount;
 	
-	struct Knitter * knitter;
+	struct Net * net;
 	
 	struct BoatError * error;
 };
@@ -22,7 +22,7 @@ struct Boat * Boat_construct(
 	struct Place * one,
 	struct Count * nodeCount,
 	struct Count * linkCount,
-	struct Knitter * knitter,
+	struct Net * net,
 	struct BoatError * error
 ) {
 	struct Boat * this = malloc(sizeof(struct Boat));
@@ -37,7 +37,7 @@ struct Boat * Boat_construct(
 	this->nodeCount = nodeCount;
 	this->linkCount = linkCount;
 	
-	this->knitter = knitter;
+	this->net = net;
 	
 	this->error = error;
 
@@ -50,7 +50,7 @@ void Boat_destruct(struct Boat * this)
 	Count_destruct(this->nodeCount);
 	Count_destruct(this->linkCount);
 	
-	Knitter_destruct(this->knitter);
+	Net_destruct(this->net);
 	
 	free(this);
 	this = NULL;
@@ -61,7 +61,7 @@ void Boat_create(struct Boat * this, size_t placeSize)
 	Boat_read(this);
 	
 	Place_set(this->one, 1);
-	Knitter_create(this->knitter, placeSize);
+	Net_create(this->net, placeSize);
 	Count_create(this->nodeCount);
 	Count_create(this->linkCount);
 }
@@ -69,29 +69,29 @@ void Boat_create(struct Boat * this, size_t placeSize)
 void Boat_read(struct Boat * this)
 {
 	Place_bind(this->one, 0);
-	Knitter_read(this->knitter);
+	Net_read(this->net);
 	Count_bind(this->nodeCount, 4);
 	Count_bind(this->linkCount, 5);
 }
 
 char Boat_isCovering(struct Boat * this, size_t place)
 {
-	return Knitter_hasCreatedEntry(this->knitter, place);
+	return Net_hasCreatedEntry(this->net, place);
 }
 
 char Boat_hasSpaceForEntry(struct Boat * this)
 {
-	return Knitter_canCreateEntry(this->knitter);
+	return Net_canCreateEntry(this->net);
 }
 
 size_t Boat_createLinkEntry(struct Boat * this)
 {
 	BoatError_requireFreeSpaceAvailable(
 		this->error,
-		Knitter_canCreateEntry(this->knitter)
+		Net_canCreateEntry(this->net)
 	);
 
-	size_t place = Knitter_createEntry(this->knitter);
+	size_t place = Net_createEntry(this->net);
 
 	Count_increment(this->linkCount);
 
@@ -102,10 +102,10 @@ size_t Boat_createNodeEntry(struct Boat * this)
 {
 	BoatError_requireFreeSpaceAvailable(
 		this->error,
-		Knitter_canCreateEntry(this->knitter)
+		Net_canCreateEntry(this->net)
 	);
 
-	size_t place = Knitter_createEntry(this->knitter);
+	size_t place = Net_createEntry(this->net);
 
 	Count_increment(this->nodeCount);
 
@@ -114,21 +114,21 @@ size_t Boat_createNodeEntry(struct Boat * this)
 
 void Boat_deleteLinkEntry(struct Boat * this, size_t place)
 {
-	Knitter_deleteEntry(this->knitter, place);
+	Net_deleteEntry(this->net, place);
 
 	Count_decrement(this->linkCount);
 }
 
 void Boat_deleteNodeEntry(struct Boat * this, size_t place)
 {
-	Knitter_deleteEntry(this->knitter, place);
+	Net_deleteEntry(this->net, place);
 
 	Count_decrement(this->nodeCount);
 }
 
 struct Export * Boat_createExport(struct Boat * this)
 {
-	size_t size = Knitter_calculateSize(this->knitter);
+	size_t size = Net_calculateSize(this->net);
 	
 	return Exports_make(this->exports, size);
 }
@@ -137,5 +137,5 @@ void Boat_import(struct Boat * this, struct Stream * stream)
 {
 	BoatError_requireOboatoVerifyCorrectPlaceSize(this->error, Place_get(this->one));
 	
-	Knitter_import(this->knitter, stream, this->graphSize);
+	Net_import(this->net, stream, this->graphSize);
 }

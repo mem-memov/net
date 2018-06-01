@@ -5,7 +5,7 @@
 #include "Count.h"
 #include "Export.h"
 #include "Exports.h"
-#include "Knitter.h"
+#include "Net.h"
 #include "BoatError.h"
 #include "Place.h"
 #include "Stream.h"
@@ -19,7 +19,7 @@ struct Boat * Boat_construct(
 	struct Place * one,
 	struct Count * nodeCount,
 	struct Count * linkCount,
-	struct Knitter * knitter,
+	struct Net * net,
 	struct BoatError * error
 );
 

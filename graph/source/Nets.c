@@ -1,45 +1,45 @@
-#include "Knitters.h"
+#include "Nets.h"
 
-struct Knitters
+struct Nets
 {
 	struct Meshes * meshes;
 	struct Places * places;
 	struct Spaces * spaces;
 	
-	struct KnitterError * knitterError;
+	struct NetError * netError;
 };
 
-struct Knitters * Knitters_construct(
+struct Nets * Nets_construct(
 	struct Meshes * meshes, 
 	struct Places * places, 
 	struct Spaces * spaces,
-	struct KnitterError * knitterError
+	struct NetError * netError
 ) {
-	struct Knitters * this = malloc(sizeof(struct Knitters));
+	struct Nets * this = malloc(sizeof(struct Nets));
 
 	this->meshes = meshes;
 	this->places = places;
 	this->spaces = spaces;
-	this->knitterError = knitterError;
+	this->netError = netError;
 	
 	return this;
 }
 
-void Knitters_destruct(struct Knitters * this)
+void Nets_destruct(struct Nets * this)
 {
 	free(this);
 	this = NULL;
 }
 
-struct Knitter * Knitters_make(struct Knitters * this, size_t entrySize)
+struct Net * Nets_make(struct Nets * this, size_t entrySize)
 {
-	return Knitter_construct(
+	return Net_construct(
 		entrySize, 
 		Places_make(this->places),
 		Places_make(this->places),
 		Places_make(this->places),
 		Meshes_make(this->meshes),
 		Spaces_make(this->spaces),
-		this->knitterError
+		this->netError
 	);
 }

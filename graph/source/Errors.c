@@ -6,7 +6,7 @@ struct Errors
 	struct Error * error;
 	struct CountError * countError;
 	struct DirectionError * directionError;
-	struct KnitterError * knitterError;
+	struct NetError * netError;
 	struct LinkError * linkError;
 	struct BoatError * boatError;
 	struct NodeError * nodeError;
@@ -21,7 +21,7 @@ struct Errors * Errors_construct(struct Error * error)
 	
 	this->countError = NULL;
 	this->directionError = NULL;
-	this->knitterError = NULL;
+	this->netError = NULL;
 	this->linkError = NULL;
 	this->boatError = NULL;
 	this->nodeError = NULL;
@@ -38,8 +38,8 @@ void Errors_destruct(struct Errors * this)
 	if (NULL != this->directionError) {
 		DirectionError_destruct(this->directionError);
 	}
-	if (NULL != this->knitterError) {
-		KnitterError_destruct(this->knitterError);
+	if (NULL != this->netError) {
+		NetError_destruct(this->netError);
 	}
 	if (NULL != this->linkError) {
 		LinkError_destruct(this->linkError);
@@ -77,13 +77,13 @@ struct DirectionError * Errors_makeDirectionError(struct Errors * this)
 	return this->directionError;
 }
 
-struct KnitterError * Errors_makeKnitterError(struct Errors * this)
+struct NetError * Errors_makeNetError(struct Errors * this)
 {
-	if (NULL == this->knitterError) {
-		this->knitterError = KnitterError_construct(this->error);
+	if (NULL == this->netError) {
+		this->netError = NetError_construct(this->error);
 	}
 	
-	return this->knitterError;
+	return this->netError;
 }
 
 struct LinkError * Errors_makeLinkError(struct Errors * this)

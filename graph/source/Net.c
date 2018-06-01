@@ -1,6 +1,6 @@
-#include "Knitter.h"
+#include "Net.h"
 
-struct Knitter
+struct Net
 {
 	size_t entrySize;
 	
@@ -12,19 +12,19 @@ struct Knitter
 	struct Mesh * mesh;
 	struct Space * space;
 	
-	struct KnitterError * error;
+	struct NetError * error;
 };
 
-struct Knitter * Knitter_construct(
+struct Net * Net_construct(
 	size_t entrySize, 
 	struct Place * placeSize,
 	struct Place * nextPlace,
 	struct Place * gapPlace,
 	struct Mesh * mesh,
 	struct Space * space,
-	struct KnitterError * error
+	struct NetError * error
 ) {
-	struct Knitter * this = malloc(sizeof(struct Knitter));
+	struct Net * this = malloc(sizeof(struct Net));
 	
 	this->entrySize = entrySize;
 	
@@ -41,7 +41,7 @@ struct Knitter * Knitter_construct(
 	return this;
 }
 
-void Knitter_destruct(struct Knitter * this)
+void Net_destruct(struct Net * this)
 {
 	// fields
 	Place_destruct(this->placeSize);
@@ -52,23 +52,23 @@ void Knitter_destruct(struct Knitter * this)
 	this = NULL;
 }
 
-void Knitter_create(struct Knitter * this, size_t placeSize)
+void Net_create(struct Net * this, size_t placeSize)
 {
-	Knitter_read(this);
+	Net_read(this);
 
 	Place_set(this->placeSize, placeSize);
 	Place_set(this->nextPlace, this->entrySize);
 	Place_set(this->gapPlace, 0);
 }
 
-void Knitter_read(struct Knitter * this)
+void Net_read(struct Net * this)
 {
 	Place_bind(this->placeSize, 1);
 	Place_bind(this->nextPlace, 2);
 	Place_bind(this->gapPlace, 3);
 }
 
-char Knitter_hasCreatedEntry(struct Knitter * this, size_t place)
+char Net_hasCreatedEntry(struct Net * this, size_t place)
 {
 	if (place < this->entrySize) {
 		return 0;
@@ -81,7 +81,7 @@ char Knitter_hasCreatedEntry(struct Knitter * this, size_t place)
 	return 1;
 }
 
-char Knitter_canCreateEntry(struct Knitter * this)
+char Net_canCreateEntry(struct Net * this)
 {
 	return Space_canTakeAnotherEntry(
 		this->space, 
@@ -90,7 +90,7 @@ char Knitter_canCreateEntry(struct Knitter * this)
 	);
 }
 
-size_t Knitter_createEntry(struct Knitter * this)
+size_t Net_createEntry(struct Net * this)
 {
 	size_t place = Place_get(this->gapPlace);
 	
@@ -107,7 +107,7 @@ size_t Knitter_createEntry(struct Knitter * this)
 	return place;
 }
 
-void Knitter_deleteEntry(struct Knitter * this, size_t place)
+void Net_deleteEntry(struct Net * this, size_t place)
 {
 	size_t nextGapPlace = Place_get(this->gapPlace);
 	
@@ -116,14 +116,14 @@ void Knitter_deleteEntry(struct Knitter * this, size_t place)
 	Place_set(this->gapPlace, place);
 }
 
-size_t Knitter_calculateSize(struct Knitter * this)
+size_t Net_calculateSize(struct Net * this)
 {
 	return Place_get(this->placeSize) * Place_get(this->nextPlace);
 }
 
-void Knitter_import(struct Knitter * this, struct Stream * stream, size_t graphSize)
+void Net_import(struct Net * this, struct Stream * stream, size_t graphSize)
 {
-	KnitterError_requireFittingInSize(this->error, Place_get(this->nextPlace), graphSize);
+	NetError_requireFittingInSize(this->error, Place_get(this->nextPlace), graphSize);
 	
 	size_t placeSize = Place_get(this->placeSize);
 	size_t nextPlace = Place_get(this->nextPlace);

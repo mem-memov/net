@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "Counts.h"
 #include "Exports.h"
-#include "Knitters.h"
+#include "Nets.h"
 #include "Boat.h"
 #include "BoatError.h"
 #include "Places.h"
@@ -14,7 +14,7 @@ struct Boats;
 struct Boats * Boats_construct(
 	struct Places * places, 
 	struct Counts * counts, 
-        struct Knitters * knitters,
+        struct Nets * nets,
 	struct Exports * exports,
         struct BoatError * boatError
 );
