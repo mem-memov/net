@@ -6,7 +6,7 @@
 #include "../Count.c"
 #include "../Export.c"
 #include "../Exports.c"
-#include "../Mesh.c"
+#include "../Knitter.c"
 #include "../NetError.c"
 #include "../Place.c"
 #include "../Stream.c"
@@ -14,31 +14,25 @@
 struct Net * net;
 size_t graphSize;
 size_t entrySize; 
-struct Mesh * mesh;
 struct Exports * exports;
 struct Place * one;
-struct Place * placeSize;
-struct Place * nextPlace;
-struct Place * gapPlace;
 struct Count * nodeCount;
 struct Count * linkCount;
+struct Knitter * knitter;
 struct NetError * error;
 
 void prepareTest()
 {
 	graphSize = 100;
 	entrySize = 6;
-	mesh = Mesh_mock();
 	exports = Exports_mock();
 	one = Place_mock();
-	placeSize = Place_mock();
-	nextPlace = Place_mock();
-	gapPlace = Place_mock();
 	nodeCount = Count_mock();
 	linkCount = Count_mock();
+	knitter = Knitter_mock();
 	error = NetError_mock();
 	
-	net = Net_construct(graphSize, entrySize, mesh, exports, one, placeSize, nextPlace, gapPlace, nodeCount, linkCount, error);
+	net = Net_construct(graphSize, entrySize, exports, one, nodeCount, linkCount, knitter, error);
 }
 
 void demolishTest()
@@ -60,18 +54,7 @@ void it_writes_new_net_to_store()
 		0 == strcmp(one->method[0], "Place_bind") 
 		&& one->position[0] == 0
 	);
-	assert(
-		0 == strcmp(placeSize->method[0], "Place_bind") 
-		&& placeSize->position[0] == 1
-	);
-	assert(
-		0 == strcmp(nextPlace->method[0], "Place_bind") 
-		&& nextPlace->position[0] == 2
-	);
-	assert(
-		0 == strcmp(gapPlace->method[0], "Place_bind") 
-		&& gapPlace->position[0] == 3
-	);
+	assert(0 == strcmp(knitter->method[0], "Knitter_read"));
 	assert(
 		0 == strcmp(nodeCount->method[0], "Count_bind") 
 		&& nodeCount->position[0] == 4
@@ -86,16 +69,8 @@ void it_writes_new_net_to_store()
 		&& one->value[1] == 1
 	);
 	assert(
-		0 == strcmp(placeSize->method[1], "Place_set") 
-		&& placeSize->value[1] == placeSizeByteLength
-	);
-	assert(
-		0 == strcmp(nextPlace->method[1], "Place_set") 
-		&& nextPlace->value[1] == entrySize
-	);
-	assert(
-		0 == strcmp(gapPlace->method[1], "Place_set") 
-		&& gapPlace->value[1] == 0
+		0 == strcmp(knitter->method[1], "Knitter_create") 
+		&& knitter->placeSize[1] == placeSizeByteLength
 	);
 	assert(0 == strcmp(nodeCount->method[1], "Count_create"));
 	assert(0 == strcmp(linkCount->method[1], "Count_create"));
@@ -113,18 +88,7 @@ void it_reads_net_fields_from_store()
 		0 == strcmp(one->method[0], "Place_bind") 
 		&& one->position[0] == 0
 	);
-	assert(
-		0 == strcmp(placeSize->method[0], "Place_bind") 
-		&& placeSize->position[0] == 1
-	);
-	assert(
-		0 == strcmp(nextPlace->method[0], "Place_bind") 
-		&& nextPlace->position[0] == 2
-	);
-	assert(
-		0 == strcmp(gapPlace->method[0], "Place_bind") 
-		&& gapPlace->position[0] == 3
-	);
+	assert(0 == strcmp(knitter->method[0], "Knitter_read"));
 	assert(
 		0 == strcmp(nodeCount->method[0], "Count_bind") 
 		&& nodeCount->position[0] == 4
@@ -137,98 +101,32 @@ void it_reads_net_fields_from_store()
 	demolishTest();
 }
 
-void it_confirms_place_covered_by_net()
+void it_checks_if_place_covered_by_net()
 {
 	prepareTest();
 	
 	size_t place = 18;
 	
-	nextPlace->value[0] = 36;
+	knitter->hasCreatedEntry[0] = 1;
 	
 	char result = Net_isCovering(net, place);
 	
-	assert(0 == strcmp(nextPlace->method[0], "Place_get"));
+	assert(0 == strcmp(knitter->method[0], "Knitter_hasCreatedEntry"));
 	
 	assert(result == 1);
 	
 	demolishTest();
 }
 
-void it_denies_place_covered_by_net_when_place_in_head()
+void it_checks_free_space()
 {
 	prepareTest();
 	
-	size_t place = 2;
-
-	char result = Net_isCovering(net, place);
-
-	assert(result == 0);
-	
-	demolishTest();
-}
-
-void it_denies_place_covered_by_net_when_behind_naxt_place()
-{
-	prepareTest();
-	
-	size_t place = 60;
-	
-	nextPlace->value[0] = 36;
-	
-	char result = Net_isCovering(net, place);
-	
-	assert(0 == strcmp(nextPlace->method[0], "Place_get"));
-	
-	assert(result == 0);
-	
-	demolishTest();
-}
-
-void it_confirms_free_space_if_next_entry_fits_garph_limit()
-{
-	prepareTest();
-	
-	nextPlace->value[0] = graphSize - 12;
+	knitter->canCreateEntry[0] = 0;
 	
 	char result = Net_hasSpaceForEntry(net);
 	
-	assert(0 == strcmp(nextPlace->method[0], "Place_get"));
-	
-	assert(result == 1);
-	
-	demolishTest();
-}
-
-void it_confirms_free_space_if_gaps_present()
-{
-	prepareTest();
-	
-	nextPlace->value[0] = graphSize;
-	gapPlace->value[0] = graphSize - 12;
-	
-	char result = Net_hasSpaceForEntry(net);
-	
-	assert(0 == strcmp(nextPlace->method[0], "Place_get"));
-	
-	assert(0 == strcmp(gapPlace->method[0], "Place_get"));
-	
-	assert(result == 1);
-	
-	demolishTest();
-}
-
-void it_denies_having_free_space()
-{
-	prepareTest();
-	
-	nextPlace->value[0] = graphSize;
-	gapPlace->value[0] = 0;
-	
-	char result = Net_hasSpaceForEntry(net);
-	
-	assert(0 == strcmp(nextPlace->method[0], "Place_get"));
-	
-	assert(0 == strcmp(gapPlace->method[0], "Place_get"));
+	assert(0 == strcmp(knitter->method[0], "Knitter_canCreateEntry"));
 	
 	assert(result == 0);
 	
@@ -239,12 +137,8 @@ int main(int argc, char** argv)
 {
 	it_writes_new_net_to_store();
 	it_reads_net_fields_from_store();
-	it_confirms_place_covered_by_net();
-	it_denies_place_covered_by_net_when_place_in_head();
-	it_denies_place_covered_by_net_when_behind_naxt_place();
-	it_confirms_free_space_if_next_entry_fits_garph_limit();
-	it_confirms_free_space_if_gaps_present();
-	it_denies_having_free_space();
+	it_checks_if_place_covered_by_net();
+	it_checks_free_space();
 
 	return (EXIT_SUCCESS);
 }
