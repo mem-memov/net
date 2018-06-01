@@ -5,18 +5,22 @@ struct Knitters
 	struct Meshes * meshes;
 	struct Places * places;
 	struct Spaces * spaces;
+	
+	struct KnitterError * knitterError;
 };
 
 struct Knitters * Knitters_construct(
 	struct Meshes * meshes, 
 	struct Places * places, 
-	struct Spaces * spaces
+	struct Spaces * spaces,
+	struct KnitterError * knitterError
 ) {
 	struct Knitters * this = malloc(sizeof(struct Knitters));
 
 	this->meshes = meshes;
 	this->places = places;
 	this->spaces = spaces;
+	this->knitterError = knitterError;
 	
 	return this;
 }
@@ -33,7 +37,9 @@ struct Knitter * Knitters_make(struct Knitters * this, size_t entrySize)
 		entrySize, 
 		Places_make(this->places),
 		Places_make(this->places),
+		Places_make(this->places),
 		Meshes_make(this->meshes),
-		Spaces_make(this->spaces)
+		Spaces_make(this->spaces),
+		this->knitterError
 	);
 }

@@ -4,6 +4,7 @@
 #include "CountError.h"
 #include "DirectionError.h"
 #include "Error.h"
+#include "KnitterError.h"
 #include "LinkError.h"
 #include "NetError.h"
 #include "NodeError.h"
@@ -18,6 +19,8 @@ void Errors_destruct(struct Errors * this);
 struct CountError * Errors_makeCountError(struct Errors * this);
 
 struct DirectionError * Errors_makeDirectionError(struct Errors * this);
+
+struct KnitterError * Errors_makeKnitterError(struct Errors * this);
 
 struct LinkError * Errors_makeLinkError(struct Errors * this);
 

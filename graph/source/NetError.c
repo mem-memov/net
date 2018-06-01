@@ -27,13 +27,6 @@ void NetError_requireOneToVerifyCorrectPlaceSize(struct NetError * this, size_t 
 	}
 }
 
-void NetError_requireFittingInSize(struct NetError * this, size_t nextPlace, size_t graphSize)
-{
-	if ( nextPlace - 1 > graphSize ) {
-		Error_terminate(this->error);
-	}
-}
-
 void NetError_requireFreeSpaceAvailable(struct NetError * this, char isAvailable)
 {
 	if ( ! isAvailable ) {

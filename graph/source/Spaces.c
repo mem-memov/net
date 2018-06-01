@@ -1,14 +1,15 @@
 #include "Spaces.h"
-#include <stdlib.h>
 
 struct Spaces
 {
-	//
+	size_t graphSize;
 };
 
-struct Spaces * Spaces_construct()
+struct Spaces * Spaces_construct(size_t graphSize)
 {
 	struct Spaces * this = malloc(sizeof(struct Spaces));
+	
+	this->graphSize = graphSize;
 
 	return this;
 }
@@ -21,5 +22,5 @@ void Spaces_destruct(struct Spaces * this)
 
 struct Space * Spaces_make(struct Spaces * this)
 {
-	return Space_construct();
+	return Space_construct(this->graphSize);
 }

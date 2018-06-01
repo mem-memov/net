@@ -136,13 +136,6 @@ struct Export * Net_createExport(struct Net * this)
 void Net_import(struct Net * this, struct Stream * stream)
 {
 	NetError_requireOneToVerifyCorrectPlaceSize(this->error, Place_get(this->one));
-	NetError_requireFittingInSize(this->error, Place_get(this->nextPlace), this->graphSize);
 	
-	size_t placeSize = Place_get(this->placeSize);
-	size_t nextPlace = Place_get(this->nextPlace);
-
-	size_t offset = this->entrySize * placeSize;
-	size_t size = nextPlace * placeSize - offset;
-	
-	Stream_read(stream, offset, size);
+	Knitter_import(this->knitter, stream, this->graphSize);
 }

@@ -72,7 +72,8 @@ struct Graph * Graph_construct(size_t graphSize)
 				Gaps_construct(this->places)
 			),
 			this->places,
-			Spaces_construct()
+			Spaces_construct(graphSize),
+			Errors_makeKnitterError(this->errors)
 		),
 		Exports_construct(this->streams),
 		Errors_makeNetError(this->errors)

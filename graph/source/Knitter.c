@@ -11,6 +11,8 @@ struct Knitter
 	
 	struct Mesh * mesh;
 	struct Space * space;
+	
+	struct KnitterError * error;
 };
 
 struct Knitter * Knitter_construct(
@@ -19,7 +21,8 @@ struct Knitter * Knitter_construct(
 	struct Place * nextPlace,
 	struct Place * gapPlace,
 	struct Mesh * mesh,
-	struct Space * space
+	struct Space * space,
+	struct KnitterError * error
 ) {
 	struct Knitter * this = malloc(sizeof(struct Knitter));
 	
@@ -32,6 +35,8 @@ struct Knitter * Knitter_construct(
 	
 	this->mesh = mesh;
 	this->space = space;
+	
+	this->error = error;
 
 	return this;
 }
@@ -114,4 +119,17 @@ void Knitter_deleteEntry(struct Knitter * this, size_t place)
 size_t Knitter_calculateSize(struct Knitter * this)
 {
 	return Place_get(this->placeSize) * Place_get(this->nextPlace);
+}
+
+void Knitter_import(struct Knitter * this, struct Stream * stream, size_t graphSize)
+{
+	KnitterError_requireFittingInSize(this->error, Place_get(this->nextPlace), graphSize);
+	
+	size_t placeSize = Place_get(this->placeSize);
+	size_t nextPlace = Place_get(this->nextPlace);
+
+	size_t offset = this->entrySize * placeSize;
+	size_t size = nextPlace * placeSize - offset;
+	
+	Stream_read(stream, offset, size);
 }

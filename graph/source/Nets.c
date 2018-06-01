@@ -43,7 +43,6 @@ struct Net * Nets_make(struct Nets * this, size_t graphSize, size_t entrySize)
 		entrySize, 
 		this->exports,
 		Places_make(this->places),
-		Places_make(this->places),
 		Counts_make(this->counts),
 		Counts_make(this->counts),
 		Knitters_make(this->knitters, entrySize),

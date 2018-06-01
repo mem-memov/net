@@ -17,7 +17,6 @@ struct Net * Net_construct(
 	size_t entrySize, 
 	struct Exports * exports,
 	struct Place * one,
-	struct Place * placeSize,
 	struct Count * nodeCount,
 	struct Count * linkCount,
 	struct Knitter * knitter,
