@@ -112,14 +112,14 @@ size_t Net_createNodeEntry(struct Net * this)
 	return place;
 }
 
-void Net_addLinkGap(struct Net * this, size_t place)
+void Net_deleteLinkEntry(struct Net * this, size_t place)
 {
 	Knitter_deleteEntry(this->knitter, place);
 
 	Count_decrement(this->linkCount);
 }
 
-void Net_addNodeGap(struct Net * this, size_t place)
+void Net_deleteNodeEntry(struct Net * this, size_t place)
 {
 	Knitter_deleteEntry(this->knitter, place);
 

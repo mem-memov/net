@@ -37,9 +37,9 @@ size_t Net_createLinkEntry(struct Net * this);
 
 size_t Net_createNodeEntry(struct Net * this);
 
-void Net_addLinkGap(struct Net * this, size_t place);
+void Net_deleteLinkEntry(struct Net * this, size_t place);
 
-void Net_addNodeGap(struct Net * this, size_t place);
+void Net_deleteNodeEntry(struct Net * this, size_t place);
 
 struct Export * Net_createExport(struct Net * this);
 

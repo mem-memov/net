@@ -133,12 +133,161 @@ void it_checks_free_space()
 	demolishTest();
 }
 
+void it_creates_link_entry()
+{
+	prepareTest();
+	
+	size_t place = 72;
+	char hasFreeSpace = 1;
+	
+	knitter->canCreateEntry[0] = hasFreeSpace;
+	knitter->place[1] = place;
+	
+	size_t result = Net_createLinkEntry(net);
+	
+	assert(0 == strcmp(knitter->method[0], "Knitter_canCreateEntry"));
+	
+	assert(
+		0 == strcmp(error->method[0], "NetError_requireFreeSpaceAvailable") 
+		&& error->isAvailable[0] == hasFreeSpace
+	);
+	
+	assert(0 == strcmp(knitter->method[1], "Knitter_createEntry"));
+	
+	assert(0 == strcmp(linkCount->method[0], "Count_increment"));
+	
+	assert(result == place);
+	
+	demolishTest();
+}
+
+void it_creates_node_entry()
+{
+	prepareTest();
+	
+	size_t place = 72;
+	char hasFreeSpace = 1;
+	
+	knitter->canCreateEntry[0] = hasFreeSpace;
+	knitter->place[1] = place;
+	
+	size_t result = Net_createNodeEntry(net);
+	
+	assert(0 == strcmp(knitter->method[0], "Knitter_canCreateEntry"));
+	
+	assert(
+		0 == strcmp(error->method[0], "NetError_requireFreeSpaceAvailable") 
+		&& error->isAvailable[0] == hasFreeSpace
+	);
+	
+	assert(0 == strcmp(knitter->method[1], "Knitter_createEntry"));
+	
+	assert(0 == strcmp(nodeCount->method[0], "Count_increment"));
+	
+	assert(result == place);
+	
+	demolishTest();
+}
+
+void it_deletes_link_entry()
+{
+	prepareTest();
+	
+	size_t place = 72;
+	
+	Net_deleteLinkEntry(net, place);
+	
+	assert(
+		0 == strcmp(knitter->method[0], "Knitter_deleteEntry") 
+		&& knitter->place[0] == place
+	);
+	
+	assert(0 == strcmp(linkCount->method[0], "Count_decrement"));
+	
+	demolishTest();
+}
+
+void it_deletes_node_entry()
+{
+	prepareTest();
+	
+	size_t place = 72;
+	
+	Net_deleteNodeEntry(net, place);
+	
+	assert(
+		0 == strcmp(knitter->method[0], "Knitter_deleteEntry") 
+		&& knitter->place[0] == place
+	);
+	
+	assert(0 == strcmp(nodeCount->method[0], "Count_decrement"));
+	
+	demolishTest();
+}
+
+void it_creates_export()
+{
+	prepareTest();
+	
+	size_t size = 200;
+	
+	knitter->size[0] = size;
+	
+	struct Export * export = Export_mock();
+	exports->export[0] = export;
+	
+	struct Export * result = Net_createExport(net);
+	
+	assert(0 == strcmp(knitter->method[0], "Knitter_calculateSize"));
+
+	assert(
+		0 == strcmp(exports->method[0], "Exports_make") 
+		&& exports->size[0] == size
+	);
+	
+	assert(result == export);
+	
+	demolishTest();
+}
+
+void it_imports_stream()
+{
+	prepareTest();
+	
+	one->value[0] = 1;
+	
+	struct Stream * stream = Stream_mock();
+	
+	Net_import(net, stream);
+	
+	assert(0 == strcmp(one->method[0], "Place_get"));
+	
+	assert(
+		0 == strcmp(error->method[0], "NetError_requireOneToVerifyCorrectPlaceSize") 
+		&& error->one[0] == 1
+	);
+	
+	assert(
+		0 == strcmp(knitter->method[0], "Knitter_import") 
+		&& knitter->stream[0] == stream
+		&& knitter->graphSize[0] == net->graphSize
+	);
+	
+	demolishTest();
+}
+
 int main(int argc, char** argv)
 {
 	it_writes_new_net_to_store();
 	it_reads_net_fields_from_store();
 	it_checks_if_place_covered_by_net();
 	it_checks_free_space();
+	it_creates_link_entry();
+	it_creates_node_entry();
+	it_deletes_link_entry();
+	it_deletes_node_entry();
+	it_creates_export();
+	it_imports_stream();
 
 	return (EXIT_SUCCESS);
 }

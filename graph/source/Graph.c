@@ -184,7 +184,7 @@ void Graph_removeNode(struct Graph * this, size_t place)
 	Node_read(this->node, place);
 	Node_delete(this->node);
 	
-	Net_addNodeGap(this->net, place);
+	Net_deleteNodeEntry(this->net, place);
 }
 
 void Graph_connectNodes(struct Graph * this, size_t origin, size_t destination)
@@ -217,7 +217,7 @@ void Graph_disconnectNodes(struct Graph * this, size_t origin, size_t destinatio
 
 		Node_deleteIncomingLink(this->destinationNode);
 
-		Net_addLinkGap(this->net, deletedOutgoingLink);
+		Net_deleteLinkEntry(this->net, deletedOutgoingLink);
 
 	} else {
 
@@ -229,7 +229,7 @@ void Graph_disconnectNodes(struct Graph * this, size_t origin, size_t destinatio
 
 		Node_deleteOutgoingLink(this->originNode);
 
-		Net_addLinkGap(this->net, deletedIncomingLink);
+		Net_deleteLinkEntry(this->net, deletedIncomingLink);
 
 	}
 }

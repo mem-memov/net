@@ -7,8 +7,7 @@ struct NetError
 	char call;
 	char * method[NETERROR_MAX_CALLS];
 	size_t one[NETERROR_MAX_CALLS];
-	size_t nextPlace[NETERROR_MAX_CALLS];
-	size_t graphSize[NETERROR_MAX_CALLS];
+	size_t isAvailable[NETERROR_MAX_CALLS];
 };
 
 struct NetError * NetError_mock()
@@ -21,8 +20,7 @@ struct NetError * NetError_mock()
 	for (i = 0; i < NETERROR_MAX_CALLS; i++) {
 		this->method[i] = "method never called";
 		this->one[i] = 55555;
-		this->nextPlace[i] = 55555;
-		this->graphSize[i] = 55555;
+		this->isAvailable[i] = 47;
 	}
 
 	return this;
@@ -42,11 +40,10 @@ void NetError_requireOneToVerifyCorrectPlaceSize(struct NetError * this, size_t 
 	this->call++;
 }
 
-void NetError_requireFittingInSize(struct NetError * this, size_t nextPlace, size_t graphSize)
+void NetError_requireFreeSpaceAvailable(struct NetError * this, char isAvailable)
 {
-	this->method[this->call] = "NetError_requireFittingInSize";
-	this->nextPlace[this->call] = nextPlace;
-	this->graphSize[this->call] = graphSize;
+	this->method[this->call] = "NetError_requireFreeSpaceAvailable";
+	this->isAvailable[this->call] = isAvailable;
 	
 	this->call++;
 }
