@@ -2,6 +2,7 @@
 #define STREAM_H
 
 #include <stdio.h>
+#include <stdlib.h>
 
 struct Stream;
 

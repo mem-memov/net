@@ -1,4 +1,4 @@
-all: direction gap link mesh node star
+all: direction gap link mesh net node star
 
 direction:
 	$(MAKE) -C Direction

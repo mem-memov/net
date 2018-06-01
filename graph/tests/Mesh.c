@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "../source/Mesh.h"
 
 #define MESH_MAX_CALLS 1
 
@@ -6,6 +6,8 @@ struct Mesh
 {
 	char call;
 	char * method[MESH_MAX_CALLS];
+	size_t place[MESH_MAX_CALLS];
+	size_t nextGapPlace[MESH_MAX_CALLS];
 };
 
 struct Mesh * Mesh_mock()
@@ -17,6 +19,8 @@ struct Mesh * Mesh_mock()
 	char i;
 	for (i = 0; i < MESH_MAX_CALLS; i++) {
 		this->method[i] = "method never called";
+		this->place[i] = 55555;
+		this->nextGapPlace[i] = 55555;
 	}
 
 	return this;
