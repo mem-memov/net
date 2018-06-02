@@ -46,9 +46,9 @@ size_t Mesh_removeGap(struct Mesh * this, size_t place)
 	this->method[this->call] = "Mesh_removeGap";
 	this->place[this->call] = place;
 	
-	this->call++;
-	
 	size_t nextGapPlace = this->nextGapPlace[this->call];
+	
+	this->call++;
 	
 	return nextGapPlace;
 }

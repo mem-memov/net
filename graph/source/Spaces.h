@@ -6,7 +6,7 @@
 
 struct Spaces;
 
-struct Spaces * Spaces_construct(size_t graphSize);
+struct Spaces * Spaces_construct(size_t graphSize, size_t entrySize, size_t placeSize);
 
 void Spaces_destruct(struct Spaces * this);
 

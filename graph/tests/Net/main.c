@@ -183,8 +183,8 @@ void it_creates_entry_when_no_gaps()
 	assert(0 == strcmp(nextPlace->method[0], "Place_get"));
 	
 	assert(
-		0 == strcmp(nextPlace->method[0], "Place_set") 
-		&& nextPlace->value[0] == 306
+		0 == strcmp(nextPlace->method[1], "Place_set") 
+		&& nextPlace->value[1] == 306
 	);
 	
 	assert(result = 300);
@@ -208,9 +208,10 @@ void it_creates_entry_using_gaps()
 		&& mesh->place[0] == 120
 	);
 	
+	printf("%zu\n", gapPlace->value[1]);
 	assert(
-		0 == strcmp(gapPlace->method[0], "Place_set") 
-		&& gapPlace->value[0] == 72
+		0 == strcmp(gapPlace->method[1], "Place_set") 
+		&& gapPlace->value[1] == 72
 	);
 	
 	assert(result = 120);
