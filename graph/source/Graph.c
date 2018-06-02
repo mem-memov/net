@@ -1,37 +1,15 @@
 #include "Graph.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include "Counts.h"
-#include "Errors.h"
-#include "Exports.h"
-#include "Imports.h"
-#include "Nets.h"
-#include "Links.h"
-#include "Boats.h"
-#include "Nodes.h"
-#include "Places.h"
-#include "Spaces.h"
-#include "Stars.h"
-#include "Streams.h"
-#include "Telescopes.h"
+#include "Boat.h"
+#include "Factory.h"
+#include "Export.h"
+#include "Import.h"
+#include "Link.h"
+#include "Node.h"
 
 struct Graph {
-	size_t graphSize;
-	size_t entrySize;
-	size_t placeSize;
 	unsigned char * bytes;
 	struct Boat * boat;
-
-	// factories
-	struct Streams * streams;
-	struct Counts * counts;
-	struct Errors * errors;
-	struct Links * links;
-	struct Boats * boats;
-	struct Nodes * nodes;
-	struct Places * places;
-	struct Stars * stars;
-	struct Imports * imports;
+	struct Factory * factory;
 	
 	// pool
 	struct Node * node;
@@ -40,87 +18,39 @@ struct Graph {
 	struct Link * link;
 };
 
-struct Graph * Graph_construct(size_t graphSize)
+struct Graph * Graph_construct(size_t graphSize, size_t placeSize)
 {
 	struct Graph * this = malloc(sizeof(struct Graph));
 	
 	if (graphSize < 1) {
 		exit(0);
 	}
-	
-	this->graphSize = graphSize;
-	this->entrySize = 6;
-	this->placeSize = 4;
-	this->bytes = malloc(this->graphSize * this->entrySize * this->placeSize);
-	
-	// factories
-	this->errors = Errors_construct(Error_construct());
-	this->places = Places_construct(this->placeSize, this->bytes);
-	
-	this->streams = Streams_construct(this->bytes);
-	
-	this->counts = Counts_construct(
-		this->places, 
-		Errors_makeCountError(this->errors)
-	);
-	
-	this->boats = Boats_construct(
-		this->places, 
-		this->counts, 
-		Nets_construct(
-			Meshes_construct(
-				Gaps_construct(this->places)
-			),
-			this->places,
-			Spaces_construct(graphSize, this->entrySize, this->placeSize),
-			Errors_makeNetError(this->errors)
-		),
-		Exports_construct(this->streams),
-		Errors_makeBoatError(this->errors)
-	);
-	
-	this->links = Links_construct(
-		Errors_makeLinkError(this->errors), 
-		Directions_construct(
-			this->places, 
-			Errors_makeDirectionError(this->errors)
-		)
-	);
+	if (placeSize < 1) {
+		exit(0);
+	}
 
-	this->stars = Stars_construct(
-		this->links,
-		Telescopes_construct(
-			this->links
-		),
-		Errors_makeStarError(this->errors)
-	);
+	size_t entrySize = 6;
+	this->bytes = malloc(graphSize * entrySize * placeSize);
 	
-	this->nodes = Nodes_construct(
-		this->places, 
-		this->counts, 
-		this->stars, 
-		Errors_makeNodeError(this->errors)
-	);
-	
-	this->boat = Boats_make(this->boats, this->graphSize, this->entrySize);
-	
-	this->imports = Imports_construct(this->streams, this->entrySize, this->placeSize, this->boat);
+	this->factory = Factory_construct(this->bytes, graphSize, entrySize, placeSize);
+
+	this->boat = Factory_makeBoat(this->factory);
 
 	// pool
-	this->node = Nodes_make(this->nodes);
-	this->originNode = Nodes_make(this->nodes);
-	this->destinationNode = Nodes_make(this->nodes);
-	this->link = Links_make(this->links);
+	this->node = Factory_makeNode(this->factory);
+	this->originNode = Factory_makeNode(this->factory);
+	this->destinationNode = Factory_makeNode(this->factory);
+	this->link = Factory_makeLink(this->factory);
 	
-	Boat_create(this->boat, this->placeSize);
+	Boat_create(this->boat, placeSize);
 
 	return this;
 }
 
 void Graph_destruct(struct Graph * this)
 {
-	free(this->places);
-	this->places = NULL;
+	free(this->bytes);
+	this->bytes = NULL;
 	
 	// fields
 	Boat_destruct(this->boat);
@@ -132,16 +62,7 @@ void Graph_destruct(struct Graph * this)
 	Link_destruct(this->link);
 	
 	// factories
-	Counts_destruct(this->counts);
-	Boats_destruct(this->boats);
-	Stars_destruct(this->stars);
-	Links_destruct(this->links);
-	Nodes_destruct(this->nodes);
-	Places_destruct(this->places);
-	Errors_destruct(this->errors);
-	
-	Imports_destruct(this->imports);
-	Streams_destruct(this->streams);
+	Factory_destruct(this->factory);
 	
 	free(this);
 	this = NULL;
@@ -270,7 +191,7 @@ void Graph_export(struct Graph * this, FILE * file)
 
 void Graph_import(struct Graph * this, FILE * file)
 {
-	struct Import * import = Imports_make(this->imports);
+	struct Import * import = Factory_makeImport(this->factory);
 	
 	Import_read(import, file);
 	

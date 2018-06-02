@@ -6,7 +6,7 @@
 
 struct Graph;
 
-struct Graph * Graph_construct(size_t size);
+struct Graph * Graph_construct(size_t graphSize, size_t placeSize);
 
 void Graph_destruct(struct Graph * this);
 

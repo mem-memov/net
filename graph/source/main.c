@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv) {
 	
-	struct Graph * graph = Graph_construct(100);
+	struct Graph * graph = Graph_construct(100, 4);
 
 	char command[100];
 	size_t place;
