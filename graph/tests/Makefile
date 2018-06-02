@@ -1,7 +1,9 @@
-all: boat direction gap link mesh net node space star
+all: count boat direction gap link mesh net node space star
 
 boat:
 	$(MAKE) -C Boat
+count:
+	$(MAKE) -C Count
 direction:
 	$(MAKE) -C Direction
 gap:

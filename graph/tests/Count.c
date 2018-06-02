@@ -1,5 +1,4 @@
 #include "../source/Count.h"
-#include <stdlib.h>
 
 #define COUNT_MAX_CALLS 2
 

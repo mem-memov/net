@@ -1,6 +1,4 @@
 #include "CountError.h"
-#include <stdlib.h>
-#include "Error.h"
 
 struct CountError
 {
