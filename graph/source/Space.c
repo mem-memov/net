@@ -26,7 +26,7 @@ void Space_destruct(struct Space * this)
 
 char Space_canTakeAnotherEntry(struct Space * this, size_t nextPlace, size_t gapPlace)
 {
-	if ( nextPlace + (this->entrySize * this->placeSize) < this->graphSize ) {
+	if ( nextPlace + (this->entrySize * this->placeSize) <= this->graphSize ) {
 		return 1;
 	}
 	
