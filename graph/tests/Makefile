@@ -1,4 +1,4 @@
-all: boat direction gap link mesh net node star
+all: boat direction gap link mesh net node space star
 
 boat:
 	$(MAKE) -C Boat
@@ -14,6 +14,8 @@ net:
 	$(MAKE) -C Net
 node:
 	$(MAKE) -C Node
+space:
+	$(MAKE) -C Space
 star:
 	$(MAKE) -C Star
 telescope:
