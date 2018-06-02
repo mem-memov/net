@@ -12,4 +12,6 @@ void CountError_destruct(struct CountError * this);
 
 void CountError_forbidNegativeValueWhenDecrementing(struct CountError * this, size_t value);
 
+void CountError_forbidOverflowWhenIncrementing(struct CountError * this, size_t value);
+
 #endif

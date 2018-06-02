@@ -1,5 +1,4 @@
 #include "Place.h"
-#include <stdlib.h>
 
 struct Place
 {

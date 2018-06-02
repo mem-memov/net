@@ -38,3 +38,10 @@ void CountError_forbidNegativeValueWhenDecrementing(struct CountError * this, si
 	this->call++;
 }
 
+void CountError_forbidOverflowWhenIncrementing(struct CountError * this, size_t value)
+{
+	this->method[this->call] = "CountError_forbidOverflowWhenIncrementing";
+	this->value[this->call] = value;
+	
+	this->call++;
+}

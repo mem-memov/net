@@ -43,8 +43,8 @@ void Count_delete(struct Count * this)
 void Count_increment(struct Count * this)
 {
 	size_t value = Place_get(this->place);
-	
-	// TODO: check overflow
+
+	CountError_forbidOverflowWhenIncrementing(this->error, value);
 	
 	value++;
 	

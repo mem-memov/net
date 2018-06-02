@@ -1,4 +1,4 @@
-all: count boat direction gap link mesh net node space star
+all: count boat direction gap link mesh net node place space star
 
 boat:
 	$(MAKE) -C Boat
@@ -16,6 +16,8 @@ net:
 	$(MAKE) -C Net
 node:
 	$(MAKE) -C Node
+place:
+	$(MAKE) -C Place
 space:
 	$(MAKE) -C Space
 star:
