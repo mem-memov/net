@@ -207,8 +207,7 @@ void it_creates_entry_using_gaps()
 		0 == strcmp(mesh->method[0], "Mesh_removeGap") 
 		&& mesh->place[0] == 120
 	);
-	
-	printf("%zu\n", gapPlace->value[1]);
+
 	assert(
 		0 == strcmp(gapPlace->method[1], "Place_set") 
 		&& gapPlace->value[1] == 72
@@ -216,6 +215,80 @@ void it_creates_entry_using_gaps()
 	
 	assert(result = 120);
 	
+	demolishTest();
+}
+
+void it_deletes_entry()
+{
+	prepareTest();
+	
+	size_t place = 360;
+	size_t nextGapPlace = 78;
+	
+	gapPlace->value[0] = nextGapPlace;
+	
+	Net_deleteEntry(net, place);
+	
+	assert(0 == strcmp(gapPlace->method[0], "Place_get"));
+	
+	assert(
+		0 == strcmp(mesh->method[0], "Mesh_addGap") 
+		&& mesh->place[0] == place
+		&& mesh->nextGapPlace[0] == nextGapPlace
+	);
+	
+	assert(
+		0 == strcmp(gapPlace->method[1], "Place_set") 
+		&& gapPlace->value[1] == place
+	);
+	
+	demolishTest();
+}
+
+void it_calculates_size()
+{
+	prepareTest();
+	
+	nextPlace->value[0] = 30;
+	placeSize->value[0] = 4;
+	
+	size_t result = Net_calculateSize(net);
+	
+	assert(0 == strcmp(nextPlace->method[0], "Place_get"));
+	assert(0 == strcmp(placeSize->method[0], "Place_get"));
+	
+	assert(result == 120);
+	
+	demolishTest();
+}
+
+void it_imports_stream()
+{
+	prepareTest();
+	
+	struct Stream * stream = Stream_mock();
+	
+	nextPlace->value[0] = 30;
+	placeSize->value[0] = 4;
+	
+	Net_import(net, stream, 1200);
+	
+	assert(0 == strcmp(nextPlace->method[0], "Place_get"));
+	
+	assert(
+		0 == strcmp(error->method[0], "NetError_requireFittingInSize") 
+		&& error->nextPlace[0] == 30
+		&& error->graphSize[0] == 1200
+	);
+	
+	assert(0 == strcmp(placeSize->method[0], "Place_get"));
+	
+	assert(
+		0 == strcmp(stream->method[0], "Stream_read") 
+		&& stream->offset[0] == 24
+		&& stream->length[0] == 96
+	);
+
 	demolishTest();
 }
 
@@ -229,6 +302,9 @@ int main(int argc, char** argv)
 	it_checks_if_another_entry_possible();
 	it_creates_entry_when_no_gaps();
 	it_creates_entry_using_gaps();
+	it_deletes_entry();
+	it_calculates_size();
+	it_imports_stream();
 
 	return (EXIT_SUCCESS);
 }

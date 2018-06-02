@@ -126,10 +126,11 @@ size_t Net_calculateSize(struct Net * this)
 
 void Net_import(struct Net * this, struct Stream * stream, size_t graphSize)
 {
-	NetError_requireFittingInSize(this->error, Place_get(this->nextPlace), graphSize);
+	size_t nextPlace = Place_get(this->nextPlace);
+	
+	NetError_requireFittingInSize(this->error, nextPlace, graphSize);
 	
 	size_t placeSize = Place_get(this->placeSize);
-	size_t nextPlace = Place_get(this->nextPlace);
 
 	size_t offset = this->entrySize * placeSize;
 	size_t size = nextPlace * placeSize - offset;
