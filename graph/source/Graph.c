@@ -42,7 +42,7 @@ struct Graph * Graph_construct(size_t graphSize, size_t placeSize)
 	this->destinationNode = Factory_makeNode(this->factory);
 	this->link = Factory_makeLink(this->factory);
 	
-	Boat_create(this->boat, placeSize);
+	Boat_create(this->boat);
 
 	return this;
 }

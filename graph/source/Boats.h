@@ -21,7 +21,7 @@ struct Boats * Boats_construct(
 
 void Boats_destruct(struct Boats * this);
 
-struct Boat * Boats_make(struct Boats * this, size_t graphSize, size_t entrySize);
+struct Boat * Boats_make(struct Boats * this, size_t graphSize, size_t entrySize, size_t placeSize);
 
 #endif
 

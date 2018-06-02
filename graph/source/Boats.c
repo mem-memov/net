@@ -36,11 +36,12 @@ void Boats_destruct(struct Boats * this)
 	this = NULL;
 }
 
-struct Boat * Boats_make(struct Boats * this, size_t graphSize, size_t entrySize)
+struct Boat * Boats_make(struct Boats * this, size_t graphSize, size_t entrySize, size_t placeSize)
 {
 	return Boat_construct(
 		graphSize, 
 		entrySize, 
+		placeSize,
 		this->exports,
 		Places_make(this->places),
 		Counts_make(this->counts),

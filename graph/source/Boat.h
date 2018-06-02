@@ -15,6 +15,7 @@ struct Boat;
 struct Boat * Boat_construct(
 	size_t graphSize, 
 	size_t entrySize, 
+	size_t placeSize,
 	struct Exports * exports,
 	struct Place * one,
 	struct Count * nodeCount,
@@ -25,7 +26,7 @@ struct Boat * Boat_construct(
 
 void Boat_destruct(struct Boat * this);
 
-void Boat_create(struct Boat * this, size_t placeSize);
+void Boat_create(struct Boat * this);
 
 void Boat_read(struct Boat * this);
 

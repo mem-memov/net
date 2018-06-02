@@ -14,6 +14,7 @@
 struct Boat * boat;
 size_t graphSize;
 size_t entrySize; 
+size_t placeSize; 
 struct Exports * exports;
 struct Place * one;
 struct Count * nodeCount;
@@ -25,6 +26,7 @@ void prepareTest()
 {
 	graphSize = 100;
 	entrySize = 6;
+	placeSize = 4;
 	exports = Exports_mock();
 	one = Place_mock();
 	nodeCount = Count_mock();
@@ -32,7 +34,7 @@ void prepareTest()
 	net = Net_mock();
 	error = BoatError_mock();
 	
-	boat = Boat_construct(graphSize, entrySize, exports, one, nodeCount, linkCount, net, error);
+	boat = Boat_construct(graphSize, entrySize, placeSize, exports, one, nodeCount, linkCount, net, error);
 }
 
 void demolishTest()
@@ -45,10 +47,8 @@ void demolishTest()
 void it_writes_new_boat_to_store()
 {
 	prepareTest();
-	
-	size_t placeSizeByteLength = 4;
-	
-	Boat_create(boat, placeSizeByteLength);
+
+	Boat_create(boat);
 	
 	assert(
 		0 == strcmp(one->method[0], "Place_bind") 
@@ -70,7 +70,7 @@ void it_writes_new_boat_to_store()
 	);
 	assert(
 		0 == strcmp(net->method[1], "Net_create") 
-		&& net->placeSize[1] == placeSizeByteLength
+		&& net->placeSize[1] == placeSize
 	);
 	assert(0 == strcmp(nodeCount->method[1], "Count_create"));
 	assert(0 == strcmp(linkCount->method[1], "Count_create"));

@@ -117,7 +117,7 @@ void Factory_destruct(struct Factory * this)
 
 struct Boat * Factory_makeBoat(struct Factory * this)
 {
-	return Boats_make(this->boats, this->graphSize, this->entrySize);
+	return Boats_make(this->boats, this->graphSize, this->entrySize, this->placeSize);
 }
 
 struct Import * Factory_makeImport(struct Factory * this)

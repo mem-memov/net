@@ -1,5 +1,5 @@
-netgraph: main.o Boat.o BoatError.o Boats.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Net.o NetError.o Nets.o Link.o LinkError.o Links.o Mesh.o Meshes.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o
-	gcc  main.o Boat.o BoatError.o Boats.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Gap.o Gaps.o Graph.o Import.o Imports.o Net.o NetError.o Nets.o Link.o LinkError.o Links.o Mesh.o Meshes.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o -o netgraph
+netgraph: main.o Boat.o BoatError.o Boats.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Factory.o Gap.o Gaps.o Graph.o Import.o Imports.o Net.o NetError.o Nets.o Link.o LinkError.o Links.o Mesh.o Meshes.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o
+	gcc  main.o Boat.o BoatError.o Boats.o Count.o CountError.o Counts.o Direction.o DirectionError.o Directions.o Error.o Errors.o Export.o Exports.o Factory.o Gap.o Gaps.o Graph.o Import.o Imports.o Net.o NetError.o Nets.o Link.o LinkError.o Links.o Mesh.o Meshes.o Node.o NodeError.o Nodes.o Place.o Places.o Space.o Spaces.o Star.o StarError.o Stars.o Stream.o Streams.o Telescope.o Telescopes.o -o netgraph
 
 main.o: main.c
 	gcc -Wall -c main.c
@@ -42,6 +42,9 @@ Export.o: Export.c Export.h
 
 Exports.o: Exports.c Exports.h
 	gcc -Wall -c Exports.c
+
+Factory.o: Factory.c Factory.h
+	gcc -Wall -c Factory.c
 
 Gap.o: Gap.c Gap.h
 	gcc -Wall -c Gap.c

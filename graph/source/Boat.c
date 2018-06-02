@@ -3,6 +3,7 @@
 struct Boat {
 	size_t graphSize;
 	size_t entrySize;
+	size_t placeSize;
 	
 	struct Exports * exports;
 	
@@ -18,6 +19,7 @@ struct Boat {
 struct Boat * Boat_construct(
 	size_t graphSize, 
 	size_t entrySize, 
+	size_t placeSize,
 	struct Exports * exports,
 	struct Place * one,
 	struct Count * nodeCount,
@@ -29,6 +31,7 @@ struct Boat * Boat_construct(
 
 	this->graphSize = graphSize;
 	this->entrySize = entrySize;
+	this->placeSize = placeSize;
 
 	this->exports = exports;
 	
@@ -56,12 +59,12 @@ void Boat_destruct(struct Boat * this)
 	this = NULL;
 }
 
-void Boat_create(struct Boat * this, size_t placeSize)
+void Boat_create(struct Boat * this)
 {
 	Boat_read(this);
 	
 	Place_set(this->one, 1);
-	Net_create(this->net, placeSize);
+	Net_create(this->net, this->placeSize);
 	Count_create(this->nodeCount);
 	Count_create(this->linkCount);
 }
