@@ -11,10 +11,10 @@ Database.o: Database.c Database.h
 	gcc -Wall -c Database.c
 	
 clean:
-	rm --force *.o netdatabase libnetdatabase.a
+	rm --force *.o netdatabase libnetdatabase.a netdatabase.h
 	
 install:
-	install netdatabase /usr/local/bin/netdatabase && rm --force main.o && ar -rcs libnetdatabase.a *.o && cp libnetdatabase.a /usr/local/lib/libnetdatabase.a && cp Database.h /usr/local/include/netdatabase.h
+	install netdatabase /usr/local/bin/netdatabase && rm --force main.o && ar -rcs libnetdatabase.a *.o && cp libnetdatabase.a /usr/local/lib/libnetdatabase.a && printf "\n" | cat Collection.h - Database.h > netdatabase.h && cp netdatabase.h /usr/local/include/netdatabase.h
 
 uninstall:
-	rm --force netdatabase /usr/local/bin/netdatabase /usr/local/lib/libnetdatabase.a /usr/local/include/netdatabase.h
+	rm --force /usr/local/bin/netdatabase /usr/local/lib/libnetdatabase.a /usr/local/include/netdatabase.h

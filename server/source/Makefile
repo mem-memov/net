@@ -47,4 +47,4 @@ install:
 	install netserver /usr/local/bin/netserver
 
 uninstall:
-	rm /usr/local/bin/netserver
+	rm --force /usr/local/bin/netserver

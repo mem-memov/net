@@ -1,5 +1,8 @@
 #include "Database.h"
 #include <stdlib.h>
+#include <netgraph.h>
+#include "Collection.h"
+#include "Collections.h"
 
 struct Database
 {
